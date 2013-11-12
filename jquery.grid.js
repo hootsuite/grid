@@ -88,7 +88,7 @@
       } else {
         // We need to translate the grid item 2d position into one relative to
         // the entire grid
-        gridItem.apply2dPosition(this.getOffsetOfCurrentPage());
+        gridItem.apply2dPosition(this._getOffsetOfCurrentPage());
       }
     },
     applySizeToItems: function() {
@@ -105,7 +105,7 @@
         height: this.options.rows * this.options.tileHeight
       });
     },
-    getOffsetOfCurrentPage: function() {
+    _getOffsetOfCurrentPage: function() {
       var pageWidth = this.options.cols * this.options.tileWidth +
                       this.options.pagePadding;
       return this.pages.indexOf(this.currentPage) * pageWidth;
