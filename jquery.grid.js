@@ -1,7 +1,6 @@
 ;(function($, window, document, undefined) {
   var Grid = function(element, options) {
     this.$grid = $(element);
-    this.$gridItems = this.$grid.children();
     this.options = $.extend({}, this.defaults, options || {});
     this.init();
   };
@@ -16,11 +15,17 @@
     },
     init: function() {
       this.$grid.data('_grid', this);
-      this.$gridItems.each(this._bindMethod(function(i, item) {
-        $(item).data('_gridItem', new GridItem(item, this));
-      }));
+      this.indexItems();
       this.applySizeToItems();
       this.render();
+    },
+    indexItems: function() {
+      this.gridItems = [];
+      this.$grid.children().each(this._bindMethod(function(i, item) {
+        var gridItem = new GridItem(item, this);
+        $(item).data('_gridItem', gridItem);
+        this.gridItems.push(gridItem);
+      }));
     },
     render: function() {
       this.sortItems();
@@ -31,9 +36,7 @@
       /**
        * Sort items based on their 1d position index
        */
-      this.$gridItems.sort(function(item1, item2) {
-        var gridItem1 = $(item1).data('_gridItem');
-        var gridItem2 = $(item2).data('_gridItem');
+      this.gridItems.sort(function(gridItem1, gridItem2) {
         if (gridItem1.position < gridItem2.position) {
           return -1;
         } else {
@@ -47,8 +50,7 @@
       this.pages = [this.currentPage];
 
       var previousGridItem = null;
-      this.$gridItems.each(this._bindMethod(function(i, item) {
-        var gridItem = $(item).data('_gridItem');
+      $.each(this.gridItems, this._bindMethod(function(i, gridItem) {
         this.positionItem2d(gridItem, previousGridItem);
         previousGridItem = gridItem;
       }));
@@ -90,8 +92,7 @@
       }
     },
     applySizeToItems: function() {
-      this.$gridItems.each(this._bindMethod(function(i, item) {
-        var gridItem = $(item).data('_gridItem');
+      $.each(this.gridItems, this._bindMethod(function(i, gridItem) {
         gridItem.applySize();
       }));
     },
