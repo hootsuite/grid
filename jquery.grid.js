@@ -24,7 +24,7 @@
     },
     render: function() {
       this.sortItems();
-      this.positionItems();
+      this.positionItems2d();
       this.applySizeToContainer();
     },
     sortItems: function() {
@@ -41,7 +41,7 @@
         }
       });
     },
-    positionItems: function() {
+    positionItems2d: function() {
       // Start with a blank empty page
       this.currentPage = new GridPage(this, 0);
       this.pages = [this.currentPage];
@@ -49,11 +49,11 @@
       var previousGridItem = null;
       this.$gridItems.each(this._bindMethod(function(i, item) {
         var gridItem = $(item).data('_gridItem');
-        this.positionItem(gridItem, previousGridItem);
+        this.positionItem2d(gridItem, previousGridItem);
         previousGridItem = gridItem;
       }));
     },
-    positionItem: function(gridItem, previousGridItem) {
+    positionItem2d: function(gridItem, previousGridItem) {
       var startingPosition2d = [0, 0];
       if (previousGridItem) {
         // The next grid item can be placed to to right of the previous one,
@@ -82,7 +82,7 @@
       if (nextPage) {
         this.currentPage = new GridPage(this, this.pages.length);
         this.pages.push(this.currentPage);
-        this.positionItem(gridItem, null);
+        this.positionItem2d(gridItem, null);
       } else {
         // We need to translate the grid item 2d position into one relative to
         // the entire grid
