@@ -11,7 +11,7 @@
       rows: 5,
       tileWidth: 100,
       tileHeight: 100,
-      pagePadding: 50,
+      pagePadding: 20,
       fillEmptySpace: true
     },
     init: function() {
