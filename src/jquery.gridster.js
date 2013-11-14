@@ -2008,6 +2008,7 @@
     * @return {Class} Returns the instance of the Gridster Class.
     */
     fn.move_widget_up = function($widget, y_units) {
+        return;
         var el_grid_data = $widget.coords().grid;
         var actual_row = el_grid_data.row;
         var moved = [];
@@ -2057,6 +2058,7 @@
     * @return {Class} Returns the instance of the Gridster Class.
     */
     fn.move_widget_down = function($widget, y_units) {
+        return;
         var el_grid_data, actual_row, moved, y_diff;
 
         if (y_units <= 0) { return false; }
