@@ -12,16 +12,14 @@
         widget_selector: 'li',
         widget_margins: [10, 10],
         widget_base_dimensions: [400, 225],
-        page_rows: 4,
-        page_cols: 3,
         extra_rows: 0,
         extra_cols: 0,
         min_cols: 1,
         max_cols: null,
-        min_rows: 1,
+        min_rows: 15,
         max_size_x: false,
         autogenerate_stylesheet: true,
-        avoid_overlapped_widgets: false,
+        avoid_overlapped_widgets: true,
         serialize_params: function($w, wgd) {
             return {
                 col: wgd.col,
@@ -220,7 +218,7 @@
         size_y || (size_y = 1);
 
         if (!col & !row) {
-            pos = this.next_position_in_range(size_x, size_y, this.options.page_rows);
+            pos = this.next_position(size_x, size_y);
         }else{
             pos = {
                 col: col,
@@ -689,7 +687,7 @@
             !this.can_move_to(
              {size_x: wgd.size_x, size_y: wgd.size_y}, wgd.col, wgd.row)
         ) {
-            $.extend(wgd, this.next_position_in_range(wgd.size_x, wgd.size_y, this.options.page_rows));
+            $.extend(wgd, this.next_position(wgd.size_x, wgd.size_y));
             $el.attr({
                 'data-col': wgd.col,
                 'data-row': wgd.row,
@@ -2872,7 +2870,10 @@
         var min_cols = Math.max.apply(Math, actual_cols);
 
         // get all rows that could be occupied by the current widgets
-        var max_rows = this.options.page_rows;
+        var max_rows = this.options.extra_rows;
+        this.$widgets.each(function(i, w) {
+            max_rows += (+$(w).attr('data-sizey'));
+        });
 
         this.cols = Math.max(min_cols, cols, this.options.min_cols);
 
