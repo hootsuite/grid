@@ -1,0 +1,103 @@
+<html>
+<head>
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: sans-serif;
+}
+.board {
+  position: relative;
+  margin: 20px;
+  list-style-type: none;
+}
+.board li {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0px 0px 0px 2px #fff;
+  line-height: 80px;
+  text-align: center;
+  font-size: 40px;
+  font-weight: 800;
+}
+  </style>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="lib/grid.js"></script>
+  <script src="jquery.grid.js"></script>
+  <script>
+// 0 means 100%
+var GRID_ITEM_TYPES = {
+  widget1x1: [1, 1, false],
+  widget2x1: [2, 1, false],
+  widget3x1: [3, 1, false],
+  timeline1x: [1, 0, false],
+  timeline2x: [2, 0, false],
+  timeline3x: [3, 0, false]
+};
+var grid1Items = [
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget2x1,
+  GRID_ITEM_TYPES.widget3x1,
+  GRID_ITEM_TYPES.timeline1x,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget2x1,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.timeline1x,
+  GRID_ITEM_TYPES.widget1x1
+];
+var grid2Items = [
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget2x1,
+  GRID_ITEM_TYPES.widget3x1,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.timeline1x,
+  GRID_ITEM_TYPES.widget2x1,
+  GRID_ITEM_TYPES.widget1x1,
+  GRID_ITEM_TYPES.widget1x1,
+  [1, 2, false]
+];
+var buildGrid = function($gridContainer, gridItems) {
+  var _gridItems = []
+  for (var i = 0; i < gridItems.length; i++) {
+    _gridItems.push({
+      cols: gridItems[i][0],
+      rows: gridItems[i][1] || 4,
+      index: i
+    });
+  }
+  var myGrid = new Grid(_gridItems, {
+    colsPerGroup: 3, rows: 4
+  });
+  myGrid.generatePositionsFromIndex();
+
+  for (var i = 0; i < _gridItems.length; i++) {
+    $gridItem = $('<li>' + (i + 1) + '</li>');
+    $gridContainer.append($gridItem);
+    $gridItem.css({
+      width: _gridItems[i].cols * 80,
+      height: _gridItems[i].rows * 80,
+      left: _gridItems[i].position[0] * 80,
+      top: _gridItems[i].position[1] * 80
+    });
+  }
+};
+$(function() {
+  buildGrid($('#grid1'), grid1Items);});
+  </script>
+</head>
+<body>
+  <div id="grid1" class="board"></div>
+</body>
