@@ -6,6 +6,40 @@
   <script type="text/javascript" src="https://rawgithub.com/ducksboard/gridster.js/master/dist/jquery.gridster.js"></script>
   <script src="lib/grid.js"></script>
   <script>
+var buildGridElements = function($gridContainer, items) {
+  var i, item, rows, cols;
+  for (i = 0; i < items.length; i++) {
+    item = items[i];
+    $item = $(
+      '<li data-sizex="' + item[0] + '" ' +
+          'data-sizey="' + item[1] + '" ' +
+          'data-index="' + i + '">' +
+          (i + 1) +
+      '</li>');
+    $gridContainer.append($item);
+  }
+};
+var initGridster = function(onStop) {
+  $("#grid1 > ul").gridster({
+    widget_margins: [5, 5],
+    widget_base_dimensions: [80, 80],
+    min_cols: 100,
+    max_cols: 100,
+    draggable: {
+      stop: onStop
+    },
+    serialize_params: function($w, wgd) {
+      return {
+        col: wgd.col,
+        row: wgd.row,
+        size_x: wgd.size_x,
+        size_y: wgd.size_y,
+        index: Number($w.attr('data-index'))
+      }
+    }
+  });
+};
+
 var GRID_ITEM_TYPES = {
   widget1x1: [1, 1, false],
   widget2x1: [2, 1, false],
@@ -30,21 +64,10 @@ var itemsGrid1 = [
   GRID_ITEM_TYPES.timeline1x,
   GRID_ITEM_TYPES.widget1x1
 ];
-var buildGridElements = function($gridContainer, items) {
-  var i, item, rows, cols;
-  for (i = 0; i < items.length; i++) {
-    item = items[i];
-    $item = $(
-      '<li data-sizex="' + item[0] + '" ' +
-          'data-sizey="' + item[1] + '" ' +
-          'data-index="' + i + '">' +
-          (i + 1) +
-      '</li>');
-    $gridContainer.append($item);
-  }
-};
+var items = [];
+
 $(function() {
-  var items = [], item, i;
+  var item, i;
 
   // 1. Build DOM elements with size and index
   buildGridElements($('#grid1 > ul'), itemsGrid1);
@@ -72,9 +95,30 @@ $(function() {
   }
 
   // 4. Init gridster on a DOM list with size and coordonates already preset
-  var gridster = $("#grid1 > ul").gridster({
-    widget_margins: [5, 5],
-    widget_base_dimensions: [80, 80]
+  initGridster(function(e, ui) {
+    var changedItems = this.serialize_changed(),
+        changedItem,
+        item;
+    for (var i = 0; i < changedItems.length; i++) {
+      changedItem = changedItems[i];
+      item = items[changedItem.index];
+      item.position = [
+        changedItem.col - 1,
+        changedItem.row - 1
+      ]
+    }
+    myGrid.generateIndexesFromPosition();
+    for (var i = 0; i < items.length; i++) {
+      items[i].$element.attr('data-index', items[i].index);
+      items[i].$element.html(items[i].index + 1);
+    }
+    myGrid.generatePositionsFromIndex();
+
+    for (i = 0; i < items.length; i++) {
+      item = items[i];
+      item.$element.attr('data-col', item.position[0] + 1);
+      item.$element.attr('data-row', item.position[1] + 1);
+    }
   });
 });
   </script>
