@@ -42,7 +42,7 @@ var GRID_ITEM_TYPES = {
 
 var itemsGrid1 = [
   GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget2x1,
+  GRID_ITEM_TYPES.widget1x1,
   GRID_ITEM_TYPES.widget1x1,
   GRID_ITEM_TYPES.widget1x1,
   GRID_ITEM_TYPES.widget2x1,
@@ -87,11 +87,12 @@ var buildGridElements = function($gridContainer, items) {
 
 var applyItemPositions = function(items) {
   // XXX don't apply position to dragged elements
-  var item, i;
+  var item, i, groupNr;
   for (i = 0; i < items.length; i++) {
     item = items[i];
+    groupNr = Math.floor(item.position.col / 3);
     item.$element.css({
-      left: item.position.col * 80,
+      left: item.position.col * 80 + (groupNr * 20),
       top: item.position.row * 80
     })
   }
