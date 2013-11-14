@@ -101,7 +101,7 @@ $(function() {
 
   // 4. Init gridster on a DOM list with size and coordonates already preset
   initGridster(function(e, ui) {
-    var changedItems = this.serialize_changed(),
+    var changedItems = this.serialize(),
         changedItem,
         item;
     for (var i = 0; i < changedItems.length; i++) {
@@ -110,7 +110,8 @@ $(function() {
       item.position = [
         changedItem.col - 1,
         changedItem.row - 1
-      ]
+        ];
+      item.widget = changedItem;
     }
     myGrid.generateIndexesFromPosition();
     for (var i = 0; i < items.length; i++) {
@@ -121,8 +122,15 @@ $(function() {
 
     for (i = 0; i < items.length; i++) {
       item = items[i];
-      item.$element.attr('data-col', item.position[0] + 1);
-      item.$element.attr('data-row', item.position[1] + 1);
+      col = item.position[0] + 1;
+      row = item.position[1] + 1;
+      this.mutate_widget_in_gridmap(item.$element, item.widget,
+        {
+            size_x: item.widget.size_x,
+            size_y: item.widget.size_y,
+            col: col,
+            row: row
+        });
     }
   });
 });
