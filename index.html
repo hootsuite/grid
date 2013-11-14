@@ -1,50 +1,36 @@
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="http://gridster.net/dist/jquery.gridster.css">
-  <link rel="stylesheet" type="text/css" href="http://gridster.net/demos/assets/demo.css">
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-  <script src="src/utils.js"></script>
-  <script src="src/jquery.collision.js"></script>
-  <script src="src/jquery.coords.js"></script>
-  <script src="src/jquery.draggable.js"></script>
-  <script src="src/jquery.gridster.js"></script>
-  <script src="src/jquery.gridster.extras.js"></script>
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+.grid {
+  margin: 20px;
+  position: relative;
+  list-style: none;
+  /* TODO: expand grid with items */
+}
+.grid li {
+  position: absolute;
+  background: rgba(200, 200, 200, 0.9);
+  box-shadow: inset 0 0 0 2px #fff;
+  font-size: 40px;
+  font-weight: bold;
+  line-height: 80px;
+  text-align: center;
+  cursor: pointer;
+  -webkit-transition: top 0.2s, left 0.2s;
+}
+.grid li.ui-draggable-dragging {
+  -webkit-transition: none;
+}
+  </style>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
   <script src="lib/grid.js"></script>
   <script>
-var buildGridElements = function($gridContainer, items) {
-  var i, item, rows, cols;
-  for (i = 0; i < items.length; i++) {
-    item = items[i];
-    $item = $(
-      '<li data-sizex="' + item[0] + '" ' +
-          'data-sizey="' + item[1] + '" ' +
-          'data-index="' + i + '">' +
-          (i + 1) +
-      '</li>');
-    $gridContainer.append($item);
-  }
-};
-var initGridster = function(onStop) {
-  $("#grid1 > ul").gridster({
-    widget_margins: [5, 5],
-    widget_base_dimensions: [80, 80],
-    min_cols: 100,
-    max_cols: 100,
-    draggable: {
-      stop: onStop
-    },
-    serialize_params: function($w, wgd) {
-      return {
-        col: wgd.col,
-        row: wgd.row,
-        size_x: wgd.size_x,
-        size_y: wgd.size_y,
-        index: Number($w.attr('data-index'))
-      }
-    }
-  });
-};
-
 var GRID_ITEM_TYPES = {
   widget1x1: [1, 1, false],
   widget2x1: [2, 1, false],
@@ -53,6 +39,7 @@ var GRID_ITEM_TYPES = {
   timeline2x: [2, 4, false],
   timeline3x: [3, 4, false]
 };
+
 var itemsGrid1 = [
   GRID_ITEM_TYPES.widget1x1,
   GRID_ITEM_TYPES.widget2x1,
@@ -69,67 +56,124 @@ var itemsGrid1 = [
   GRID_ITEM_TYPES.timeline1x,
   GRID_ITEM_TYPES.widget1x1
 ];
-var items = [];
 
-$(function() {
-  var item, i;
-
-  // 1. Build DOM elements with size and index
-  buildGridElements($('#grid1 > ul'), itemsGrid1);
-
-  // 2. Read DOM elements and generate 2d positions on a virtual grid, using
-  // our proprietary formula
-  $('#grid1 > ul > li').each(function(i, li) {
-    item = {
-      cols: $(li).data('sizex'),
-      rows: $(li).data('sizey'),
-      index: $(li).data('index')
-    }
-    item.$element = $(li);
-    items.push(item);
-  });
-  myGrid = new Grid(items, {colsPerGroup: 3, rows: 4});
-  myGrid.generatePositionsFromIndex();
-
-  // 3. Read 2d positions generate and embed coordonates in each item, in the
-  // format gridster expects
+var getFormattedItems = function(items) {
+  var _items = [], i, item;
   for (i = 0; i < items.length; i++) {
     item = items[i];
-    item.$element.attr('data-col', item.position[0] + 1);
-    item.$element.attr('data-row', item.position[1] + 1);
+    _items.push({
+      index: i,
+      cols: item[0],
+      rows: item[1]
+    })
   }
+  return _items;
+}
 
-  // 4. Init gridster on a DOM list with size and coordonates already preset
-  initGridster(function(e, ui) {
-    var changedItems = this.serialize_changed(),
-        changedItem,
-        item;
-    for (var i = 0; i < changedItems.length; i++) {
-      changedItem = changedItems[i];
-      item = items[changedItem.index];
-      item.position = [
-        changedItem.col - 1,
-        changedItem.row - 1
-      ]
-    }
-    myGrid.generateIndexesFromPosition();
-    for (var i = 0; i < items.length; i++) {
-      items[i].$element.attr('data-index', items[i].index);
-      items[i].$element.html(items[i].index + 1);
-    }
-    myGrid.generatePositionsFromIndex();
+var buildGridElements = function($gridContainer, items) {
+  var item, i;
+  for (i = 0; i < items.length; i++) {
+    item = items[i];
+    $item = $('<li>' + (i + 1) + '</li>');
+    $item.css({
+      width: item.cols * 80,
+      height: item.rows * 80
+    })
+    $gridContainer.append($item);
+    // Add reference to corresponding DOM element to each item
+    item.$element = $item
+  }
+};
 
-    for (i = 0; i < items.length; i++) {
-      item = items[i];
-      item.$element.attr('data-col', item.position[0] + 1);
-      item.$element.attr('data-row', item.position[1] + 1);
+var applyItemPositions = function(items) {
+  // XXX don't apply position to dragged elements
+  var item, i;
+  for (i = 0; i < items.length; i++) {
+    item = items[i];
+    item.$element.css({
+      left: item.position.col * 80,
+      top: item.position.row * 80
+    })
+  }
+};
+
+var updateItemIndexes = function(items) {
+  var item, i;
+  for (var i = 0; i < items.length; i++) {
+    item = items[i];
+    item.$element.html(item.index + 1);
+  }
+};
+
+var getItemByElement = function(items, element) {
+  // XXX we should store item index in element data attributes
+  var itemIndex = Number($(element).text()) - 1;
+  return items[itemIndex];
+};
+
+var positionItemToGrid = function(item) {
+  var position = item.$element.position();
+  item.position.col = Math.round(position.left / 80);
+  item.position.row = Math.round(position.top / 80);
+};
+
+var embedMovementSpeedInItem = function(item, ui) {
+  // XXX are we sure it's OK to mix left and top movements?
+  if (!item.previousPosition) {
+    item.movementOffset = (
+      (ui.position.left - ui.originalPosition.left) +
+      (ui.position.top - ui.originalPosition.top)
+    );
+  } else {
+    item.movementOffset = (
+      (ui.position.left - item.previousPosition.left) +
+      (ui.position.top - item.previousPosition.top)
+    );
+  }
+}
+
+$(function() {
+  var items = getFormattedItems(itemsGrid1),
+      item, i;
+
+  buildGridElements($('#grid1'), items);
+
+  myGrid = new Grid(items, {
+    colsPerGroup: 3,
+    rows: 4,
+    sortItemsByPosition: function(item1, item2) {
+      // XXX are we sure it's OK to mix left and top movements?
+      return (item1.movementOffset || 0) - (item2.movementOffset || 0);
+    }
+  });
+
+  myGrid.generatePositionsFromIndex();
+  applyItemPositions(items);
+
+  $('#grid1 > li').draggable({
+    zIndex: 2,
+    drag: function(event, ui) {
+      var item = getItemByElement(items, ui.helper);
+      positionItemToGrid(item);
+      embedMovementSpeedInItem(item, ui);
+
+      myGrid.generateIndexesFromPosition();
+      updateItemIndexes(items);
+
+      myGrid.generatePositionsFromIndex();
+      applyItemPositions(items);
+    },
+    stop: function(event, ui) {
+      var item = getItemByElement(items, ui.helper);
+      item.movementOffset = 0;
+
+      myGrid.generatePositionsFromIndex();
+      applyItemPositions(items);
     }
   });
 });
   </script>
 </head>
 <body>
-  <div id="grid1" class="gridster">
-    <ul></ul>
-  </div>
+  <ul id="grid1" class="grid"></ul>
 </body>
