@@ -40,9 +40,9 @@ var GridTestCases = {
   },
   rightPositioning: function () {
     var returned = GridTest.testGridList([
-      {rows: 1, cols: 2},
-      {rows: 1, cols: 2},
-      {rows: 1, cols: 1}
+      {cols: 2, rows: 1},
+      {cols: 2, rows: 1},
+      {cols: 1, rows: 1}
     ], {
       rows: 4,
       colsPerGroup: 3
@@ -56,9 +56,9 @@ var GridTestCases = {
   },
   longBarCharts: function() {
     var returned = GridTest.testGridList([
-      {rows: 2, cols: 1},
-      {rows: 1, cols: 2},
-      {rows: 2, cols: 1}
+      {cols: 1, rows: 2},
+      {cols: 2, rows: 1},
+      {cols: 1, rows: 2}
     ], {
       rows: 4,
       colsPerGroup: 3
@@ -72,10 +72,10 @@ var GridTestCases = {
   },
   placementAfterTimeline: function() {
     var returned = GridTest.testGridList([
-      {rows: 1, cols: 1},
-      {rows: 1, cols: 1},
-      {rows: 4, cols: 1},
-      {rows: 1, cols: 1}
+      {cols: 1, rows: 1},
+      {cols: 1, rows: 1},
+      {cols: 1, rows: 4},
+      {cols: 1, rows: 1}
     ], {
       rows: 4,
       colsPerGroup: 3
@@ -91,9 +91,9 @@ var GridTestCases = {
   },
   timelineInNewGroup: function() {
     var returned = GridTest.testGridList([
-      {rows: 1, cols: 1},
-      {rows: 1, cols: 2},
-      {rows: 4, cols: 1}
+      {cols: 1, rows: 1},
+      {cols: 2, rows: 1},
+      {cols: 1, rows: 4}
     ], {
       rows: 4,
       colsPerGroup: 3
@@ -108,12 +108,12 @@ var GridTestCases = {
   },
   widget3xInNewGroup: function() {
     var returned = GridTest.testGridList([
-      {rows: 1, cols: 2},
-      {rows: 1, cols: 2},
-      {rows: 1, cols: 2},
-      {rows: 1, cols: 1},
-      {rows: 1, cols: 1},
-      {rows: 1, cols: 3}
+      {cols: 2, rows: 1},
+      {cols: 2, rows: 1},
+      {cols: 2, rows: 1},
+      {cols: 1, rows: 1},
+      {cols: 1, rows: 1},
+      {cols: 3, rows: 1}
     ], {
       rows: 4,
       colsPerGroup: 3
@@ -124,6 +124,25 @@ var GridTestCases = {
       {x: 0, y: 2},
       {x: 2, y: 2},
       {x: 0, y: 3}
+    ], [
+      {x: 0, y: 0}
+    ]];
+    return [returned, expected];
+  },
+  barchartWithMoreThan5Sources: function() {
+    var returned = GridTest.testGridList([
+      {cols: 1, rows: 1},
+      {cols: 1, rows: 2},
+      {cols: 3, rows: 1},
+      {cols: 1, rows: 2}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 1, y: 0},
+      {x: 0, y: 2}
     ], [
       {x: 0, y: 0}
     ]];
@@ -141,3 +160,4 @@ GridTestCases.test('longBarCharts');
 GridTestCases.test('placementAfterTimeline');
 GridTestCases.test('timelineInNewGroup');
 GridTestCases.test('widget3xInNewGroup');
+GridTestCases.test('barchartWithMoreThan5Sources');
