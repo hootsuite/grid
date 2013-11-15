@@ -29,7 +29,7 @@
   </style>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-  <script src="lib/grid.js"></script>
+  <script src="lib/gridList.js"></script>
   <script>
 var GRID_ITEM_TYPES = {
   widget1x1: [1, 1, false],
@@ -149,7 +149,7 @@ $(function() {
 
   buildGridElements($('#grid1'), items);
 
-  myGrid = new Grid(items, {
+  myGrid = new GridList(items, {
     colsPerGroup: 3,
     rows: 4,
     sortItemsByPosition: function(items) {
