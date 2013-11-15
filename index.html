@@ -87,6 +87,9 @@ var buildGridElements = function($gridContainer, items) {
 };
 
 var applyItemPositions = function(items) {
+  // XXX very hackish implementation of Group separators
+  $('.grid-separator').remove()
+  var currGroup = 0;
   var item, i;
   for (i = 0; i < items.length; i++) {
     item = items[i];
@@ -98,6 +101,19 @@ var applyItemPositions = function(items) {
       left: item.position.col * 80,
       top: item.position.row * 80
     })
+    if (item.position.col % 3 > currGroup) {
+      currGroup++;
+      var $separator = $('<div class="grid-separator"></div>');
+      $separator.css({
+        position: 'absolute',
+        width: 2,
+        height: 320,
+        left: 20 + 240 * currGroup - 1,
+        top: 20,
+        background: 'red'
+      });
+      $('body').append($separator);
+    }
   }
 };
 
