@@ -62,7 +62,6 @@ var getFormattedItems = function(items) {
   for (i = 0; i < items.length; i++) {
     item = items[i];
     _items.push({
-      index: i,
       cols: item[0],
       rows: item[1]
     })
@@ -80,19 +79,22 @@ var buildGridElements = function($gridContainer, items) {
       height: item.rows * 80
     })
     $gridContainer.append($item);
-    // Add reference to corresponding DOM element to each item
+    // Add reference to corresponding DOM element to each item and viceversa
     item.$element = $item
+    $item.data('_gridItem', item);
   }
 };
 
 var applyItemPositions = function(items) {
-  // XXX don't apply position to dragged elements
-  var item, i, groupNr;
+  var item, i;
   for (i = 0; i < items.length; i++) {
     item = items[i];
-    groupNr = Math.floor(item.position.col / 3);
+    // Don't apply position to dragged elements
+    if (item.drag) {
+      continue;
+    }
     item.$element.css({
-      left: item.position.col * 80 + (groupNr * 20),
+      left: item.position.col * 80,
       top: item.position.row * 80
     })
   }
@@ -102,15 +104,31 @@ var updateItemIndexes = function(items) {
   var item, i;
   for (var i = 0; i < items.length; i++) {
     item = items[i];
-    item.$element.html(item.index + 1);
+    item.$element.html(i + 1);
   }
 };
 
-var getItemByElement = function(items, element) {
-  // XXX we should store item index in element data attributes
-  var itemIndex = Number($(element).text()) - 1;
-  return items[itemIndex];
+var getItemByElement = function(element) {
+  return $(element).data('_gridItem');
 };
+
+var setDragMovementToItem = function(item, ui) {
+  if (!item.previousPosition) {
+    item.drag = {
+      x: ui.position.left - ui.originalPosition.left,
+      y: ui.position.top - ui.originalPosition.top
+    };
+  } else {
+    item.drag = {
+      x: ui.position.left - item.previousPosition.left,
+      y: ui.position.top - item.previousPosition.top
+    };
+  }
+  item.previousPosition = {
+    left: ui.position.left,
+    top: ui.position.top
+  };
+}
 
 var positionItemToGrid = function(item) {
   var position = item.$element.position();
@@ -118,20 +136,12 @@ var positionItemToGrid = function(item) {
   item.position.row = Math.round(position.top / 80);
 };
 
-var embedMovementSpeedInItem = function(item, ui) {
-  // XXX are we sure it's OK to mix left and top movements?
-  if (!item.previousPosition) {
-    item.movementOffset = (
-      (ui.position.left - ui.originalPosition.left) +
-      (ui.position.top - ui.originalPosition.top)
-    );
-  } else {
-    item.movementOffset = (
-      (ui.position.left - item.previousPosition.left) +
-      (ui.position.top - item.previousPosition.top)
-    );
-  }
-}
+var areCollidingItems = function(item1, item2) {
+  return !(item2.position.col >= item1.position.col + item1.cols ||
+           item2.position.col + item2.cols <= item1.position.col ||
+           item2.position.row >= item1.position.row + item1.rows ||
+           item2.position.row + item2.rows <= item1.position.row);
+};
 
 $(function() {
   var items = getFormattedItems(itemsGrid1),
@@ -142,9 +152,55 @@ $(function() {
   myGrid = new Grid(items, {
     colsPerGroup: 3,
     rows: 4,
-    sortItemsByPosition: function(item1, item2) {
-      // XXX are we sure it's OK to mix left and top movements?
-      return (item1.movementOffset || 0) - (item2.movementOffset || 0);
+    sortItemsByPosition: function(items) {
+      // README: Regular sorting doesn't work for this scenario, as it doesn't look
+      // at all neighbours due to optimization reasons. Since we're sorting objects
+      // from their 2d position into the 1d index (using our Groups positioning
+      // algorithm), the 4th next element might overlap with the one we're dragging,
+      // while the 3rd might not. Hence the 4th will be shifted before the dragged
+      // one, while the 3rd will remain after. For this we need to iterate through
+      // all the list item combinations.
+      var collidingItems = [],
+          i, j,
+          dragItem, collidingItem,
+          movementDirection;
+      for (i = 0; i < items.length; i++) {
+        dragItem = items[i];
+        if (!dragItem.drag) {
+          continue;
+        }
+        for (j = 0; j < items.length; j++) {
+          if (i == j) {
+            continue;
+          }
+          collidingItem = items[j];
+          if (areCollidingItems(dragItem, collidingItem)) {
+            collidingItems.push(j);
+          }
+        }
+        // There's only one drag at a time
+        break;
+      }
+      if (!collidingItems.length) {
+        return;
+      }
+      // Detect on which axis does the dragging movement stand out
+      if (Math.abs(dragItem.drag.x) > Math.abs(dragItem.drag.y)) {
+        movementDirection = dragItem.drag.x;
+      } else {
+        movementDirection = dragItem.drag.y;
+      }
+      // If we're dragging to the right/bottom, move all colliding items to the
+      // left, and vice-versa
+      while (collidingItems.length) {
+        if (movementDirection > 0) {
+          collidingItem = items.splice(collidingItems.shift(), 1)[0];
+          items.splice(this._getIndexOfItem(dragItem), 0, collidingItem);
+        } else {
+          collidingItem = items.splice(collidingItems.pop(), 1)[0];
+          items.splice(this._getIndexOfItem(dragItem) + 1, 0, collidingItem);
+        }
+      }
     }
   });
 
@@ -154,9 +210,9 @@ $(function() {
   $('#grid1 > li').draggable({
     zIndex: 2,
     drag: function(event, ui) {
-      var item = getItemByElement(items, ui.helper);
+      var item = getItemByElement(ui.helper);
       positionItemToGrid(item);
-      embedMovementSpeedInItem(item, ui);
+      setDragMovementToItem(item, ui)
 
       myGrid.generateIndexesFromPosition();
       updateItemIndexes(items);
@@ -165,10 +221,9 @@ $(function() {
       applyItemPositions(items);
     },
     stop: function(event, ui) {
-      var item = getItemByElement(items, ui.helper);
-      item.movementOffset = 0;
+      var item = getItemByElement(ui.helper);
+      item.drag = null;
 
-      myGrid.generatePositionsFromIndex();
       applyItemPositions(items);
     }
   });
