@@ -101,7 +101,7 @@ var applyItemPositions = function(items) {
       left: item.position.col * 80,
       top: item.position.row * 80
     })
-    if (item.position.col % 3 > currGroup) {
+    if (Math.floor(item.position.col / 3) > currGroup) {
       currGroup++;
       var $separator = $('<div class="grid-separator"></div>');
       $separator.css({
