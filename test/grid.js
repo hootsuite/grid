@@ -147,6 +147,255 @@ var GridTestCases = {
       {x: 0, y: 0}
     ]];
     return [returned, expected];
+  },
+  barchartsGalore: function() {
+    var returned = GridTest.testGridList([
+      {cols: 1, rows: 2},
+      {cols: 1, rows: 2},
+      {cols: 1, rows: 2},
+      {cols: 3, rows: 1},
+      {cols: 3, rows: 1}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 1, y: 0},
+      {x: 2, y: 0},
+      {x: 0, y: 2},
+      {x: 0, y: 3}
+    ]];
+    return [returned, expected];
+  },
+  wideWidgetsAndTimeline: function() {
+    var returned = GridTest.testGridList([
+      {cols: 3, rows: 1},
+      {cols: 2, rows: 1},
+      {cols: 1, rows: 4}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 0, y: 1}
+    ], [
+      {x: 0, y: 0}
+    ]];
+    return [returned, expected];
+  },
+  wideWidgetInNewGroup: function() {
+    var returned = GridTest.testGridList([
+      {cols: 1, rows: 1},
+      {cols: 1, rows: 2},
+      {cols: 3, rows: 1},
+      {cols: 1, rows: 1},
+      {cols: 3, rows: 0}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 1, y: 0},
+      {x: 0, y: 2},
+      {x: 0, y: 3}
+    ], [
+      {x: 0, y: 0}
+    ]];
+    return [returned, expected];
+  },
+  emptySpaceFromWideAndTallWidgets: function() {
+    var returned = GridTest.testGridList([
+      {cols: 3, rows: 1},
+      {cols: 1, rows: 2},
+      {cols: 3, rows: 1},
+      {cols: 1, rows: 1}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 0, y: 1},
+      {x: 0, y: 3}
+    ], [
+      {x: 0, y: 0}
+    ]];
+    return [returned, expected];
+  },
+  twoTimelinesInGroup: function() {
+    var returned = GridTest.testGridList([
+      {cols: 1, rows: 4},
+      {cols: 1, rows: 4},
+      {cols: 1, rows: 1},
+      {cols: 1, rows: 1},
+      {cols: 2, rows: 1}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 1, y: 0},
+      {x: 2, y: 0},
+      {x: 2, y: 1}
+    ], [
+      {x: 0, y: 0}
+    ]];
+    return [returned, expected];
+  },
+  manyShortWidgetsInGroup: function() {
+    var returned = GridTest.testGridList([
+      {cols: 2, rows: 1},
+      {cols: 1, rows: 1},
+      {cols: 1, rows: 1},
+      {cols: 2, rows: 1},
+      {cols: 3, rows: 1}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 2, y: 0},
+      {x: 0, y: 1},
+      {x: 1, y: 1},
+      {x: 0, y: 2}
+    ]];
+    return [returned, expected];
+  },
+  emptyRowInGroup: function() {
+    var returned = GridTest.testGridList([
+      {cols: 3, rows: 1},
+      {cols: 1, rows: 2},
+      {cols: 2, rows: 1},
+      {cols: 3, rows: 1},
+      {cols: 1, rows: 1}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 0, y: 1},
+      {x: 1, y: 1},
+      {x: 0, y: 3}
+    ], [
+      {x: 0, y: 0}
+    ]];
+    return [returned, expected];
+  },
+  twoSquareWidgets: function() {
+    var returned = GridTest.testGridList([
+      {cols: 2, rows: 2},
+      {cols: 2, rows: 2}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 0, y: 2}
+    ]];
+    return [returned, expected];
+  },
+  emptyColumnInGroup: function() {
+    var returned = GridTest.testGridList([
+      {cols: 2, rows: 2},
+      {cols: 2, rows: 1},
+      {cols: 2, rows: 2},
+      {cols: 1, rows: 4}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 0, y: 2}
+    ], [
+      {x: 0, y: 0},
+      {x: 2, y: 0}
+    ]];
+    return [returned, expected];
+  },
+  smallAndBigWidgets: function() {
+    var returned = GridTest.testGridList([
+      {cols: 2, rows: 2},
+      {cols: 1, rows: 1},
+      {cols: 1, rows: 2},
+      {cols: 2, rows: 2},
+      {cols: 1, rows: 1}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 2, y: 0},
+      {x: 2, y: 1}
+    ], [
+      {x: 0, y: 0},
+      {x: 2, y: 0}
+    ]];
+    return [returned, expected];
+  },
+  widgetUnderEmptySpace: function() {
+    var returned = GridTest.testGridList([
+      {cols: 1, rows: 1},
+      {cols: 2, rows: 2},
+      {cols: 1, rows: 1}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 1, y: 0},
+      {x: 0, y: 2}
+    ]];
+    return [returned, expected];
+  },
+  allWidgetSizes: function() {
+    var returned = GridTest.testGridList([
+      {cols: 1, rows: 1},
+      {cols: 2, rows: 2},
+      {cols: 1, rows: 2},
+      {cols: 1, rows: 1},
+      {cols: 2, rows: 2}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 1, y: 0},
+      {x: 0, y: 2},
+      {x: 1, y: 2}
+    ], [
+      {x: 0, y: 0}
+    ]];
+    return [returned, expected];
+  },
+  bigBarchartInNewGroup: function() {
+    var returned = GridTest.testGridList([
+      {cols: 1, rows: 4},
+      {cols: 1, rows: 1},
+      {cols: 2, rows: 2},
+      {cols: 1, rows: 2}
+    ], {
+      rows: 4,
+      colsPerGroup: 3
+    });
+    var expected = [[
+      {x: 0, y: 0},
+      {x: 1, y: 0},
+      {x: 1, y: 1}
+    ], [
+      {x: 0, y: 0}
+    ]];
+    return [returned, expected];
   }
 };
 
@@ -161,3 +410,16 @@ GridTestCases.test('placementAfterTimeline');
 GridTestCases.test('timelineInNewGroup');
 GridTestCases.test('widget3xInNewGroup');
 GridTestCases.test('barchartWithMoreThan5Sources');
+GridTestCases.test('barchartsGalore');
+GridTestCases.test('wideWidgetsAndTimeline');
+GridTestCases.test('wideWidgetInNewGroup');
+GridTestCases.test('emptySpaceFromWideAndTallWidgets');
+GridTestCases.test('twoTimelinesInGroup');
+GridTestCases.test('manyShortWidgetsInGroup');
+GridTestCases.test('emptyRowInGroup');
+GridTestCases.test('twoSquareWidgets');
+GridTestCases.test('emptyColumnInGroup');
+GridTestCases.test('smallAndBigWidgets');
+GridTestCases.test('widgetUnderEmptySpace');
+GridTestCases.test('allWidgetSizes');
+GridTestCases.test('bigBarchartInNewGroup');
