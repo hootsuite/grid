@@ -94,7 +94,7 @@ var applyItemPositions = function(items) {
   for (i = 0; i < items.length; i++) {
     item = items[i];
     // Don't apply position to dragged elements
-    if (item.drag) {
+    if (item.move) {
       continue;
     }
     item.$element.css({
@@ -131,12 +131,12 @@ var getItemByElement = function(element) {
 
 var setDragMovementToItem = function(item, ui) {
   if (!item.previousPosition) {
-    item.drag = {
+    item.move = {
       x: ui.position.left - ui.originalPosition.left,
       y: ui.position.top - ui.originalPosition.top
     };
   } else {
-    item.drag = {
+    item.move = {
       x: ui.position.left - item.previousPosition.left,
       y: ui.position.top - item.previousPosition.top
     };
@@ -153,13 +153,6 @@ var positionItemToGrid = function(item) {
   item.position.row = Math.round(position.top / 80);
 };
 
-var areCollidingItems = function(item1, item2) {
-  return !(item2.position.col >= item1.position.col + item1.cols ||
-           item2.position.col + item2.cols <= item1.position.col ||
-           item2.position.row >= item1.position.row + item1.rows ||
-           item2.position.row + item2.rows <= item1.position.row);
-};
-
 $(function() {
   var items = getFormattedItems(itemsGrid1),
       item, i;
@@ -168,57 +161,7 @@ $(function() {
 
   myGrid = new GridList(items, {
     colsPerGroup: 3,
-    rows: 4,
-    sortItemsByPosition: function(items) {
-      // README: Regular sorting doesn't work for this scenario, as it doesn't look
-      // at all neighbours due to optimization reasons. Since we're sorting objects
-      // from their 2d position into the 1d index (using our Groups positioning
-      // algorithm), the 4th next element might overlap with the one we're dragging,
-      // while the 3rd might not. Hence the 4th will be shifted before the dragged
-      // one, while the 3rd will remain after. For this we need to iterate through
-      // all the list item combinations.
-      var collidingItems = [],
-          i, j,
-          dragItem, collidingItem,
-          movementDirection;
-      for (i = 0; i < items.length; i++) {
-        dragItem = items[i];
-        if (!dragItem.drag) {
-          continue;
-        }
-        for (j = 0; j < items.length; j++) {
-          if (i == j) {
-            continue;
-          }
-          collidingItem = items[j];
-          if (areCollidingItems(dragItem, collidingItem)) {
-            collidingItems.push(j);
-          }
-        }
-        // There's only one drag at a time
-        break;
-      }
-      if (!collidingItems.length) {
-        return;
-      }
-      // Detect on which axis does the dragging movement stand out
-      if (Math.abs(dragItem.drag.x) > Math.abs(dragItem.drag.y)) {
-        movementDirection = dragItem.drag.x;
-      } else {
-        movementDirection = dragItem.drag.y;
-      }
-      // If we're dragging to the right/bottom, move all colliding items to the
-      // left, and vice-versa
-      while (collidingItems.length) {
-        if (movementDirection > 0) {
-          collidingItem = items.splice(collidingItems.shift(), 1)[0];
-          items.splice(this._getIndexOfItem(dragItem), 0, collidingItem);
-        } else {
-          collidingItem = items.splice(collidingItems.pop(), 1)[0];
-          items.splice(this._getIndexOfItem(dragItem) + 1, 0, collidingItem);
-        }
-      }
-    }
+    rows: 4
   });
 
   myGrid.generatePositionsFromIndex();
@@ -239,8 +182,13 @@ $(function() {
     },
     stop: function(event, ui) {
       var item = getItemByElement(ui.helper);
-      item.drag = null;
 
+      myGrid.generateIndexesFromPosition();
+      updateItemIndexes(items);
+
+      item.move = null;
+
+      myGrid.generatePositionsFromIndex();
       applyItemPositions(items);
     }
   });
