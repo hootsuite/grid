@@ -23,7 +23,12 @@
   cursor: pointer;
   -webkit-transition: top 0.2s, left 0.2s;
 }
-.grid li.ui-draggable-dragging {
+.grid li.is-dragged {
+  -webkit-transition: none;
+}
+.grid li.position-highlight {
+  position: absolute;
+  background: rgba(255, 0, 0, 0.2);
   -webkit-transition: none;
 }
   </style>
