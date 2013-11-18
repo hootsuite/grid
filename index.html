@@ -30,6 +30,7 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
   <script src="lib/gridList.js"></script>
+  <script src="lib/jquery.gridList.js"></script>
   <script>
 var GRID_ITEM_TYPES = {
   widget1x1: [1, 1, false],
@@ -57,138 +58,31 @@ var itemsGrid1 = [
   GRID_ITEM_TYPES.widget1x1
 ];
 
-var getFormattedItems = function(items) {
-  var _items = [], i, item;
-  for (i = 0; i < items.length; i++) {
-    item = items[i];
-    _items.push({
-      cols: item[0],
-      rows: item[1]
-    })
-  }
-  return _items;
-}
-
 var buildGridElements = function($gridContainer, items) {
   var item, i;
   for (i = 0; i < items.length; i++) {
     item = items[i];
     $item = $('<li>' + (i + 1) + '</li>');
-    $item.css({
-      width: item.cols * 80,
-      height: item.rows * 80
-    })
+    $item.attr({
+      'data-cols': item[0],
+      'data-rows': item[1]
+    });
     $gridContainer.append($item);
-    // Add reference to corresponding DOM element to each item and viceversa
-    item.$element = $item
-    $item.data('_gridItem', item);
   }
-};
-
-var applyItemPositions = function(items) {
-  // XXX very hackish implementation of Group separators
-  $('.grid-separator').remove()
-  var currGroup = 0;
-  var item, i;
-  for (i = 0; i < items.length; i++) {
-    item = items[i];
-    // Don't apply position to dragged elements
-    if (item.move) {
-      continue;
-    }
-    item.$element.css({
-      left: item.position.col * 80,
-      top: item.position.row * 80
-    })
-    if (Math.floor(item.position.col / 3) > currGroup) {
-      currGroup++;
-      var $separator = $('<div class="grid-separator"></div>');
-      $separator.css({
-        position: 'absolute',
-        width: 2,
-        height: 320,
-        left: 20 + 240 * currGroup - 1,
-        top: 20,
-        background: 'red'
-      });
-      $('body').append($separator);
-    }
-  }
-};
-
-var updateItemIndexes = function(items) {
-  var item, i;
-  for (var i = 0; i < items.length; i++) {
-    item = items[i];
-    item.$element.html(i + 1);
-  }
-};
-
-var getItemByElement = function(element) {
-  return $(element).data('_gridItem');
-};
-
-var setDragMovementToItem = function(item, ui) {
-  if (!item.previousPosition) {
-    item.move = {
-      x: ui.position.left - ui.originalPosition.left,
-      y: ui.position.top - ui.originalPosition.top
-    };
-  } else {
-    item.move = {
-      x: ui.position.left - item.previousPosition.left,
-      y: ui.position.top - item.previousPosition.top
-    };
-  }
-  item.previousPosition = {
-    left: ui.position.left,
-    top: ui.position.top
-  };
-}
-
-var positionItemToGrid = function(item) {
-  var position = item.$element.position();
-  item.position.col = Math.round(position.left / 80);
-  item.position.row = Math.round(position.top / 80);
 };
 
 $(function() {
-  var items = getFormattedItems(itemsGrid1),
-      item, i;
+  buildGridElements($('#grid1'), itemsGrid1);
 
-  buildGridElements($('#grid1'), items);
-
-  myGrid = new GridList(items, {
-    colsPerGroup: 3,
-    rows: 4
-  });
-
-  myGrid.generatePositionsFromIndex();
-  applyItemPositions(items);
-
-  $('#grid1 > li').draggable({
-    zIndex: 2,
-    drag: function(event, ui) {
-      var item = getItemByElement(ui.helper);
-      positionItemToGrid(item);
-      setDragMovementToItem(item, ui)
-
-      myGrid.generateIndexesFromPosition();
-      updateItemIndexes(items);
-
-      myGrid.generatePositionsFromIndex();
-      applyItemPositions(items);
+  $('#grid1').gridList({
+    gridOptions: {
+      colsPerGroup: 3,
+      rows: 4
     },
-    stop: function(event, ui) {
-      var item = getItemByElement(ui.helper);
-
-      myGrid.generateIndexesFromPosition();
-      updateItemIndexes(items);
-
-      item.move = null;
-
-      myGrid.generatePositionsFromIndex();
-      applyItemPositions(items);
+    onPositionChange: function(items) {
+      for (var i = 0; i < items.length; i++) {
+        items[i].$element.html(i + 1);
+      }
     }
   });
 });
