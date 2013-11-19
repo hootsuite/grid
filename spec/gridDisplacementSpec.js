@@ -1,5 +1,12 @@
-var GridTest = {
-  testGridListMovement: function(inputItems, drop, gridListOptions) {
+// Load dependencies when run with Node (in browser they are expected to
+// already be included)
+if (typeof(require) == 'function') {
+  var GridList = require('../lib/gridList.js').GridList;
+}
+
+describe("Grid positioning after moving", function() {
+
+  var gridPositionOfWidgetsAfterDisplacement = function(inputItems, drop, gridListOptions) {
     var items = [],
         translatedItems = [],
         i, j,
@@ -51,27 +58,10 @@ var GridTest = {
       });
     }
     return translatedItems;
-  },
-  assertEqualObjects: function (returned, expected, message) {
-    var equal = JSON.stringify(returned) == JSON.stringify(expected);
-    message = '"' + message + '"';
-    if (equal) {
-      console.log('✔ Test passed', message);
-    } else {
-      console.error('✖ Test failed', message);
-      console.error('  EXPECTED', expected);
-      console.error('  RETURNED', returned);
-    }
-  }
-};
+  };
 
-var GridTestCases = {
-  test: function(testCase) {
-    var values = this[testCase]();
-    GridTest.assertEqualObjects(values[0], values[1], testCase);
-  },
-  MOVEsmallWidgetUnderAll: function() {
-    var returned = GridTest.testGridListMovement([[
+  it("smallWidgetUnderAll", function() {
+    expect(gridPositionOfWidgetsAfterDisplacement([[
       {x: 0, y: 0, cols: 2, rows: 1},
       {x: 2, y: 0, cols: 1, rows: 1},
       {x: 0, y: 1, cols: 2, rows: 1}
@@ -83,16 +73,15 @@ var GridTestCases = {
     }, {
       rows: 4,
       colsPerGroup: 3
-    });
-    var expected = [[
+    })).toEqual([[
       {x: 0, y: 0},
       {x: 0, y: 1},
       {x: 2, y: 1}
-    ]];
-    return [returned, expected];
-  },
-  MOVEbigWidgetToLeft: function() {
-    var returned = GridTest.testGridListMovement([[
+    ]]);
+  });
+
+  it("bigWidgetToLeft", function() {
+    expect(gridPositionOfWidgetsAfterDisplacement([[
       {x: 0, y: 0, cols: 1, rows: 1},
       {x: 1, y: 0, cols: 2, rows: 1},
       {x: 0, y: 1, cols: 1, rows: 2},
@@ -106,18 +95,17 @@ var GridTestCases = {
     }, {
       rows: 4,
       colsPerGroup: 3
-    });
-    var expected = [[
+    })).toEqual([[
       {x: 0, y: 0},
       {x: 1, y: 0},
       {x: 0, y: 1},
       {x: 2, y: 1},
       {x: 0, y: 3}
-    ]];
-    return [returned, expected];
-  },
-  MOVEbigWidgetAbove: function() {
-    var returned = GridTest.testGridListMovement([[
+    ]]);
+  });
+
+  it("bigWidgetAbove", function() {
+    expect(gridPositionOfWidgetsAfterDisplacement([[
       {x: 0, y: 0, cols: 1, rows: 1},
       {x: 1, y: 0, cols: 2, rows: 1},
       {x: 0, y: 1, cols: 1, rows: 2},
@@ -131,19 +119,18 @@ var GridTestCases = {
     }, {
       rows: 4,
       colsPerGroup: 3
-    });
-    var expected = [[
+    })).toEqual([[
       {x: 0, y: 0},
       {x: 1, y: 0},
       {x: 0, y: 2},
       {x: 2, y: 2}
     ], [
       {x: 0, y: 0}
-    ]];
-    return [returned, expected];
-  },
-  MOVEsmallWidgetBelow: function() {
-    var returned = GridTest.testGridListMovement([[
+    ]]);
+  });
+
+  it("smallWidgetBelow", function() {
+    expect(gridPositionOfWidgetsAfterDisplacement([[
       {x: 0, y: 0, cols: 1, rows: 1},
       {x: 1, y: 0, cols: 2, rows: 1},
       {x: 0, y: 1, cols: 1, rows: 2},
@@ -157,19 +144,18 @@ var GridTestCases = {
     }, {
       rows: 4,
       colsPerGroup: 3
-    });
-    var expected = [[
+    })).toEqual([[
       {x: 0, y: 0},
       {x: 2, y: 0},
       {x: 0, y: 2},
       {x: 1, y: 2}
     ], [
       {x: 0, y: 0}
-    ]];
-    return [returned, expected];
-  },
-  MOVEsmallWidgetToBottomRight: function() {
-    var returned = GridTest.testGridListMovement([[
+    ]]);
+  });
+
+  it("smallWidgetToBottomRight", function() {
+    expect(gridPositionOfWidgetsAfterDisplacement([[
       {x: 0, y: 0, cols: 1, rows: 1},
       {x: 1, y: 0, cols: 2, rows: 1},
       {x: 0, y: 1, cols: 1, rows: 2},
@@ -183,27 +169,14 @@ var GridTestCases = {
     }, {
       rows: 4,
       colsPerGroup: 3
-    });
-    var expected = [[
+    })).toEqual([[
       {x: 0, y: 0},
       {x: 2, y: 0},
       {x: 0, y: 2},
       {x: 2, y: 2}
     ], [
       {x: 0, y: 0}
-    ]];
-    return [returned, expected];
-  }
-};
+    ]]);
+  });
 
-// Enable node module
-if (typeof(require) == 'function') {
-  var GridList = require('../lib/gridList.js').GridList;
-}
-
-GridTestCases.test('MOVEsmallWidgetUnderAll');
-GridTestCases.test('MOVEbigWidgetToLeft');
-GridTestCases.test('MOVEbigWidgetAbove');
-GridTestCases.test('MOVEsmallWidgetBelow');
-GridTestCases.test('MOVEsmallWidgetBelow');
-GridTestCases.test('MOVEsmallWidgetToBottomRight');
+});
