@@ -18,7 +18,7 @@
   box-shadow: inset 0 0 0 5px #fff;
   font-size: 80px;
   font-weight: bold;
-  line-height: 180px;
+  line-height: 200px;
   text-align: center;
   cursor: pointer;
   -webkit-transition: top 0.2s, left 0.2s;
@@ -74,7 +74,9 @@ $(function() {
   buildGridElements($('#grid'), items);
 
   $('#grid').gridList({
-    rows: 3
+    rows: 3,
+    itemWidth: 200,
+    itemHeight: 200
   });
 });
   </script>
