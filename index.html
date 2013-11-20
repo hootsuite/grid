@@ -15,15 +15,15 @@
 .grid li {
   position: absolute;
   background: rgba(200, 200, 200, 0.9);
-  box-shadow: inset 0 0 0 2px #fff;
-  font-size: 40px;
+  box-shadow: inset 0 0 0 5px #fff;
+  font-size: 80px;
   font-weight: bold;
-  line-height: 80px;
+  line-height: 180px;
   text-align: center;
   cursor: pointer;
   -webkit-transition: top 0.2s, left 0.2s;
 }
-.grid li.is-dragged {
+.grid li.ui-draggable-dragging {
   -webkit-transition: none;
 }
 .grid li.position-highlight {
@@ -37,30 +37,22 @@
   <script src="lib/gridList.js"></script>
   <script src="lib/jquery.gridList.js"></script>
   <script>
-var GRID_ITEM_TYPES = {
-  widget1x1: [1, 1],
-  widget2x1: [2, 1],
-  widget3x1: [3, 1],
-  timeline1x: [1, 4],
-  timeline2x: [2, 4],
-  timeline3x: [3, 4]
-};
 
-var itemsGrid1 = [
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget2x1,
-  GRID_ITEM_TYPES.widget3x1,
-  GRID_ITEM_TYPES.timeline1x,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget2x1,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.timeline1x,
-  GRID_ITEM_TYPES.widget1x1
+var items = [
+  {w: 1, h: 1, x: 0, y: 0},
+  {w: 1, h: 1, x: 0, y: 1},
+  {w: 3, h: 1, x: 0, y: 2},
+  {w: 1, h: 1, x: 1, y: 0},
+  {w: 2, h: 1, x: 1, y: 1},
+  {w: 1, h: 1, x: 2, y: 0},
+  {w: 1, h: 0, x: 3, y: 0},
+  {w: 1, h: 1, x: 4, y: 0},
+  {w: 2, h: 1, x: 4, y: 1},
+  {w: 1, h: 1, x: 4, y: 2},
+  {w: 1, h: 1, x: 5, y: 0},
+  {w: 1, h: 1, x: 5, y: 2},
+  {w: 1, h: 2, x: 6, y: 0},
+  {w: 1, h: 1, x: 6, y: 2}
 ];
 
 var buildGridElements = function($gridContainer, items) {
@@ -69,30 +61,24 @@ var buildGridElements = function($gridContainer, items) {
     item = items[i];
     $item = $('<li>' + (i + 1) + '</li>');
     $item.attr({
-      'data-cols': item[0],
-      'data-rows': item[1]
+      'data-w': item.w,
+      'data-h': item.h,
+      'data-x': item.x,
+      'data-y': item.y
     });
     $gridContainer.append($item);
   }
 };
 
 $(function() {
-  buildGridElements($('#grid1'), itemsGrid1);
+  buildGridElements($('#grid'), items);
 
-  $('#grid1').gridList({
-    gridOptions: {
-      colsPerGroup: 3,
-      rows: 4
-    },
-    onPositionChange: function(items) {
-      for (var i = 0; i < items.length; i++) {
-        items[i].$element.html(i + 1);
-      }
-    }
+  $('#grid').gridList({
+    rows: 3
   });
 });
   </script>
 </head>
 <body>
-  <ul id="grid1" class="grid"></ul>
+  <ul id="grid" class="grid"></ul>
 </body>
