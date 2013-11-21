@@ -32,17 +32,16 @@ describe("Grid positioning", function() {
     });
 
     it("should maintain positions for 3 rows", function() {
-      grid.createGrid(3);
       expect(grid.items).toEqualPositions(gridFixture.rows3);
     });
 
     it("should generate correct positions for 2 rows", function() {
-      grid.createGrid(2);
+      grid.resizeGrid(2);
       expect(grid.items).toEqualPositions(gridFixture.rows2);
     });
 
     it("should generate correct positions for 4 rows", function() {
-      grid.createGrid(4);
+      grid.resizeGrid(4);
       expect(grid.items).toEqualPositions(gridFixture.rows4);
     });
   });
