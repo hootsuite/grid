@@ -34,26 +34,10 @@
   </style>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+  <script src="spec/fixtures.js"></script>
   <script src="lib/gridList.js"></script>
   <script src="lib/jquery.gridList.js"></script>
   <script>
-
-var items = [
-  {w: 1, h: 1, x: 0, y: 0},
-  {w: 1, h: 1, x: 0, y: 1},
-  {w: 3, h: 1, x: 0, y: 2},
-  {w: 1, h: 1, x: 1, y: 0},
-  {w: 2, h: 1, x: 1, y: 1},
-  {w: 1, h: 1, x: 2, y: 0},
-  {w: 1, h: 0, x: 3, y: 0},
-  {w: 1, h: 1, x: 4, y: 0},
-  {w: 2, h: 1, x: 4, y: 1},
-  {w: 1, h: 1, x: 4, y: 2},
-  {w: 1, h: 1, x: 5, y: 0},
-  {w: 1, h: 1, x: 5, y: 2},
-  {w: 1, h: 2, x: 6, y: 0},
-  {w: 1, h: 1, x: 6, y: 2}
-];
 
 var buildGridElements = function($gridContainer, items) {
   var item, i;
@@ -71,7 +55,7 @@ var buildGridElements = function($gridContainer, items) {
 };
 
 $(function() {
-  buildGridElements($('#grid'), items);
+  buildGridElements($('#grid'), fixtures.GRID1.rows4);
 
   $('#grid').gridList({
     rows: 3,
