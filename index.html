@@ -54,6 +54,24 @@ body {
       border: none;
       background: #ccc;
     }
+
+.header {
+  height: 55px;
+  border-bottom: 1px solid #ccc;
+}
+  .header .button {
+    float: left;
+    width: 40px;
+    height: 40px;
+    margin: 6px 0 0 10px;
+    border: solid 1px #ccc;
+    background: #fafafa;
+    font-size: 18px;
+    line-height: 40px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+  }
   </style>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
@@ -77,13 +95,24 @@ var buildGridElements = function($gridContainer, items) {
   }
 };
 
+var currentGridSize = 3;
+var setGridSize = function(zoomSize) {
+  $('#grid').gridList('resize', zoomSize);
+};
+
 $(function() {
   buildGridElements($('#grid'), fixtures.GRID2.rows3);
 
   $('#grid').gridList({
-    rows: 3,
+    rows: currentGridSize,
     widthHeightRatio: 264 / 294,
     heightToFontSizeRatio: 0.25
+  });
+  $('.button-minus').click(function() {
+    setGridSize(--currentGridSize);
+  });
+  $('.button-plus').click(function() {
+    setGridSize(++currentGridSize);
   });
 });
 $(window).resize(function() {
@@ -93,6 +122,8 @@ $(window).resize(function() {
 </head>
 <body>
   <div class="header">
+    <div class="button button-minus">-</div>
+    <div class="button button-plus">+</div>
   </div>
   <div class="grid-container">
     <ul id="grid" class="grid">
