@@ -11,10 +11,10 @@ body {
 }
 .grid-container {
   position: absolute;
-  top: 56px;
+  top: 66px;
   left: 0;
   right: 10px;
-  bottom: 10px;
+  bottom: 0;
   overflow-x: auto;
   overflow-y: hidden;
 }
@@ -33,14 +33,15 @@ body {
                         left 0.2s,
                         width 0.2s,
                         height 0.2s,
-                        font-size 0.2s;
+                        font-size 0.2s,
+                        line-height 0.2s;
   }
   .grid li .inner {
     position: absolute;
     background: #fff;
     border: 1px solid #bbb;
-    top: 10px;
-    bottom: 0;
+    top: 0;
+    bottom: 10px;
     left: 10px;
     right: 0;
   }
@@ -66,10 +67,12 @@ body {
     margin: 6px 0 0 10px;
     border: solid 1px #ccc;
     background: #fafafa;
+    color: #000;
     font-size: 18px;
     line-height: 40px;
     font-weight: 700;
     text-align: center;
+    text-decoration: none;
     cursor: pointer;
   }
   </style>
@@ -96,8 +99,8 @@ var buildGridElements = function($gridContainer, items) {
 };
 
 var currentGridSize = 3;
-var setGridSize = function(zoomSize) {
-  $('#grid').gridList('resize', zoomSize);
+var updateGridSize = function() {
+  $('#grid').gridList('resize', currentGridSize);
 };
 
 $(function() {
@@ -108,11 +111,15 @@ $(function() {
     widthHeightRatio: 264 / 294,
     heightToFontSizeRatio: 0.25
   });
-  $('.button-minus').click(function() {
-    setGridSize(--currentGridSize);
+  $('.button-minus').click(function(e) {
+    e.preventDefault();
+    currentGridSize++;
+    updateGridSize();
   });
-  $('.button-plus').click(function() {
-    setGridSize(++currentGridSize);
+  $('.button-plus').click(function(e) {
+    e.preventDefault();
+    currentGridSize = Math.max(1, currentGridSize - 1);
+    updateGridSize();
   });
 });
 $(window).resize(function() {
@@ -122,8 +129,8 @@ $(window).resize(function() {
 </head>
 <body>
   <div class="header">
-    <div class="button button-minus">-</div>
-    <div class="button button-plus">+</div>
+    <a href="#" class="button button-minus">-</a>
+    <a href="#" class="button button-plus">+</a>
   </div>
   <div class="grid-container">
     <ul id="grid" class="grid">
