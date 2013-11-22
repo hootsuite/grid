@@ -15,7 +15,6 @@ describe("Grid positioning", function() {
         for (var i = 0; i < expected.length; i++) {
           if (expected[i].x != this.actual[i].x ||
               expected[i].y != this.actual[i].y) {
-            console.log(i, expected[i], this.actual[i]);
             return false;
           }
         }
