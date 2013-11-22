@@ -13,8 +13,6 @@
 }
 .grid li {
   position: absolute;
-  background: rgba(200, 200, 200, 0.9);
-  box-shadow: inset 0 0 0 3px #fff;
   font-weight: bold;
   line-height: 4em;
   text-align: center;
@@ -25,13 +23,22 @@
                       height 0.2s,
                       font-size 0.2s;
 }
+.grid li .inner {
+  position: absolute;
+  background: rgba(200, 200, 200, 0.9);
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
+}
 .grid li.ui-draggable-dragging {
   -webkit-transition: none;
 }
 .grid li.position-highlight {
-  position: absolute;
-  background: rgba(255, 0, 0, 0.2);
   -webkit-transition: none;
+}
+.grid li.position-highlight .inner {
+  background: rgba(255, 0, 0, 0.2);
 }
   </style>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -45,7 +52,7 @@ var buildGridElements = function($gridContainer, items) {
   var item, i;
   for (i = 0; i < items.length; i++) {
     item = items[i];
-    $item = $('<li>' + (i + 1) + '</li>');
+    $item = $('<li><div class="inner">' + (i + 1) + '</div></li>');
     $item.attr({
       'data-w': item.w,
       'data-h': item.h,
@@ -70,5 +77,9 @@ $(window).resize(function() {
   </script>
 </head>
 <body>
-  <ul id="grid" class="grid"></ul>
+  <ul id="grid" class="grid">
+    <li class="position-highlight">
+      <div class="inner"></div>
+    </li>
+  </ul>
 </body>
