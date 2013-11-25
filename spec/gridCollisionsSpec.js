@@ -7,6 +7,26 @@ if (typeof(require) == 'function') {
 
 describe("Grid collisions", function() {
 
+  // Add indexes to items to match them after being reordered in the
+  // positioning process
+  var addIndexesToItems = function(items) {
+    for (var i = 0; i < items.length; i++) {
+      items[i].index = i;
+    }
+  };
+
+  var sortItemsByIndex = function(items) {
+    items.sort(function(item1, item2) {
+      if (item1.index < item2.index) {
+        return -1;
+      } else if (item1.index > item2.index) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  };
+
   beforeEach(function() {
     this.addMatchers({
       // We don't care about the other fields, only the positions and that the
@@ -15,6 +35,7 @@ describe("Grid collisions", function() {
         for (var i = 0; i < expected.length; i++) {
           if (expected[i].x != this.actual[i].x ||
               expected[i].y != this.actual[i].y) {
+            console.log('Actual positions', expected[i], this.actual[i]);
             return false;
           }
         }
@@ -156,6 +177,22 @@ describe("Grid collisions", function() {
     expectedItems[8] = {x: 4, y: 1};
     expectedItems[9] = {x: 4, y: 0};
     expectedItems[11] = {x: 5, y: 0};
+    expect(grid.items).toEqualPositions(expectedItems);
+  });
+
+  it("should move 1x1 + 1x1 widgets to right of 2x1 widget", function() {
+    var gridFixture = fixtures.GRID2;
+    var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
+      rows: 3
+    });
+    addIndexesToItems(grid.items);
+    grid.moveItemToPosition(grid.items[12], [3, 2]);
+    sortItemsByIndex(grid.items);
+
+    var expectedItems = GridList.cloneItems(gridFixture.rows3);
+    expectedItems[7] = {x: 5, y: 2};
+    expectedItems[10] = {x: 6, y: 2};
+    expectedItems[12] = {x: 3, y: 2};
     expect(grid.items).toEqualPositions(expectedItems);
   });
 });
