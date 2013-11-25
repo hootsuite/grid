@@ -6,93 +6,137 @@
   padding: 0;
   font-family: sans-serif;
 }
+body {
+  background: #E5E5E5;
+}
+.grid-container {
+  position: absolute;
+  top: 66px;
+  left: 0;
+  right: 10px;
+  bottom: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
 .grid {
-  margin: 20px;
   position: relative;
+  height: 100%;
   list-style: none;
-  /* TODO: expand grid with items */
 }
-.grid li {
-  position: absolute;
-  background: rgba(200, 200, 200, 0.9);
-  box-shadow: inset 0 0 0 2px #fff;
-  font-size: 40px;
-  font-weight: bold;
-  line-height: 80px;
-  text-align: center;
-  cursor: pointer;
-  -webkit-transition: top 0.2s, left 0.2s;
+  .grid li {
+    position: absolute;
+    font-weight: bold;
+    line-height: 4em;
+    text-align: center;
+    cursor: pointer;
+    -webkit-transition: top 0.2s,
+                        left 0.2s,
+                        width 0.2s,
+                        height 0.2s,
+                        font-size 0.2s,
+                        line-height 0.2s;
+  }
+  .grid li .inner {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #bbb;
+    top: 0;
+    bottom: 10px;
+    left: 10px;
+    right: 0;
+  }
+  .grid li.ui-draggable-dragging {
+    -webkit-transition: none;
+  }
+  .grid li.position-highlight {
+    -webkit-transition: none;
+  }
+    .grid li.position-highlight .inner {
+      border: none;
+      background: #ccc;
+    }
+
+.header {
+  height: 55px;
+  border-bottom: 1px solid #ccc;
 }
-.grid li.is-dragged {
-  -webkit-transition: none;
-}
-.grid li.position-highlight {
-  position: absolute;
-  background: rgba(255, 0, 0, 0.2);
-  -webkit-transition: none;
-}
+  .header .button {
+    float: left;
+    width: 40px;
+    height: 40px;
+    margin: 6px 0 0 10px;
+    border: solid 1px #ccc;
+    background: #fafafa;
+    color: #000;
+    font-size: 18px;
+    line-height: 40px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
   </style>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+  <script src="spec/fixtures.js"></script>
   <script src="lib/gridList.js"></script>
   <script src="lib/jquery.gridList.js"></script>
   <script>
-var GRID_ITEM_TYPES = {
-  widget1x1: [1, 1],
-  widget2x1: [2, 1],
-  widget3x1: [3, 1],
-  timeline1x: [1, 4],
-  timeline2x: [2, 4],
-  timeline3x: [3, 4]
-};
-
-var itemsGrid1 = [
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget2x1,
-  GRID_ITEM_TYPES.widget3x1,
-  GRID_ITEM_TYPES.timeline1x,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget2x1,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.widget1x1,
-  GRID_ITEM_TYPES.timeline1x,
-  GRID_ITEM_TYPES.widget1x1
-];
 
 var buildGridElements = function($gridContainer, items) {
   var item, i;
   for (i = 0; i < items.length; i++) {
     item = items[i];
-    $item = $('<li>' + (i + 1) + '</li>');
+    $item = $('<li><div class="inner">' + (i + 1) + '</div></li>');
     $item.attr({
-      'data-cols': item[0],
-      'data-rows': item[1]
+      'data-w': item.w,
+      'data-h': item.h,
+      'data-x': item.x,
+      'data-y': item.y
     });
     $gridContainer.append($item);
   }
 };
 
-$(function() {
-  buildGridElements($('#grid1'), itemsGrid1);
+var currentGridSize = 3;
+var updateGridSize = function() {
+  $('#grid').gridList('resize', currentGridSize);
+};
 
-  $('#grid1').gridList({
-    gridOptions: {
-      colsPerGroup: 3,
-      rows: 4
-    },
-    onPositionChange: function(items) {
-      for (var i = 0; i < items.length; i++) {
-        items[i].$element.html(i + 1);
-      }
-    }
+$(function() {
+  buildGridElements($('#grid'), fixtures.GRID2.rows3);
+
+  $('#grid').gridList({
+    rows: currentGridSize,
+    widthHeightRatio: 264 / 294,
+    heightToFontSizeRatio: 0.25
+  });
+  $('.button-minus').click(function(e) {
+    e.preventDefault();
+    currentGridSize++;
+    updateGridSize();
+  });
+  $('.button-plus').click(function(e) {
+    e.preventDefault();
+    currentGridSize = Math.max(1, currentGridSize - 1);
+    updateGridSize();
   });
 });
+$(window).resize(function() {
+  $('#grid').gridList('render');
+})
   </script>
 </head>
 <body>
-  <ul id="grid1" class="grid"></ul>
+  <div class="header">
+    <a href="#" class="button button-minus">-</a>
+    <a href="#" class="button button-plus">+</a>
+  </div>
+  <div class="grid-container">
+    <ul id="grid" class="grid">
+      <li class="position-highlight">
+        <div class="inner"></div>
+      </li>
+    </ul>
+  </div>
 </body>
