@@ -16,17 +16,19 @@ describe("Grid item resizing", function() {
   });
 
   describe("a 1xtimeline to 3xtimeline", function() {
-    var gridFixture = fixtures.GRID2,
-        grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
-          rows: 3
-        }),
-        item = grid.items[13];
+    var fixture = fixtures.GRID2.rows3,
+        item,
+        grid;
+
+    grid = new GridList(GridList.cloneItems(fixture), {rows: 3});
+    item = grid.items[13];
+    helpers.addIndexesToItems(grid.items);
 
     it("should move all three 1x1 widgets to right", function() {
-      item.w = 3;
-      grid.moveItemToPosition(item, [item.x, item.y]);
+      grid.resizeItem(item, 3);
+      helpers.sortItemsByIndex(grid.items);
 
-      var expectedItems = GridList.cloneItems(gridFixture.rows3);
+      var expectedItems = GridList.cloneItems(fixture);
       expectedItems[13] = {x: 7, y: 0};
       expectedItems[14] = {x: 10, y: 0};
       expectedItems[15] = {x: 10, y: 1};
@@ -35,10 +37,10 @@ describe("Grid item resizing", function() {
     });
 
     it("should move all three 1x1 widgets back to left", function() {
-      item.w = 1;
-      grid.moveItemToPosition(item, [item.x, item.y]);
+      grid.resizeItem(item, 1);
+      helpers.sortItemsByIndex(grid.items);
 
-      var expectedItems = GridList.cloneItems(gridFixture.rows3);
+      var expectedItems = GridList.cloneItems(fixture);
       expectedItems[13] = {x: 7, y: 0};
       expectedItems[14] = {x: 8, y: 0};
       expectedItems[15] = {x: 8, y: 1};
@@ -48,17 +50,19 @@ describe("Grid item resizing", function() {
   });
 
   describe("a 2x1 widget into a 1x1 widget", function() {
-    var gridFixture = fixtures.GRID2,
-        grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
-          rows: 3
-        }),
-        item = grid.items[5];
+    var fixture = fixtures.GRID2.rows3,
+        item,
+        grid;
+
+    grid = new GridList(GridList.cloneItems(fixture), {rows: 3});
+    item = grid.items[5];
+    helpers.addIndexesToItems(grid.items);
 
     it("should pull next widgets from its row to left", function() {
-      item.w = 1;
-      grid.moveItemToPosition(item, [item.x, item.y]);
+      grid.resizeItem(item, 1);
+      helpers.sortItemsByIndex(grid.items);
 
-      var expectedItems = GridList.cloneItems(gridFixture.rows3);
+      var expectedItems = GridList.cloneItems(fixture);
       expectedItems[5] = {x: 2, y: 1};
       expectedItems[9] = {x: 3, y: 1};
       expectedItems[11] = {x: 4, y: 1};
@@ -68,10 +72,10 @@ describe("Grid item resizing", function() {
     });
 
     it("should push next widgets from its row back to right", function() {
-      item.w = 2;
-      grid.moveItemToPosition(item, [item.x, item.y]);
+      grid.resizeItem(item, 2);
+      helpers.sortItemsByIndex(grid.items);
 
-      var expectedItems = GridList.cloneItems(gridFixture.rows3);
+      var expectedItems = GridList.cloneItems(fixture);
       expectedItems[5] = {x: 2, y: 1};
       expectedItems[9] = {x: 4, y: 1};
       expectedItems[11] = {x: 5, y: 1};
@@ -82,17 +86,19 @@ describe("Grid item resizing", function() {
   });
 
   describe("a 2x1 widget into a 3x1 widget", function() {
-    var gridFixture = fixtures.GRID2,
-        grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
-          rows: 3
-        }),
-        item = grid.items[5];
+    var fixture = fixtures.GRID2.rows3,
+        item,
+        grid;
+
+    grid = new GridList(GridList.cloneItems(fixture), {rows: 3});
+    item = grid.items[5];
+    helpers.addIndexesToItems(grid.items);
 
     it("should pull next widgets from its row to left", function() {
-      item.w = 3;
-      grid.moveItemToPosition(item, [item.x, item.y]);
+      grid.resizeItem(item, 3);
+      helpers.sortItemsByIndex(grid.items);
 
-      var expectedItems = GridList.cloneItems(gridFixture.rows3);
+      var expectedItems = GridList.cloneItems(fixture);
       expectedItems[5] = {x: 2, y: 1};
       expectedItems[9] = {x: 5, y: 1};
       expectedItems[11] = {x: 6, y: 1};
@@ -104,10 +110,10 @@ describe("Grid item resizing", function() {
     });
 
     it("should push next widgets from its row back to right", function() {
-      item.w = 2;
-      grid.moveItemToPosition(item, [item.x, item.y]);
+      grid.resizeItem(item, 2);
+      helpers.sortItemsByIndex(grid.items);
 
-      var expectedItems = GridList.cloneItems(gridFixture.rows3);
+      var expectedItems = GridList.cloneItems(fixture);
       expectedItems[5] = {x: 2, y: 1};
       expectedItems[9] = {x: 4, y: 1};
       expectedItems[11] = {x: 5, y: 1};
