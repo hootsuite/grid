@@ -55,6 +55,31 @@ body {
       border: none;
       background: #ccc;
     }
+  .grid .controls {
+    position: absolute;
+    top: 0;
+    right: 0;
+    float: right;
+    font-size: 0.4em;
+    font-weight: normal;
+    line-height: 1em;
+    opacity: 0;
+    -webkit-transition: opacity 0.2s;
+  }
+    .grid .controls .resize {
+      float: left;
+      margin: 5px 5px 0 0;
+      padding: 0.3em;
+      background: #fafafa;
+      color: #444;
+      text-decoration: none;
+    }
+    .grid .controls .resize:hover {
+      background: #f1f1f1;
+    }
+  .grid li:hover .controls {
+    opacity: 1;
+  }
 
 .header {
   height: 55px;
@@ -87,7 +112,18 @@ var buildGridElements = function($gridContainer, items) {
   var item, i;
   for (i = 0; i < items.length; i++) {
     item = items[i];
-    $item = $('<li><div class="inner">' + i + '</div></li>');
+    $item = $(
+      '<li>' +
+        '<div class="inner">' +
+          '<div class="controls">' +
+            '<a href="#" class="resize" data-size="1">1x</a>' +
+            '<a href="#" class="resize" data-size="2">2x</a>' +
+            '<a href="#" class="resize" data-size="3">3x</a>' +
+          '</div>' +
+          i +
+        '</div>' +
+      '</li>'
+    );
     $item.attr({
       'data-w': item.w,
       'data-h': item.h,
