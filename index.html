@@ -87,7 +87,7 @@ var buildGridElements = function($gridContainer, items) {
   var item, i;
   for (i = 0; i < items.length; i++) {
     item = items[i];
-    $item = $('<li><div class="inner">' + (i + 1) + '</div></li>');
+    $item = $('<li><div class="inner">' + i + '</div></li>');
     $item.attr({
       'data-w': item.w,
       'data-h': item.h,
