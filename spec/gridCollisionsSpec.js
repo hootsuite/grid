@@ -3,44 +3,15 @@
 if (typeof(require) == 'function') {
   var GridList = require('../lib/gridList.js').GridList,
       fixtures = require('./fixtures.js');
+      matchers = require('./matchers.js');
+      helpers = require('./helpers.js');
 }
 
 describe("Grid collisions", function() {
 
-  // Add indexes to items to match them after being reordered in the
-  // positioning process
-  var addIndexesToItems = function(items) {
-    for (var i = 0; i < items.length; i++) {
-      items[i].index = i;
-    }
-  };
-
-  var sortItemsByIndex = function(items) {
-    items.sort(function(item1, item2) {
-      if (item1.index < item2.index) {
-        return -1;
-      } else if (item1.index > item2.index) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-  };
-
   beforeEach(function() {
     this.addMatchers({
-      // We don't care about the other fields, only the positions and that the
-      // indexes correspond (e.g. the h changes for items with auto height)
-      toEqualPositions: function(expected) {
-        for (var i = 0; i < expected.length; i++) {
-          if (expected[i].x != this.actual[i].x ||
-              expected[i].y != this.actual[i].y) {
-            console.log('Actual positions', expected[i], this.actual[i]);
-            return false;
-          }
-        }
-        return true;
-      }
+      toEqualPositions: matchers.toEqualPositions
     });
   });
 
@@ -185,9 +156,9 @@ describe("Grid collisions", function() {
     var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
       rows: 3
     });
-    addIndexesToItems(grid.items);
+    helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[12], [3, 2]);
-    sortItemsByIndex(grid.items);
+    helpers.sortItemsByIndex(grid.items);
 
     var expectedItems = GridList.cloneItems(gridFixture.rows3);
     expectedItems[7] = {x: 5, y: 2};
