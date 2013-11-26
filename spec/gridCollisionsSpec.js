@@ -186,4 +186,41 @@ describe("Grid collisions", function() {
     expectedItems[12] = {x: 3, y: 2};
     expect(grid.items).toEqualPositions(expectedItems);
   });
+
+  it("should keep position when moving 1x1 widget over timeline", function() {
+    var gridFixture = fixtures.GRID2.rows3;
+    var grid = new GridList(GridList.cloneItems(gridFixture), {
+      rows: 3
+    });
+    helpers.addIndexesToItems(grid.items);
+    grid.moveItemToPosition(grid.items[1], [1, 1]);
+    helpers.sortItemsByIndex(grid.items);
+
+    var expectedItems = GridList.cloneItems(gridFixture);
+    expectedItems[1] = {x: 0, y: 1};
+    expect(grid.items).toEqualPositions(expectedItems);
+  });
+
+  it("should position to left when moving 1x1 widget over 2x1", function() {
+    var gridFixture = fixtures.GRID2.rows3;
+    var grid = new GridList(GridList.cloneItems(gridFixture), {
+      rows: 3
+    });
+    helpers.addIndexesToItems(grid.items);
+    grid.moveItemToPosition(grid.items[7], [3, 1]);
+    helpers.sortItemsByIndex(grid.items);
+
+    var expectedItems = GridList.cloneItems(gridFixture);
+    expectedItems[5] = {x: 3, y: 1};
+    expectedItems[7] = {x: 2, y: 1};
+    expectedItems[9] = {x: 5, y: 1};
+    expectedItems[10] = {x: 3, y: 2};
+    expectedItems[11] = {x: 6, y: 1};
+    expectedItems[12] = {x: 4, y: 2};
+    expectedItems[13] = {x: 8, y: 0};
+    expectedItems[14] = {x: 9, y: 0};
+    expectedItems[15] = {x: 9, y: 1};
+    expectedItems[16] = {x: 9, y: 2};
+    expect(grid.items).toEqualPositions(expectedItems);
+  });
 });
