@@ -20,7 +20,9 @@ describe("Grid collisions", function() {
     var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
       rows: 3
     });
+    helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[3], [0, 0]);
+    helpers.sortItemsByIndex(grid.items);
 
     var expectedItems = GridList.cloneItems(gridFixture.rows3);
     expectedItems[0] = {x: 1, y: 0};
@@ -35,7 +37,9 @@ describe("Grid collisions", function() {
     var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
       rows: 3
     });
+    helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[13], [8, 0]);
+    helpers.sortItemsByIndex(grid.items);
 
     var expectedItems = GridList.cloneItems(gridFixture.rows3);
     expectedItems[13] = {x: 8, y: 0};
@@ -50,7 +54,9 @@ describe("Grid collisions", function() {
     var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
       rows: 3
     });
+    helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[6], [2, 2]);
+    helpers.sortItemsByIndex(grid.items);
 
     var expectedItems = GridList.cloneItems(gridFixture.rows3);
     expectedItems[6] = {x: 2, y: 2};
@@ -63,7 +69,9 @@ describe("Grid collisions", function() {
     var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
       rows: 3
     });
+    helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[7], [3, 2]);
+    helpers.sortItemsByIndex(grid.items);
 
     var expectedItems = GridList.cloneItems(gridFixture.rows3);
     expectedItems[6] = {x: 2, y: 2};
@@ -76,7 +84,9 @@ describe("Grid collisions", function() {
     var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
       rows: 3
     });
+    helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[10], [4, 1]);
+    helpers.sortItemsByIndex(grid.items);
 
     var expectedItems = GridList.cloneItems(gridFixture.rows3);
     expectedItems[9] = {x: 4, y: 2};
@@ -89,7 +99,9 @@ describe("Grid collisions", function() {
     var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
       rows: 3
     });
+    helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[9], [4, 2]);
+    helpers.sortItemsByIndex(grid.items);
 
     var expectedItems = GridList.cloneItems(gridFixture.rows3);
     expectedItems[9] = {x: 4, y: 2};
@@ -102,7 +114,9 @@ describe("Grid collisions", function() {
     var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
       rows: 3
     });
+    helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[12], [5, 1]);
+    helpers.sortItemsByIndex(grid.items);
 
     var expectedItems = GridList.cloneItems(gridFixture.rows3);
     expectedItems[11] = {x: 5, y: 2};
@@ -115,7 +129,9 @@ describe("Grid collisions", function() {
     var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
       rows: 3
     });
+    helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[11], [5, 2]);
+    helpers.sortItemsByIndex(grid.items);
 
     var expectedItems = GridList.cloneItems(gridFixture.rows3);
     expectedItems[11] = {x: 5, y: 2};
@@ -128,7 +144,9 @@ describe("Grid collisions", function() {
     var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
       rows: 3
     });
+    helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[5], [2, 2]);
+    helpers.sortItemsByIndex(grid.items);
 
     var expectedItems = GridList.cloneItems(gridFixture.rows3);
     expectedItems[5] = {x: 2, y: 2};
@@ -142,7 +160,9 @@ describe("Grid collisions", function() {
     var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
       rows: 3
     });
+    helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[8], [4, 1]);
+    helpers.sortItemsByIndex(grid.items);
 
     var expectedItems = GridList.cloneItems(gridFixture.rows3);
     expectedItems[8] = {x: 4, y: 1};
