@@ -149,12 +149,11 @@ $(function() {
     widthHeightRatio: 264 / 294,
     heightToFontSizeRatio: 0.25
   });
-  $('#grid .resize').click(function(e) {
+  $('#grid li .resize').click(function(e) {
     e.preventDefault();
-    var item = $('#grid').data('_gridList')._getItemByElement($(e.currentTarget).closest('li')),
-        size = $(e.currentTarget).data('size');
-    $('#grid').data('_gridList').gridList.resizeItem(item, size);
-    $('#grid').gridList('render');
+    var itemElement = ,
+        itemSize = $(e.currentTarget).data('size');
+    $('#grid').gridList('resizeItem', itemElement, itemSize);
   });
   $('.button-minus').click(function(e) {
     e.preventDefault();
