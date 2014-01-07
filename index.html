@@ -151,7 +151,7 @@ $(function() {
   });
   $('#grid li .resize').click(function(e) {
     e.preventDefault();
-    var itemElement = ,
+    var itemElement = $(e.currentTarget).closest('li'),
         itemSize = $(e.currentTarget).data('size');
     $('#grid').gridList('resizeItem', itemElement, itemSize);
   });
