@@ -46,6 +46,11 @@ body {
     bottom: 10px;
     left: 10px;
     right: 0;
+    -webkit-transition: background 3s;
+  }
+  .grid li.changed .inner {
+    background: #ffff66;
+    -webkit-transition: none;
   }
   .grid li.ui-draggable-dragging {
     -webkit-transition: none;
@@ -147,7 +152,24 @@ $(function() {
   $('#grid').gridList({
     rows: currentGridSize,
     widthHeightRatio: 264 / 294,
-    heightToFontSizeRatio: 0.25
+    heightToFontSizeRatio: 0.25,
+    onChange: function(changedItems) {
+      // Hack to flash changed items visually
+      for (var i = 0; i < changedItems.length; i++) {
+        (function($element) {
+          $element.addClass('changed')
+          setTimeout(function() {
+            $element.removeClass('changed');
+          }, 0);
+        })(changedItems[i].$element);
+      }
+    }
+  });
+  $('#grid li .resize').click(function(e) {
+    e.preventDefault();
+    var itemElement = $(e.currentTarget).closest('li'),
+        itemSize = $(e.currentTarget).data('size');
+    $('#grid').gridList('resizeItem', itemElement, itemSize);
   });
   $('.button-minus').click(function(e) {
     e.preventDefault();
