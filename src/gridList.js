@@ -106,10 +106,41 @@ GridList.prototype = {
     for (i = 0; i < this.items.length; i++) {
       item = this.items[i];
       this._updateItemPosition(
-        item, this._findPositionForItem(item, {x: currentColumn, y: 0}));
+        item, this.findPositionForItem(item, {x: currentColumn, y: 0}));
       // New items should never be placed to the left of previous items
       currentColumn = Math.max(currentColumn, item.x);
     }
+  },
+
+  findPositionForItem: function(item, start, fixedRow) {
+    /**
+     * This method has two options for the position we want for the item:
+     * - Starting from a certain row/column number and only looking for
+     *   positions to its right
+     * - Accepting positions for a certain row number only (use-case: items
+     *   being shifted to the left/right as a result of collisions)
+     */
+    var x, y, position;
+
+    // Start searching for a position from the horizontal position of the
+    // rightmost item from the grid
+    for (x = start.x; x < this.grid.length; x++) {
+      if (fixedRow !== undefined) {
+        position = [x, fixedRow];
+        if (this._itemFitsAtPosition(item, position)) {
+          return position;
+        }
+      } else {
+        for (y = start.y; y < this.options.rows; y++) {
+          position = [x, y];
+          if (this._itemFitsAtPosition(item, position)) {
+            return position;
+          }
+        }
+      }
+    }
+    // If we've reached this point, we need to start a new column
+    return [this.grid.length, fixedRow || 0];
   },
 
   moveItemToPosition: function(item, position) {
@@ -183,37 +214,6 @@ GridList.prototype = {
 
   _resetGrid: function() {
     this.grid = [];
-  },
-
-  _findPositionForItem: function(item, start, fixedRow) {
-    /**
-     * This method has two options for the position we want for the item.
-     * - Starting from a certain row/column number and only looking for positions
-     * to its right
-     * - Accepting positions for a certain row number only (use-case: items
-     * being shifted to the left/right as a result of collisions)
-     */
-    var x, y, position;
-
-    // Start searching for a position from the horizontal position of the
-    // rightmost item from the grid
-    for (x = start.x; x < this.grid.length; x++) {
-      if (fixedRow !== undefined) {
-        position = [x, fixedRow];
-        if (this._itemFitsAtPosition(item, position)) {
-          return position;
-        }
-      } else {
-        for (y = start.y; y < this.options.rows; y++) {
-          position = [x, y];
-          if (this._itemFitsAtPosition(item, position)) {
-            return position;
-          }
-        }
-      }
-    }
-    // If we've reached this point, we need to start a new column
-    return [this.grid.length, fixedRow || 0];
   },
 
   _itemFitsAtPosition: function(item, position) {
@@ -429,7 +429,7 @@ GridList.prototype = {
       if (fixedItem && item == fixedItem) {
         continue;
       }
-      this._updateItemPosition(item, this._findPositionForItem(
+      this._updateItemPosition(item, this.findPositionForItem(
         item,
         {x: this._findLeftMostPositionForItem(item), y: 0},
         item.y));
