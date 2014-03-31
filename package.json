@@ -6,5 +6,8 @@
   "devDependencies": {
     "jasmine-node": "~1.13.1"
   },
-  "main": "src/gridList.js"
+  "main": "src/gridList.js",
+  "scripts": {
+    "test": "./node_modules/jasmine-node/bin/jasmine-node --verbose spec"
+  }
 }
