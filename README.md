@@ -3,6 +3,8 @@
 Drag and drop library for a two-dimensional resizable and responsive list of
 items
 
+**Demo: http://ubervu.github.io/grid/**
+
 The GridList library is split into two roles:
 
 1. An [agnostic GridList class](src/gridList.js) that manages the
