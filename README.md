@@ -27,6 +27,9 @@ as much of their order as possible
 - **moveItemToPosition**: Handle collisions when moving an item over another
 - **resizeItem**: Resize an item and reposition colliding items around.
 **TODO:** Currently only the width of an item (w) can be resized
+- **getChangedItems**: Compare a list of items with that of a GridList instance
+and return the changed items only (diff). Useful when updating item sizes and
+positions in a persistent medium (e.g. syncing grid to db with minimum payload)
 
 The size of an item is expressed using the number of cols and rows it takes up
 within the grid (w and h). The position of an item is expressed using the col
