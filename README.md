@@ -1,4 +1,4 @@
-GridList
+GridList [![Build Status](https://travis-ci.org/uberVU/grid.svg?branch=17-travisci-integration)](https://travis-ci.org/uberVU/grid)
 ====
 Drag and drop library for a two-dimensional resizable and responsive list of
 items
