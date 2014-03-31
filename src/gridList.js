@@ -351,7 +351,7 @@ GridList.prototype = {
      */
     var collidingItems = this._getItemsCollidingWithItem(item);
     if (!collidingItems.length) {
-      return;
+      return true;
     }
     var _gridList = new GridList([], this.options),
         collidingItem,
