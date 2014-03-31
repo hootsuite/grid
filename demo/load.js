@@ -65,11 +65,11 @@ $(function() {
         itemSize = $(e.currentTarget).data('size');
     $('#grid').gridList('resizeItem', itemElement, itemSize);
   });
-  $('.button-minus').click(function(e) {
+  $('.add-row').click(function(e) {
     e.preventDefault();
     DemoGrid.resize(DemoGrid.currentSize + 1);
   });
-  $('.button-plus').click(function(e) {
+  $('.remove-row').click(function(e) {
     e.preventDefault();
     DemoGrid.resize(Math.max(1, DemoGrid.currentSize - 1));
   });
