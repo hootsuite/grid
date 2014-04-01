@@ -21,7 +21,12 @@
     defaults: {
       rows: 5,
       widthHeightRatio: 1,
-      dragAndDrop: true
+      dragAndDrop: true,
+      columnsPerGroup: false,
+      // Since the entire grid is built fluid and responsive, the separator
+      // width will also be relative to the item width (which in turn is
+      // relative to the parent container's height)
+      groupSeparatorWidth: 0.5
     },
 
     destroy: function() {
@@ -92,7 +97,7 @@
     _initGridList: function() {
       // Create instance of GridList (decoupled lib for handling the grid
       // positioning and sorting post-drag and dropping)
-      this.gridList = new GridList(this.items, {rows: this.options.rows});
+      this.gridList = new GridList(this.items, this.options);
     },
 
     _bindEvents: function() {
