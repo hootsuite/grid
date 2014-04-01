@@ -231,24 +231,14 @@
         if (this.items[i].move) {
           continue;
         }
-        this.items[i].$element.css(this._getPositionForItem(this.items[i]));
+        this.items[i].$element.css({
+          left: this._getColPosition(this.items[i].x),
+          top: this.items[i].y * this._cellHeight
+        });
       }
       // Update the width of the entire grid container with an extra column on
       // the right for extra dragging room
       this.$element.width((this.gridList.grid.length + 1) * this._cellWidth);
-    },
-
-    _getPositionForItem: function(item) {
-      var position = {
-            left: item.x * this._cellWidth,
-            top: item.y * this._cellHeight
-          },
-          group;
-      if (this.options.columnsPerGroup) {
-        group = Math.floor(item.x / this.options.columnsPerGroup);
-        position.left += group * this._separatorWidth;
-      }
-      return position;
     },
 
     _dragPositionChanged: function(newPosition) {
@@ -263,7 +253,7 @@
       var position = item.$element.position(),
           row,
           col;
-      col = Math.round(position.left / this._cellWidth);
+      col = this._getClosestColumnForPosition(position.left + this._cellWidth / 2);
       row = Math.round(position.top / this._cellHeight);
       // Keep item position within the grid and don't let the item create more
       // than one extra column
@@ -274,13 +264,74 @@
       return [col, row];
     },
 
+    _getClosestColumnForPosition: function(left) {
+      /**
+       * Given a horizontal position (pixels), find the closest column from the
+       * grid. The column with the closest center position is selected.
+       */
+      if (!this.options.columnsPerGroup) {
+        return left / this._cellWidth;
+      }
+      var leftCol = this._getLeftColForPosition(left),
+          rightCol = leftCol + 1,
+          distanceFromLeftCol = this._getDistanceToCol(left, leftCol),
+          distanceFromRightCol = this._getDistanceToCol(left, rightCol);
+      return distanceFromLeftCol < distanceFromRightCol ? leftCol : rightCol;
+    },
+
+    _getLeftColForPosition: function(left) {
+      /**
+       * Given a horizontal position (pixels), find the closest column to the
+       * left of that position. Translating positions into cols is a bit
+       * cumbersome because of the variable group separators.
+       */
+      var groupWidth = this._getGroupWidth(),
+          groupIndex = Math.floor(left / groupWidth),
+          groupPosition = groupIndex * groupWidth,
+          positionInGroup = left - groupPosition,
+          colInGroup = Math.min(Math.floor(positionInGroup / this._cellWidth),
+                                this.options.columnsPerGroup - 1);
+      return groupIndex * this.options.columnsPerGroup + colInGroup;
+    },
+
+    _getDistanceToCol: function(left, col) {
+      /**
+       * Calculate the horizontal distance between a given position and a
+       * the center position of a column.
+       */
+      return Math.abs(left - (this._getColPosition(col) + this._cellWidth / 2));
+    },
+
+    _getColPosition: function(col) {
+      /**
+       * Calculate the horizontal position of a column. This gets a bit more
+       * complicated when the columnsPerGroup option is set, as separators need
+       * to be factored it.
+       */
+      var left = col * this._cellWidth;
+      if (this.options.columnsPerGroup) {
+          var groupIndex = Math.floor(col / this.options.columnsPerGroup);
+          left += groupIndex * this._separatorWidth;
+      }
+      return left;
+    },
+
+    _getGroupWidth: function() {
+      /**
+       * Calculate the width of a group of columns (only relevant when the
+       * columnsPerGroup option is set.)
+       */
+      return this.options.columnsPerGroup * this._cellWidth +
+             this._separatorWidth;
+    },
+
     _highlightPositionForItem: function(item) {
-      this.$positionHighlight.css($.extend(
-        this._getPositionForItem(item), {
-          width: this._getItemWidth(item),
-          height: this._getItemHeight(item)
-        }
-      )).show();
+      this.$positionHighlight.css({
+        width: this._getItemWidth(item),
+        height: this._getItemHeight(item),
+        left: this._getColPosition(item.x),
+        top: item.y * this._cellHeight
+      }).show();
       if (this.options.heightToFontSizeRatio) {
         this.$positionHighlight.css('font-size', this._fontSize);
       }
