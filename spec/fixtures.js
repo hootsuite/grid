@@ -111,6 +111,149 @@ fixtures.GRID2 = {
   ]
 };
 
+fixtures.COLUMN_GROUPS_1 = {
+
+  initial: [
+    {w: 1, h: 1, x: 0, y: 0},
+    {w: 1, h: 1, x: 0, y: 1},
+    {w: 1, h: 0, x: 1, y: 0}, // 2
+    {w: 1, h: 1, x: 2, y: 0},
+    {w: 1, h: 1, x: 2, y: 1},
+    {w: 1, h: 1, x: 2, y: 2},
+
+    {w: 1, h: 1, x: 3, y: 0},
+    {w: 2, h: 1, x: 4, y: 0}, // 7
+    {w: 2, h: 1, x: 3, y: 1}, // 8
+    {w: 2, h: 1, x: 4, y: 2},
+
+    {w: 2, h: 0, x: 6, y: 0},
+    {w: 1, h: 1, x: 8, y: 0},
+    {w: 1, h: 1, x: 8, y: 1},
+    {w: 1, h: 1, x: 8, y: 2}
+  ],
+
+  after_dragging_7_down: [
+    {w: 1, h: 1, x: 0, y: 0},
+    {w: 1, h: 1, x: 0, y: 1},
+    {w: 1, h: 0, x: 1, y: 0},
+    {w: 1, h: 1, x: 2, y: 0},
+    {w: 1, h: 1, x: 2, y: 1},
+    {w: 1, h: 1, x: 2, y: 2},
+
+    {w: 1, h: 1, x: 3, y: 0},
+    {w: 2, h: 1, x: 4, y: 0}, // 8
+    {w: 2, h: 1, x: 4, y: 1}, // 7
+    {w: 2, h: 1, x: 4, y: 2},
+
+    {w: 2, h: 0, x: 6, y: 0},
+    {w: 1, h: 1, x: 8, y: 0},
+    {w: 1, h: 1, x: 8, y: 1},
+    {w: 1, h: 1, x: 8, y: 2}
+  ],
+
+  after_dragging_8_down: [
+    {w: 1, h: 1, x: 0, y: 0},
+    {w: 1, h: 1, x: 0, y: 1},
+    {w: 1, h: 0, x: 1, y: 0},
+    {w: 1, h: 1, x: 2, y: 0},
+    {w: 1, h: 1, x: 2, y: 1},
+    {w: 1, h: 1, x: 2, y: 2},
+
+    {w: 1, h: 1, x: 3, y: 0},
+    {w: 2, h: 1, x: 4, y: 0}, // 7
+    {w: 2, h: 1, x: 4, y: 1}, // 9
+    {w: 2, h: 1, x: 3, y: 2}, // 8
+
+    {w: 2, h: 0, x: 6, y: 0}, // 10
+    {w: 1, h: 1, x: 8, y: 0}, // 11
+    {w: 1, h: 1, x: 8, y: 1}, // 12
+    {w: 1, h: 1, x: 8, y: 2}  // 13
+  ],
+
+  after_dragging_13_down: [
+    // 9 should not be moved to the left via pull-to-left
+    {w: 1, h: 1, x: 0, y: 0},
+    {w: 1, h: 1, x: 0, y: 1},
+    {w: 1, h: 0, x: 1, y: 0},
+    {w: 1, h: 1, x: 2, y: 0},
+    {w: 1, h: 1, x: 2, y: 1},
+    {w: 1, h: 1, x: 2, y: 2},
+
+    {w: 1, h: 1, x: 3, y: 0},
+    {w: 2, h: 1, x: 4, y: 0}, // 7
+    {w: 2, h: 1, x: 3, y: 1}, // 8
+    {w: 2, h: 1, x: 4, y: 2}, // 9
+
+    {w: 2, h: 0, x: 6, y: 0},
+    {w: 1, h: 1, x: 8, y: 0},
+    {w: 1, h: 1, x: 8, y: 1},
+    {w: 1, h: 1, x: 8, y: 3}  //13
+  ],
+
+  after_dragging_11_to_the_left: [
+    {w: 1, h: 1, x: 0, y: 0},
+    {w: 1, h: 1, x: 0, y: 1},
+    {w: 1, h: 0, x: 1, y: 0},
+    {w: 1, h: 1, x: 2, y: 0},
+    {w: 1, h: 1, x: 2, y: 1},
+    {w: 1, h: 1, x: 2, y: 2},
+
+    {w: 1, h: 1, x: 3, y: 0},
+    {w: 2, h: 1, x: 4, y: 0}, // 8
+    {w: 2, h: 1, x: 4, y: 1}, // 7
+    {w: 2, h: 1, x: 4, y: 2},
+
+    {w: 1, h: 1, x: 6, y: 0}, // 11
+    {w: 2, h: 0, x: 7, y: 0}, // 10
+    {w: 1, h: 1, x: 6, y: 1}, // 12
+    {w: 1, h: 1, x: 6, y: 2}  // 13
+  ],
+
+  after_dragging_2_to_the_right: [
+    {w: 1, h: 1, x: 0, y: 0},
+    {w: 1, h: 1, x: 0, y: 1},
+    {w: 1, h: 1, x: 1, y: 0}, // 3
+    {w: 1, h: 1, x: 1, y: 1}, // 4
+    {w: 1, h: 1, x: 1, y: 2}, // 5
+    {w: 1, h: 0, x: 2, y: 0}, // 2
+
+    {w: 1, h: 1, x: 3, y: 0},
+    {w: 2, h: 1, x: 4, y: 0}, // 7
+    {w: 2, h: 1, x: 3, y: 1}, // 8
+    {w: 2, h: 1, x: 4, y: 2},
+
+    {w: 2, h: 0, x: 6, y: 0},
+    {w: 1, h: 1, x: 8, y: 0},
+    {w: 1, h: 1, x: 8, y: 1},
+    {w: 1, h: 1, x: 8, y: 2},
+  ]
+};
+
+fixtures.COLUMN_GROUPS_2 = {
+
+  initial: [
+    // Should be laid out like this after initializing the grid with it.
+    // This means actually that pull to left should stop at page boundary
+    {w: 1, h: 1, x: 0, y: 0},
+    {w: 1, h: 1, x: 0, y: 1},
+    {w: 1, h: 0, x: 1, y: 0}, // 2
+    {w: 1, h: 1, x: 2, y: 0},
+    {w: 1, h: 1, x: 2, y: 1},
+    {w: 1, h: 1, x: 2, y: 2},
+
+    {w: 1, h: 1, x: 3, y: 0},
+    {w: 2, h: 1, x: 4, y: 0}, // 7
+    {w: 2, h: 1, x: 3, y: 1}, // 8
+    {w: 2, h: 1, x: 4, y: 2},
+
+    {w: 2, h: 0, x: 6, y: 0}, // 9
+
+    {w: 1, h: 1, x: 9, y: 0}, // 10
+    {w: 1, h: 1, x: 9, y: 1}, // 11
+    {w: 1, h: 1, x: 9, y: 2}  // 12
+  ]
+};
+
 // Enable Node module
 if (typeof(require) == 'function') {
   for (var k in fixtures) {
