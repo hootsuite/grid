@@ -200,6 +200,10 @@
       if (this.options.heightToFontSizeRatio) {
         this._fontSize = this._cellHeight * this.options.heightToFontSizeRatio;
       }
+      if (this.options.columnsPerGroup) {
+        this._groupSeparatorWidth = this._cellWidth *
+                                    this.options.groupSeparatorWidth;
+      }
     },
 
     _getItemWidth: function(item) {
@@ -223,14 +227,13 @@
     },
 
     _applyPositionToItems: function() {
-      // TODO: Implement group separators
       for (var i = 0; i < this.items.length; i++) {
         // Don't interfere with the positions of the dragged items
         if (this.items[i].move) {
           continue;
         }
         this.items[i].$element.css({
-          left: this.items[i].x * this._cellWidth,
+          left: this._getColPosition(this.items[i].x),
           top: this.items[i].y * this._cellHeight
         });
       }
@@ -262,11 +265,25 @@
       return [col, row];
     },
 
+    _getColPosition: function(col) {
+       /**
+        * Calculate the horizontal position of a column. This gets a bit more
+        * complicated when the columnsPerGroup option is set, as separators need
+        * to be factored it.
+        */
+       var left = col * this._cellWidth;
+       if (this.options.columnsPerGroup) {
+         var groupIndex = Math.floor(col / this.options.columnsPerGroup);
+         left += groupIndex * this._groupSeparatorWidth;
+       }
+       return left;
+     },
+
     _highlightPositionForItem: function(item) {
       this.$positionHighlight.css({
         width: this._getItemWidth(item),
         height: this._getItemHeight(item),
-        left: item.x * this._cellWidth,
+        left: this._getColPosition(item.x),
         top: item.y * this._cellHeight
       }).show();
       if (this.options.heightToFontSizeRatio) {
