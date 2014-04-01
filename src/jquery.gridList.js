@@ -200,6 +200,9 @@
       if (this.options.heightToFontSizeRatio) {
         this._fontSize = this._cellHeight * this.options.heightToFontSizeRatio;
       }
+      if (this.options.columnsPerGroup) {
+        this._separatorWidth = this._cellWidth * this.options.groupSeparatorWidth;
+      }
     },
 
     _getItemWidth: function(item) {
@@ -223,20 +226,29 @@
     },
 
     _applyPositionToItems: function() {
-      // TODO: Implement group separators
       for (var i = 0; i < this.items.length; i++) {
         // Don't interfere with the positions of the dragged items
         if (this.items[i].move) {
           continue;
         }
-        this.items[i].$element.css({
-          left: this.items[i].x * this._cellWidth,
-          top: this.items[i].y * this._cellHeight
-        });
+        this.items[i].$element.css(this._getPositionForItem(this.items[i]));
       }
       // Update the width of the entire grid container with an extra column on
       // the right for extra dragging room
       this.$element.width((this.gridList.grid.length + 1) * this._cellWidth);
+    },
+
+    _getPositionForItem: function(item) {
+      var position = {
+            left: item.x * this._cellWidth,
+            top: item.y * this._cellHeight
+          },
+          group;
+      if (this.options.columnsPerGroup) {
+        group = Math.floor(item.x / this.options.columnsPerGroup);
+        position.left += group * this._separatorWidth;
+      }
+      return position;
     },
 
     _dragPositionChanged: function(newPosition) {
