@@ -275,12 +275,12 @@
     },
 
     _highlightPositionForItem: function(item) {
-      this.$positionHighlight.css({
-        width: this._getItemWidth(item),
-        height: this._getItemHeight(item),
-        left: item.x * this._cellWidth,
-        top: item.y * this._cellHeight
-      }).show();
+      this.$positionHighlight.css($.extend(
+        this._getPositionForItem(item), {
+          width: this._getItemWidth(item),
+          height: this._getItemHeight(item)
+        }
+      )).show();
       if (this.options.heightToFontSizeRatio) {
         this.$positionHighlight.css('font-size', this._fontSize);
       }
