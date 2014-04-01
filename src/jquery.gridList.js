@@ -290,13 +290,13 @@
         * Given a horizontal position (in pixels), find the closest column from
         * the grid. The column with the closest center position is selected.
         */
-       var col,
-           closestDist,
+       var col = 0,
+           closestDist = Math.abs(x - this._colPositions[0]),
            currentDist,
            i;
-       for (i = 0; i < this._colPositions.length; i++) {
+       for (i = 1; i < this._colPositions.length; i++) {
          currentDist = Math.abs(x - this._colPositions[i]);
-         if (col == null || currentDist < closestDist) {
+         if (currentDist < closestDist) {
            closestDist = currentDist;
            col = i;
          }
