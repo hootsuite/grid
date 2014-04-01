@@ -252,7 +252,7 @@
           continue;
         }
         this.items[i].$element.css({
-          left: this._getColPosition(this.items[i].x),
+          left: this._colPositions[this.items[i].x],
           top: this.items[i].y * this._cellHeight
         });
       }
@@ -284,21 +284,7 @@
       return [col, row];
     },
 
-    _getColPosition: function(col) {
-       /**
-        * Calculate the horizontal position of a column. This gets a bit more
-        * complicated when the columnsPerGroup option is set, as separators need
-        * to be factored it.
-        */
-       var left = col * this._cellWidth;
-       if (this.options.columnsPerGroup) {
-         var groupIndex = Math.floor(col / this.options.columnsPerGroup);
-         left += groupIndex * this._groupSeparatorWidth;
-       }
-       return left;
-     },
-
-     _getClosestColFromPosition: function(x) {
+    _getClosestColFromPosition: function(x) {
        /**
         * Given a horizontal position (in pixels), find the closest column from
         * the grid. The column with the closest center position is selected.
@@ -321,7 +307,7 @@
       this.$positionHighlight.css({
         width: this._getItemWidth(item),
         height: this._getItemHeight(item),
-        left: this._getColPosition(item.x),
+        left: this._colPositions[item.x],
         top: item.y * this._cellHeight
       }).show();
       if (this.options.heightToFontSizeRatio) {
