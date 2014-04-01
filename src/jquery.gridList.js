@@ -204,6 +204,25 @@
         this._groupSeparatorWidth = this._cellWidth *
                                     this.options.groupSeparatorWidth;
       }
+      this._cacheColPositions();
+    },
+
+    _cacheColPositions: function() {
+      /**
+       * Calculate and cache the center positions from each column, to be able
+       * to find the closest one when dragging items around
+       */
+      var position,
+          i;
+      this._colPositions = [];
+      for (var i = 0; i < this.gridList.grid.length; i++) {
+        var position = i * this._cellWidth;
+        if (this.options.columnsPerGroup) {
+          position += Math.floor(i / this.options.columnsPerGroup) *
+                      this._groupSeparatorWidth;
+        }
+        this._colPositions[i] = position;
+      }
     },
 
     _getItemWidth: function(item) {
@@ -254,7 +273,7 @@
       var position = item.$element.position(),
           row,
           col;
-      col = Math.round(position.left / this._cellWidth);
+      col = this._getClosestColFromPosition(position.left);
       row = Math.round(position.top / this._cellHeight);
       // Keep item position within the grid and don't let the item create more
       // than one extra column
@@ -277,6 +296,25 @@
          left += groupIndex * this._groupSeparatorWidth;
        }
        return left;
+     },
+
+     _getClosestColFromPosition: function(x) {
+       /**
+        * Given a horizontal position (in pixels), find the closest column from
+        * the grid. The column with the closest center position is selected.
+        */
+       var col,
+           closestDist,
+           currentDist,
+           i;
+       for (i = 0; i < this._colPositions.length; i++) {
+         currentDist = Math.abs(x - this._colPositions[i]);
+         if (col == null || currentDist < closestDist) {
+           closestDist = currentDist;
+           col = i;
+         }
+       }
+       return col;
      },
 
     _highlightPositionForItem: function(item) {
