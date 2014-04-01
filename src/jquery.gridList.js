@@ -246,7 +246,6 @@
       var position = item.$element.position(),
           row,
           col;
-      position[0] -= this.$element.position().left;
       col = Math.round(position.left / this._cellWidth);
       row = Math.round(position.top / this._cellHeight);
       // Keep item position within the grid and don't let the item create more
