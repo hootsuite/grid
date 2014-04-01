@@ -3,6 +3,8 @@
 Drag and drop library for a two-dimensional resizable and responsive list of
 items
 
+**Demo: http://ubervu.github.io/grid/**
+
 The GridList library is split into two roles:
 
 1. An [agnostic GridList class](src/gridList.js) that manages the
@@ -59,3 +61,26 @@ expected to have `data-w` and `data-h` attributes, and optionally `data-x` and
 The rendered list is **responsive** to its parent container, meaning that the
 width and height of the items are calculated based on the container height
 divided by the number of grid rows.
+
+## FAQ: Why not [gridster](https://github.com/ducksboard/gridster.js)?
+
+- Their README reads Ducksboard is no longer active in their development. There
+are a few notable forks but it's hard to assert their [reliability.](https://github.com/dustmoo/gridster.js/issues)
+- gridster works vertically and our design is horizontal. We instigated a
+gridster pull request that attempted to make gridster work both ways and it
+didn't seem to stabilize any time soon, plus the code was too complex to 
+approach. Our lib ended up having less than 5 times fewer code.
+- gridster collisions are [very basic](https://github.com/ducksboard/gridster.js/issues/54),
+we pushed towards better UX and found alternative ways for dealing with
+collisions.
+- We wanted out-of-the-box responsiveness, and the entire grid system was build
+fluid, relative to any parent container.
+- We needed the grid logic to be a DOM-less lib outside the jQuery plugin. This
+allows us to compute grid positions on the server-side and run kick-ass fast
+tests with Node.
+- Another more particular thing we needed was widgets that had height=0, which
+means they stretch on however many rows a grid has. We show timelines like 
+this. The same can be easily adapted for width in vertical grids.
+
+*Please check [demo page](http://ubervu.github.io/grid/) or code directly for
+investigating these assumptions.*
