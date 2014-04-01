@@ -11,13 +11,13 @@
     "src/jquery.gridList.js"
   ],
   "keywords": [
+    "grid",
     "drag&drop",
     "resizable",
     "reponsive",
-    "grid",
-    "zoom"
+    "zoom",
+    "drag'n'drop"
   ],
-  "license": "Apache2",
   "license": "Apache2",
   "ignore": [
     "**/.*",
