@@ -212,16 +212,17 @@
        * Calculate and cache the center positions from each column, to be able
        * to find the closest one when dragging items around
        */
-      var position,
+      var columnsPerGroup = this.options.columnsPerGroup,
+          position = 0,
           i;
       this._colPositions = [];
-      for (var i = 0; i < this.gridList.grid.length; i++) {
-        var position = i * this._cellWidth;
-        if (this.options.columnsPerGroup) {
-          position += Math.floor(i / this.options.columnsPerGroup) *
-                      this._groupSeparatorWidth;
-        }
+      for (i = 0; i < this.gridList.grid.length; i++) {
         this._colPositions[i] = position;
+        // We add a group separator after each last column from a group
+        position += this._cellWidth;
+        if (columnsPerGroup && (i % columnsPerGroup == columnsPerGroup - 1)) {
+          position += this._groupSeparatorWidth;
+        }
       }
     },
 
