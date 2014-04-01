@@ -2,9 +2,6 @@
   "name": "grid-list",
   "version": "0.1.0",
   "homepage": "https://github.com/uberVU/grid",
-  "authors": [
-    "uberVU"
-  ],
   "description": "Drag and drop library for a two-dimensional resizable and responsive list of items",
   "main": [
     "src/gridList.js",
@@ -12,18 +9,14 @@
   ],
   "keywords": [
     "grid",
-    "drag&drop",
+    "drag and drop",
     "resizable",
-    "reponsive",
-    "zoom",
-    "drag'n'drop"
+    "reponsive"
   ],
-  "license": "Apache2",
   "ignore": [
-    "**/.*",
     "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "demo",
+    "spec",
+    "index.html"
   ]
 }
