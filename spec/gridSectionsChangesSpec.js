@@ -11,8 +11,7 @@ describe("Grid positioning", function() {
 
   beforeEach(function() {
     this.addMatchers({
-      toEqualPositions: matchers.toEqualPositions,
-      toEqualPositionsById: matchers.toEqualPositionsById
+      toEqualPositions: matchers.toEqualPositions
     });
   });
 
@@ -28,68 +27,68 @@ describe("Grid positioning", function() {
         columnsPerGroup: 3
       });
       // This actually means that pullToLeft is done on section boundary only
-      item_10 = grid._getItemByAttribute('id', 10);
+      item_10 = grid.items[10];
       grid.moveItemToPosition(item_10, [7, 0]);
-      expect(grid.items).toEqualPositionsById(gridFixture.after_dragging_10_to_the_right);
+      expect(grid.items).toEqualPositions(gridFixture.after_dragging_10_to_the_right);
     });
     */
 
-    it("moving 7 to the right should move everything one section to the right", function() {
+    it("moving 9 to the right should move everything one section to the right", function() {
       var gridFixture = fixtures.COLUMN_GROUPS_1;
       var grid = new GridList(GridList.cloneItems(gridFixture.initial), {
         rows: 4,
         columnsPerGroup: 3
       });
-      item_7 = grid._getItemByAttribute('id', 7);
-      grid.moveItemToPosition(item_7, [6, 0]);
-      expect(grid.items).toEqualPositionsById(gridFixture.after_dragging_7_to_the_right);
+      item_9 = grid.items[9];
+      grid.moveItemToPosition(item_9, [6, 0]);
+      expect(grid.items).toEqualPositions(gridFixture.after_dragging_9_to_the_right);
     });
 
-    it("dragging 7 and leaving it in place should leave everything in the same position", function() {
+    it("dragging 9 and leaving it in place should leave everything in the same position", function() {
       var gridFixture = fixtures.COLUMN_GROUPS_1;
       var grid = new GridList(GridList.cloneItems(gridFixture.initial), {
         rows: 4,
         columnsPerGroup: 3
       });
-      item_7 = grid._getItemByAttribute('id', 7);
-      grid.moveItemToPosition(item_7, [4, 0]);
-      expect(grid.items).toEqualPositionsById(gridFixture.initial);
+      item_9 = grid.items[9];
+      grid.moveItemToPosition(item_9, [4, 0]);
+      expect(grid.items).toEqualPositions(gridFixture.initial);
     });
 
-    it("moving 6 over 7's right half should interchange them", function() {
+    it("moving 6 over 9's right half should interchange them", function() {
       var gridFixture = fixtures.COLUMN_GROUPS_1;
       var grid = new GridList(GridList.cloneItems(gridFixture.initial), {
         rows: 4,
         columnsPerGroup: 3
       });
-      item_6 = grid._getItemByAttribute('id', 6);
+      item_6 = grid.items[6];
       grid.moveItemToPosition(item_6, [5, 0]);
-      expect(grid.items).toEqualPositionsById(gridFixture.after_dragging_6_over_7_second_half);
+      expect(grid.items).toEqualPositions(gridFixture.after_dragging_6_over_9_second_half);
     });
 
-    it("moving 7 to the right and back should automatically delete the empty section", function() {
+    it("moving 9 to the right and back should automatically delete the empty section", function() {
       var gridFixture = fixtures.COLUMN_GROUPS_1;
       var grid = new GridList(GridList.cloneItems(gridFixture.initial), {
         rows: 4,
         columnsPerGroup: 3
       });
-      item_7 = grid._getItemByAttribute('id', 7);
-      grid.moveItemToPosition(item_7, [6, 0]);
-      grid.moveItemToPosition(item_7, [4, 0]);
-      expect(grid.items).toEqualPositionsById(gridFixture.initial);
+      item_9 = grid.items[9];
+      grid.moveItemToPosition(item_9, [6, 0]);
+      grid.moveItemToPosition(item_9, [4, 0]);
+      expect(grid.items).toEqualPositions(gridFixture.initial);
     });
 
-    it("moving 7 to a new section and dragging 10 over 7 should push 7 to a new section", function() {
+    it("moving 9 to a new section and dragging 10 over 9 should push 9 to a new section", function() {
       var gridFixture = fixtures.COLUMN_GROUPS_1;
       var grid = new GridList(GridList.cloneItems(gridFixture.initial), {
         rows: 4,
         columnsPerGroup: 3
       });
-      item_7 = grid._getItemByAttribute('id', 7);
-      item_10 = grid._getItemByAttribute('id', 10);
-      grid.moveItemToPosition(item_7, [10, 0]);
+      item_9 = grid.items[9];
+      item_10 = grid.items[10];
+      grid.moveItemToPosition(item_9, [10, 0]);
       grid.moveItemToPosition(item_10, [9, 0]);
-      expect(grid.items).toEqualPositionsById(gridFixture.after_moving_7_to_empty_section_and_dragging_10_over_7);
+      expect(grid.items).toEqualPositions(gridFixture.after_moving_9_to_empty_section_and_dragging_10_over_9);
     });
 
   });

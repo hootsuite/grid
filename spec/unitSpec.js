@@ -11,8 +11,7 @@ describe("Grid unit tests", function() {
 
   beforeEach(function() {
     this.addMatchers({
-      toEqualPositions: matchers.toEqualPositions,
-      toEqualPositionsById: matchers.toEqualPositionsById
+      toEqualPositions: matchers.toEqualPositions
     });
   });
 
@@ -26,8 +25,8 @@ describe("Grid unit tests", function() {
       });
 
       grid._moveAllSectionsToTheRight(2);
-      expect(grid.items).toEqualPositionsById(
-                               gridFixture.after_moving_section_2_to_the_right);
+      expect(grid.items).toEqualPositions(
+        gridFixture.after_moving_section_2_to_the_right);
     });
 
   });
