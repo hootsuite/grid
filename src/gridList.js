@@ -148,6 +148,24 @@ GridList.prototype = {
     this._resolveCollisions(item);
   },
 
+
+  _resolveCollisions: function(item) {
+    if (!this._tryToResolveCollisionsLocally(item)) {
+      if (this.options.columnsPerGroup) {
+        var targetSection = this._getSection(item);
+        this._moveAllSectionsToTheRight(targetSection, item);
+      } else {
+        this._pullItemsToLeft(item);
+      }
+    }
+
+    if (!this.options.columnsPerGroup) {
+        this._pullItemsToLeft();
+    } else {
+        this._deleteEmptySections();
+    }
+  },
+
   resizeItem: function(item, width) {
     this._updateItemSize(item, width);
     this._resolveCollisions(item);
@@ -216,6 +234,64 @@ GridList.prototype = {
     this.grid = [];
   },
 
+  itemSpansMoreThanOneSection: function(item) {
+    return item.x % this.options.columnsPerGroup +
+           item.w > this.options.columnsPerGroup;
+  },
+
+  _findPositionForItem: function(item, start, fixedRow) {
+    /**
+     * This method has two options for the position we want for the item.
+     * - Starting from a certain row/column number and only looking for positions
+     * to its right
+     * - Accepting positions for a certain row number only (use-case: items
+     * being shifted to the left/right as a result of collisions)
+     */
+    var x, y, position;
+
+    // Start searching for a position from the horizontal position of the
+    // rightmost item from the grid
+    for (x = start.x; x < this.grid.length; x++) {
+      // If we have sections enabled, skip those candidates that would make the
+      // item span more than one section.
+      if (this.options.columnsPerGroup && this.itemSpansMoreThanOneSection({'x': x, 'w': item.w})) {
+        continue;
+      }
+
+      if (fixedRow !== undefined) {
+        position = [x, fixedRow];
+        if (this._itemFitsAtPosition(item, position)) {
+          return position;
+        }
+      } else {
+        for (y = start.y; y < this.options.rows; y++) {
+          position = [x, y];
+          if (this._itemFitsAtPosition(item, position)) {
+            return position;
+          }
+        }
+      }
+    }
+
+    if (this.options.columnsPerGroup) {
+      // If we did not find a position for this item, check that adding it
+      // at the end does not span multiple sections.
+      if (!this.itemSpansMoreThanOneSection({'x': this.grid.length, 'w': item.w})) {
+        x = this.grid.length;
+        y = fixedRow || 0;
+        return [x, y];
+      // Otherwise, we must add a whole new section at the end of the grid
+      } else {
+        x = Math.floor((this.grid.length + this.options.columnsPerGroup - 1) / this.options.columnsPerGroup) * this.options.columnsPerGroup;
+        y = fixedRow || 0;
+        return [x, y];
+      }
+    } else {
+      return [this.grid.length, fixedRow || 0];
+    }
+
+  },
+
   _itemFitsAtPosition: function(item, position) {
     /**
      * Check that an item wouldn't overlap with another one if placed at a
@@ -225,6 +301,18 @@ GridList.prototype = {
     // No coordonate can be negative
     if (position[0] < 0 || position[1] < 0) {
       return false;
+    }
+
+    // Make sure the item fits in the current section
+    if(this.options.columnsPerGroup) {
+      currentSection = this._getSection(item);
+      futureSection = this._getSection({
+                                        x: position[0] + item.w,
+                                        y: position[1]
+                                      });
+      if(currentSection !== futureSection) {
+        return false;
+      }
     }
     // Make sure the item isn't larger than the entire grid
     if (position[1] + item.h > this.options.rows) {
@@ -263,6 +351,12 @@ GridList.prototype = {
       this._deleteItemPositionFromGrid(item);
     }
     item.w = width;
+
+    // Move item to the right if it does not fit in the current section
+    // anymore
+    if (this.options.columnsPerGroup && this.itemSpansMoreThanOneSection(item)) {
+      item.x = item.x + this.options.columnsPerGroup - item.x % this.options.columnsPerGroup;
+    }
     this._markItemPositionToGrid(item);
   },
 
@@ -333,11 +427,83 @@ GridList.prototype = {
              item2.y + item2.h <= item1.y);
   },
 
-  _resolveCollisions: function(item) {
-    if (!this._tryToResolveCollisionsLocally(item)) {
-      this._pullItemsToLeft(item);
+  _getSection: function(item) {
+    return Math.floor(item.x / this.options.columnsPerGroup);
+  },
+
+  _moveAllSectionsToTheRight: function(sectionStartingWith, itemToSkip) {
+    var itemsInSection, i, itemToMove,
+        _gridList = new GridList([], this.options);
+
+    GridList.cloneItems(this.items, _gridList.items);
+    _gridList.generateGrid();
+    _gridList._sortItemsByPosition();
+
+    for (i = _gridList.items.length - 1; i >= 0; i--) {
+      itemToMove = _gridList.items[i];
+
+      if (itemToSkip != undefined && itemToMove.x == itemToSkip.x && itemToMove.y == itemToSkip.y && itemToMove.h == itemToSkip.h && itemToMove.w == itemToSkip.w) {
+        continue;
+      }
+
+      if (this._getSection(itemToMove) >= sectionStartingWith) {
+        var itemInCurrentGrid = this._getItemByAttributes({x: itemToMove.x, y: itemToMove.y, w: itemToMove.w, h: itemToMove.h});
+        this._updateItemPosition(itemInCurrentGrid,
+                                 [itemInCurrentGrid.x + this.options.columnsPerGroup,
+                                  itemInCurrentGrid.y]);
+      }
     }
-    this._pullItemsToLeft();
+  },
+
+  _getFirstEmptySection: function() {
+    var i, filledSections = [], maxSectionSoFar = -1;
+
+    for (i = 0; i < this.items.length; i++) {
+      var section = this._getSection(this.items[i]);
+      if (filledSections.indexOf(section) == -1) {
+        filledSections.push(section);
+      }
+      if (section > maxSectionSoFar) {
+        maxSectionSoFar = section;
+      }
+    }
+
+    for (i = 0; i < maxSectionSoFar; i++) {
+      if (filledSections.indexOf(i) == -1) {
+        return i;
+      }
+    }
+
+    return -1;
+  },
+
+  _deleteEmptySection: function(section) {
+      var i, itemToMove, itemInCurrentGrid,
+          _gridList = new GridList([], this.options);
+
+      GridList.cloneItems(this.items, _gridList.items);
+      _gridList.generateGrid();
+      _gridList._sortItemsByPosition();
+
+      for (i = 0; i < _gridList.items.length; i++) {
+        itemToMove = _gridList.items[i];
+        if (this._getSection(itemToMove) > section) {
+            itemInCurrentGrid = this._getItemByAttributes({x: itemToMove.x, y: itemToMove.y, w: itemToMove.w, h: itemToMove.h});
+            this._updateItemPosition(itemInCurrentGrid,
+                                 [itemInCurrentGrid.x - this.options.columnsPerGroup,
+                                  itemInCurrentGrid.y]);
+        }
+      }
+  },
+
+  _deleteEmptySections: function() {
+      var firstEmptySection;
+
+      firstEmptySection = this._getFirstEmptySection();
+      while (firstEmptySection > -1) {
+        this._deleteEmptySection(firstEmptySection);
+        firstEmptySection = this._getFirstEmptySection();
+      }
   },
 
   _tryToResolveCollisionsLocally: function(item) {
@@ -351,15 +517,19 @@ GridList.prototype = {
      */
     var collidingItems = this._getItemsCollidingWithItem(item);
     if (!collidingItems.length) {
+      // No colliding items means that we successfully solved all collisions
+      // locally and we don't need to pull to left anymore.
       return true;
     }
     var _gridList = new GridList([], this.options),
         collidingItem,
-        i,
+        i, j,
         leftOfItem,
         rightOfItem,
         aboveOfItem,
-        belowOfItem;
+        belowOfItem,
+        candidates,
+        solvedCollision;
 
     GridList.cloneItems(this.items, _gridList.items);
     _gridList.generateGrid();
@@ -379,15 +549,26 @@ GridList.prototype = {
       aboveOfItem = [collidingItem.x, item.y - collidingItem.h];
       belowOfItem = [collidingItem.x, item.y + item.h];
 
-      if (_gridList._itemFitsAtPosition(collidingItem, leftOfItem)) {
-        _gridList._updateItemPosition(collidingItem, leftOfItem);
-      } else if (_gridList._itemFitsAtPosition(collidingItem, aboveOfItem)) {
-        _gridList._updateItemPosition(collidingItem, aboveOfItem);
-      } else if (_gridList._itemFitsAtPosition(collidingItem, belowOfItem)) {
-        _gridList._updateItemPosition(collidingItem, belowOfItem);
-      } else if (_gridList._itemFitsAtPosition(collidingItem, rightOfItem)) {
-        _gridList._updateItemPosition(collidingItem, rightOfItem);
-      } else {
+      candidates = [leftOfItem, rightOfItem, aboveOfItem, belowOfItem];
+      if (this.options.columnsPerGroup) {
+        var filteredCandidates = [];
+        for (j = 0; j < candidates.length; j++) {
+          if (this._getSection(collidingItem) == this._getSection({x: candidates[j][0], y: candidates[j][1]})) {
+            filteredCandidates.push(candidates[j]);
+          }
+        }
+        candidates = filteredCandidates;
+      }
+
+      solvedCollision = false;
+      for (j = 0; j < candidates.length && !solvedCollision; j++) {
+        if (_gridList._itemFitsAtPosition(collidingItem, candidates[j])) {
+          _gridList._updateItemPosition(collidingItem, candidates[j]);
+          solvedCollision = true;
+        }
+      }
+
+      if (!solvedCollision) {
         // Collisions failed, we must use the pullItemsToLeft method to arrange
         // the other items around this item with fixed position. This is our
         // plan B for when local collision resolving fails.
@@ -413,7 +594,9 @@ GridList.prototype = {
      * rest of the items will be layed around it.
      */
     var item,
-        i;
+        i,
+        newPosition,
+        startX;
 
     // Start a fresh grid with the fixed item already placed inside
     this._sortItemsByPosition();
@@ -429,10 +612,10 @@ GridList.prototype = {
       if (fixedItem && item == fixedItem) {
         continue;
       }
-      this._updateItemPosition(item, this.findPositionForItem(
-        item,
-        {x: this._findLeftMostPositionForItem(item), y: 0},
-        item.y));
+
+      startX = this._findLeftMostPositionForItem(item);
+      newPosition = this._findPositionForItem(item, {x: startX}, item.y);
+      this._updateItemPosition(item, newPosition);
     }
   },
 
@@ -455,12 +638,39 @@ GridList.prototype = {
         tail = otherItem.x + otherItem.w;
       }
     }
+
+    // Don't go further away than the start of current section.
+    // One use-case for this is in pullToLeft, where items being pulled to left
+    // should not leave their current section.
+    if (this.options.columnsPerGroup) {
+        startOfItemPageX = item.x - (item.x % this.options.columnsPerGroup);
+        tail = Math.max(tail, startOfItemPageX);
+    }
     return tail;
   },
 
   _getItemByAttribute: function(key, value) {
     for (var i = 0; i < this.items.length; i++) {
       if (this.items[i][key] === value) {
+        return this.items[i];
+      }
+    }
+    return null;
+  },
+
+  _getItemByAttributes: function(dict) {
+    var found;
+
+    for (var i = 0; i < this.items.length; i++) {
+      found = true;
+      for(var key in dict){
+        if (dict.hasOwnProperty(key)) {
+          if (this.items[i][key] !== dict[key]) {
+            found = false;
+          }
+        }
+      }
+      if (found) {
         return this.items[i];
       }
     }

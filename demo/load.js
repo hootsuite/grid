@@ -1,5 +1,5 @@
 var DemoGrid = {
-  currentSize: 3,
+  currentSize: 4,
   buildElements: function($gridContainer, items) {
     var item, i;
     for (i = 0; i < items.length; i++) {
@@ -49,12 +49,13 @@ $(window).resize(function() {
 });
 
 $(function() {
-  DemoGrid.buildElements($('#grid'), fixtures.DEMO);
+  DemoGrid.buildElements($('#grid'), fixtures.COLUMN_GROUPS_1.initial);
 
   $('#grid').gridList({
     rows: DemoGrid.currentSize,
     widthHeightRatio: 264 / 294,
     heightToFontSizeRatio: 0.25,
+    columnsPerGroup: 3,
     onChange: function(changedItems) {
       DemoGrid.flashItems(changedItems);
     }
