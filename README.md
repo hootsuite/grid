@@ -22,23 +22,54 @@ drag and drop capabilities
 
 ## GridList class
 
+Jump to:
+
+- [API](#api)
+- [Primitives](#primitives)
+
+### API
+
+#### new GridList(items, options)
+
 ```js
-var gridList = new GridList(items, {rows: 3});
+var grid = new GridList(items, {rows: 3});
 ```
 
-Here are the main functions of the GridList class:
+The first constructor parameter is an array of [items](#primitives) to populate
+the grid with.
 
-- **findPositionForItem**: Generate new positions inside a 2d grid. The
-positioning algorithm places items in columns, starting from left to right,
-going through each column top to bottom
-- **resize**: Convert item positions from one grid size to another, maintaining
-as much of their order as possible
-- **moveItemToPosition**: Handle collisions when moving an item over another
-- **resizeItem**: Resize an item and reposition colliding items around.
-**TODO:** Currently only the width of an item (w) can be resized
-- **getChangedItems**: Compare a list of items with that of a GridList instance
-and return the changed items only (diff). Useful when updating item sizes and
-positions in a persistent medium (e.g. syncing grid to db with minimum payload)
+ Supported options:
+
+ - **rows** - Number of rows for the grid
+
+#### generateGrid()
+
+```js
+grid.generateGrid();
+```
+
+Build the grid structure from scratch, using the positions of the given
+items. If items lack positional attributes (x and y), they will be misplaced,
+possibly overlapping. If you want to build a grid around a list of items that
+only have their size attributes defined (w and h), and rely on the library to
+position them two-dimensionally, use [_resizeGrid._](#resizegridrows)
+
+#### resizeGrid(rows)
+
+```js
+grid.resizeGrid(4);
+```
+
+(Re)generate positions for the items inside a grid instance for a given number
+of rows. This method has two major use-cases:
+
+1. Items are being represented two-dimensionally for the first time
+2. Items already have 2d positions but need to be represented on a different
+grid size, maintaining as much as possible of their previous order
+
+Given the horizontal orientation, positions inside the grid are generated
+left-to-right, top-to-bottom. So when looking for a new position inside the
+grid the topmost row from the leftmost column is chosen.
 
 ### Primitives
 
