@@ -33,17 +33,27 @@ as much of their order as possible
 and return the changed items only (diff). Useful when updating item sizes and
 positions in a persistent medium (e.g. syncing grid to db with minimum payload)
 
-The size of an item is expressed using the number of cols and rows it takes up
-within the grid (w and h). The position of an item is expressed using the col
-and row position within the grid (x and y)
+### Primitives
 
-An item is an object of structure:
+#### Item
+
+The item is the building block of GridList. The primary function of the
+GridList is to position items two-dimentionally. Which brings us to the
+composition of an item: **w** and **h** for size, **x** and **y** for
+position. E.g.
+
 ```js
 {
   w: 3, h: 1,
   x: 0, y: 1
 }
 ```
+
+Note that x and y (**column** and **row**) are abstract coords inside the grid,
+they are integer values starting from 0. Naturally, w and h (**width** and
+**height**) also take up space in the same coordinate system, which reveals the
+smallest unit of a grid: the **cell.** You could say, for example, that the
+featured item from above takes up three grid cells.
 
 ## $.fn.gridList
 
@@ -68,7 +78,7 @@ divided by the number of grid rows.
 are a few notable forks but it's hard to assert their [reliability.](https://github.com/dustmoo/gridster.js/issues)
 - gridster works vertically and our design is horizontal. We instigated a
 gridster pull request that attempted to make gridster work both ways and it
-didn't seem to stabilize any time soon, plus the code was too complex to 
+didn't seem to stabilize any time soon, plus the code was too complex to
 approach. Our lib ended up having less than 5 times fewer code.
 - gridster collisions are [very basic](https://github.com/ducksboard/gridster.js/issues/54),
 we pushed towards better UX and found alternative ways for dealing with
@@ -79,7 +89,7 @@ fluid, relative to any parent container.
 allows us to compute grid positions on the server-side and run kick-ass fast
 tests with Node.
 - Another more particular thing we needed was widgets that had height=0, which
-means they stretch on however many rows a grid has. We show timelines like 
+means they stretch on however many rows a grid has. We show timelines like
 this. The same can be easily adapted for width in vertical grids.
 
 *Please check [demo page](http://ubervu.github.io/grid/) or code directly for
