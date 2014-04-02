@@ -205,10 +205,9 @@
         this._groupSeparatorWidth = this._cellWidth *
                                     this.options.groupSeparatorWidth;
       }
-      this._cacheColPositions();
     },
 
-    _cacheColPositions: function() {
+    _calculateColPositions: function() {
       /**
        * Calculate and cache the center positions from each column, to be able
        * to find the closest one when dragging items around
@@ -248,6 +247,7 @@
     },
 
     _applyPositionToItems: function() {
+      this._calculateColPositions();
       for (var i = 0; i < this.items.length; i++) {
         // Don't interfere with the positions of the dragged items
         if (this.items[i].move) {
