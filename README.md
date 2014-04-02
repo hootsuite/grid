@@ -54,10 +54,10 @@ featured item above takes up three grid cells.
 
 #### gridList.items
 
-A GridList instance works around an array of items. It is the first parameter
-of the class constructor and is always visible under the `.items` property.
-Here's a list of items for a grid with three 1x1 items on a column with three
-rows:
+A GridList instance works around an array of items. The items array is the
+first parameter of the class constructor and is always visible under the
+`.items` property. Here's a list of items for a grid with three 1x1 items on a
+column with three rows:
 
 ```js
 [{w: 1, h: 1, x: 0, y: 0},
@@ -70,7 +70,7 @@ rows:
 Seeing how JavaScript doesn't support multidimensional arrays, the 2d grid
 inside GridList is represented by an array for columns, with each array entry
 containing another array with cells for each row. __The cell is simply a pointer
-to an item that occupies it, or a *null* reference if not item is sitting on
+to an item that occupies it, or a *null* reference if no item is sitting on
 that cell's position.__ Note that more cells can point to the same item
 reference, because items occupy `w * h` cells. Here's a grid
 pseudo-representation:
