@@ -197,6 +197,7 @@
     _calculateCellSize: function() {
       this._cellHeight = Math.floor(this.$element.height() / this.options.rows);
       this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
+      window._cellWidth = this._cellWidth;
       if (this.options.heightToFontSizeRatio) {
         this._fontSize = this._cellHeight * this.options.heightToFontSizeRatio;
       }
@@ -280,7 +281,15 @@
       // than one extra column
       col = Math.max(col, 0);
       row = Math.max(row, 0);
-      col = Math.min(col, this._maxGridCols);
+
+      if (this.options.columnsPerGroup) {
+        if (this.gridList.itemSpansMoreThanOneSection({x: col, w: item.w})) {
+          col = col - (col % this.options.columnsPerGroup + item.w - this.options.columnsPerGroup);
+        }
+      } else {
+        col = Math.min(col, this._maxGridCols);
+      }
+
       row = Math.min(row, this.options.rows - item.h);
       return [col, row];
     },
