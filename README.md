@@ -191,7 +191,7 @@ are a few notable forks but it's hard to assert their [reliability.](https://git
 - gridster works vertically and our design is horizontal. We instigated a
 gridster pull request that attempted to make gridster work both ways and it
 didn't seem to stabilize any time soon, plus the code was too complex to
-approach. Our lib ended up having less than 5 times fewer code.
+approach. Our lib ended up having over than 5 times fewer code.
 - gridster collisions are [very basic](https://github.com/ducksboard/gridster.js/issues/54),
 we pushed towards better UX and found alternative ways for dealing with
 collisions.
