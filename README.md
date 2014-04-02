@@ -1,4 +1,4 @@
-[GridList](http://ubervu.github.io/grid/) [![Build Status](https://travis-ci.org/uberVU/grid.svg?branch=master)](https://travis-ci.org/uberVU/grid)
+GridList [![Build Status](https://travis-ci.org/uberVU/grid.svg?branch=master)](https://travis-ci.org/uberVU/grid)
 ====
 Drag and drop library for a two-dimensional resizable and responsive list of
 items
@@ -14,9 +14,9 @@ making both orientations available through the use of an single option.
 
 The GridList library is split into two roles:
 
-1. An [agnostic GridList class](src/gridList.js) that manages the
+1. An agnostic [**GridList class**](#gridlist-class) that manages the
 two-dimensional positions from a list of items within a virtual matrix
-2. A [jQuery plugin](src/jquery.gridList.js) built on top of the GridList class
+2. A [**jQuery plugin**](#fngridlist) built on top of the GridList class
 that translates the generic items positions into responsive DOM elements with
 drag and drop capabilities
 
