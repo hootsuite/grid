@@ -95,6 +95,21 @@ entire grid will be [regenerated](#resizegridrows), starting with the moved
 item fixed in its new position. In the latter case, all the items around and
 to the right of the moved item might have their position slightly altered.
 
+#### resizeItem(item, width)
+
+```js
+// Resize item from position [0, 0] to span over 3 columns
+var growthItem = myGrid.grid[0, 0];
+myGrid.resizeItem(growthItem, 3);
+console.log(growthItem.w); // will output "3"
+```
+
+Resizing an item is very similar to moving its position, in the sense that
+[grid](#gridlistgrid) cells will be repopulated and collisions will be handled
+afterwards. See [moveItemToPosition.](#moveitemtopositionitem-position)
+
+_TODO: Implement resizing of item height_
+
 ### Primitives
 
 #### Item
