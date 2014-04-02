@@ -24,15 +24,15 @@ drag and drop capabilities
 
 Jump to:
 
-- [API](#api)
-- [Primitives](#primitives)
+- [**API**](#api)
+- [**Primitives**](#primitives)
 
 ### API
 
 #### new GridList(items, options)
 
 ```js
-var grid = new GridList(items, {rows: 3});
+var myGrid = new GridList(items, {rows: 3});
 ```
 
 The first constructor parameter is an array of [items](#primitives) to populate
@@ -45,7 +45,7 @@ the grid with.
 #### generateGrid()
 
 ```js
-grid.generateGrid();
+myGrid.generateGrid();
 ```
 
 Build the grid structure from scratch, using the positions of the given
@@ -57,7 +57,7 @@ position them two-dimensionally, use [_resizeGrid._](#resizegridrows)
 #### resizeGrid(rows)
 
 ```js
-grid.resizeGrid(4);
+myGrid.resizeGrid(4);
 ```
 
 (Re)generate positions for the items inside a grid instance for a given number
@@ -70,6 +70,30 @@ grid size, maintaining as much as possible of their previous order
 Given the horizontal orientation, positions inside the grid are generated
 left-to-right, top-to-bottom. So when looking for a new position inside the
 grid the topmost row from the leftmost column is chosen.
+
+#### moveItemToPosition(item, position)
+
+```js
+// Move item from [0, 0] to [1, 1]
+var carefreeItem = myGrid.grid[0][0];
+myGrid.moveItemToPosition(carefreeItem, [1, 1]);
+```
+
+Here are things that happen when moving an item inside the grid:
+
+1. The item's previous position is cleared inside the [2d grid](#gridlistgrid)
+2. The position inside the [item object](#item) is updated
+3. The item's new position is marked inside the 2d grid
+4. Collisions are handled if the moved item overlaps with other item(s) from
+the grid
+
+Collisions can be solved in two ways. First, an attempt to resolve them
+_locally_ is made, meaning that the moved item tries to swap position with
+the overlapped item(s). This is the preferred _fair trade._ If this doesn't
+work out and after swapping we still have collisions inside the grid, the
+entire grid will be [regenerated](#resizegridrows), starting with the moved
+item fixed in its new position. In the latter case, all the items around and
+to the right of the moved item might have their position slightly altered.
 
 ### Primitives
 
