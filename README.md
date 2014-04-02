@@ -5,6 +5,13 @@ items
 
 **Demo: http://ubervu.github.io/grid/**
 
+**Disclaimer: The current implementation is for a horizontal grid. This means
+that the number of rows is configurable, whereas columns extend dynamically,
+based on the number, size and position of items placed inside the grid.** While
+this is by design, most, if not all, logic was built around the idea that at
+any point the other axis could be supported with minor/moderate code changes,
+making both orientations available through the use of an single option.
+
 The GridList library is split into two roles:
 
 1. An [agnostic GridList class](src/gridList.js) that manages the
