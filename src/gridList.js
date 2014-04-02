@@ -381,19 +381,29 @@ GridList.prototype = {
 
 
   _resolveCollisions: function(item) {
-    if (!this._tryToResolveCollisionsLocally(item)) {
-      if (this.options.columnsPerGroup) {
+    /**
+     * Resolve all collisions after an item has been placed on the grid.
+     */
+
+    // When we have sections, the collision solving strategy is to
+    // preserve the content of the sections as much as possible:
+    // - first try to resolve collisions locally within the section
+    // - otherwise, move all sections to the right
+    if (this.options.columnsPerGroup) {
+      if (!this._tryToResolveCollisionsLocally(item)) {
         var targetSection = this._getSection(item);
         this._moveAllSectionsToTheRight(targetSection, item);
-      } else {
+      }
+      this._deleteEmptySections();
+
+    // When we don't have sections, we first try to resolve the collisions
+    // locally, and then if that fails, we lay out all the items as much to
+    // the left as possible, by putting the moved item in a fixed position.
+    } else {
+      if (!this._tryToResolveCollisionsLocally(item)) {
         this._pullItemsToLeft(item);
       }
-    }
-
-    if (!this.options.columnsPerGroup) {
-        this._pullItemsToLeft();
-    } else {
-        this._deleteEmptySections();
+      this._pullItemsToLeft();
     }
   },
 
@@ -420,9 +430,23 @@ GridList.prototype = {
   },
 
   _moveAllSectionsToTheRight: function(sectionStartingWith, itemToSkip) {
+    /**
+     * Moves all sections to the right, starting with section
+     * "sectionStartingWith". Sections are numbered from left-to-right,
+     * starting with the index 0.
+     *
+     * It can optionally skip an item, given as a parameter, so that
+     * the dragged item stays the same.
+     */
     var itemsInSection, i, itemToMove,
         _gridList = new GridList([], this.options);
 
+    // Note: we cannot use this.grid[i][j] to check which items should
+    // be moved to the right because it might be already corrupted by the
+    // _updateItemPosition call for the dragged item.
+
+    // Sort all the items by x, y so that we can go through them
+    // from the end to the start and move them one section to the right, each.
     GridList.cloneItems(this.items, _gridList.items);
     _gridList.generateGrid();
     _gridList._sortItemsByPosition();
@@ -430,6 +454,8 @@ GridList.prototype = {
     for (i = _gridList.items.length - 1; i >= 0; i--) {
       itemToMove = _gridList.items[i];
 
+      // TODO: this is shaky, needs some love when itemToMove and itemToSkip
+      // are both with the same parameters, but are overlapping widgets.
       if (itemToSkip != undefined && itemToMove.x == itemToSkip.x && itemToMove.y == itemToSkip.y && itemToMove.h == itemToSkip.h && itemToMove.w == itemToSkip.w) {
         continue;
       }
@@ -444,8 +470,15 @@ GridList.prototype = {
   },
 
   _getFirstEmptySection: function() {
+    /**
+     * Retrieve the first empty section, or -1 if none exists.
+     *
+     * This is useful when determining which sections to delete.
+     */
     var i, filledSections = [], maxSectionSoFar = -1;
 
+    // Go through all the items, memorize all the sections they are placed in
+    // and the maximal section number of an item.
     for (i = 0; i < this.items.length; i++) {
       var section = this._getSection(this.items[i]);
       if (filledSections.indexOf(section) == -1) {
@@ -456,7 +489,9 @@ GridList.prototype = {
       }
     }
 
-    for (i = 0; i < maxSectionSoFar; i++) {
+    // We use the maximal section number we have seen in order to check for all
+    // such sections if at least one widget has been found in them or not.
+    for (i = 0; i <= maxSectionSoFar; i++) {
       if (filledSections.indexOf(i) == -1) {
         return i;
       }
@@ -466,6 +501,17 @@ GridList.prototype = {
   },
 
   _deleteEmptySection: function(section) {
+    /**
+     * Given a section number (0-based, left-to-right), deletes that empty
+     * section.
+     *
+     * What actually happens is that the items are all moved to the left
+     * with one section, starting with that section.
+     *
+     * Note that this is completely different from moving all items to the
+     * right, where we have to go through all the items from right-to-left
+     * and move them one by one. Here, we have to move them from left-to-right.
+     */
       var i, itemToMove, itemInCurrentGrid,
           _gridList = new GridList([], this.options);
 
@@ -485,13 +531,16 @@ GridList.prototype = {
   },
 
   _deleteEmptySections: function() {
-      var firstEmptySection;
+    /**
+     * Deletes all empty sections that are present within the grid.
+     */
+    var firstEmptySection;
 
+    firstEmptySection = this._getFirstEmptySection();
+    while (firstEmptySection > -1) {
+      this._deleteEmptySection(firstEmptySection);
       firstEmptySection = this._getFirstEmptySection();
-      while (firstEmptySection > -1) {
-        this._deleteEmptySection(firstEmptySection);
-        firstEmptySection = this._getFirstEmptySection();
-      }
+    }
   },
 
   _tryToResolveCollisionsLocally: function(item) {
@@ -638,12 +687,9 @@ GridList.prototype = {
   },
 
   _getItemByAttribute: function(key, value) {
-    for (var i = 0; i < this.items.length; i++) {
-      if (this.items[i][key] === value) {
-        return this.items[i];
-      }
-    }
-    return null;
+    var filters = {};
+    filters[key] = value;
+    return this._getItemByAttributes(filters);
   },
 
   _getItemByAttributes: function(dict) {
