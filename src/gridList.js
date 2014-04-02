@@ -130,6 +130,12 @@ GridList.prototype = {
     // Start searching for a position from the horizontal position of the
     // rightmost item from the grid
     for (x = start.x; x < this.grid.length; x++) {
+      // If we have sections enabled, skip those candidates that would make the
+      // item span more than one section.
+      if (this.options.columnsPerGroup && this.itemSpansMoreThanOneSection({'x': x, 'w': item.w})) {
+        continue;
+      }
+
       if (fixedRow !== undefined) {
         position = [x, fixedRow];
         if (this._itemFitsAtPosition(item, position)) {
@@ -144,8 +150,23 @@ GridList.prototype = {
         }
       }
     }
-    // If we've reached this point, we need to start a new column
-    return [this.grid.length, fixedRow || 0];
+
+    if (this.options.columnsPerGroup) {
+      // If we did not find a position for this item, check that adding it
+      // at the end does not span multiple sections.
+      if (!this.itemSpansMoreThanOneSection({'x': this.grid.length, 'w': item.w})) {
+        x = this.grid.length;
+        y = fixedRow || 0;
+        return [x, y];
+      // Otherwise, we must add a whole new section at the end of the grid
+      } else {
+        x = Math.floor((this.grid.length + this.options.columnsPerGroup - 1) / this.options.columnsPerGroup) * this.options.columnsPerGroup;
+        y = fixedRow || 0;
+        return [x, y];
+      }
+    } else {
+      return [this.grid.length, fixedRow || 0];
+    }
   },
 
   moveItemToPosition: function(item, position) {
@@ -224,59 +245,6 @@ GridList.prototype = {
   itemSpansMoreThanOneSection: function(item) {
     return item.x % this.options.columnsPerGroup +
            item.w > this.options.columnsPerGroup;
-  },
-
-  _findPositionForItem: function(item, start, fixedRow) {
-    /**
-     * This method has two options for the position we want for the item.
-     * - Starting from a certain row/column number and only looking for positions
-     * to its right
-     * - Accepting positions for a certain row number only (use-case: items
-     * being shifted to the left/right as a result of collisions)
-     */
-    var x, y, position;
-
-    // Start searching for a position from the horizontal position of the
-    // rightmost item from the grid
-    for (x = start.x; x < this.grid.length; x++) {
-      // If we have sections enabled, skip those candidates that would make the
-      // item span more than one section.
-      if (this.options.columnsPerGroup && this.itemSpansMoreThanOneSection({'x': x, 'w': item.w})) {
-        continue;
-      }
-
-      if (fixedRow !== undefined) {
-        position = [x, fixedRow];
-        if (this._itemFitsAtPosition(item, position)) {
-          return position;
-        }
-      } else {
-        for (y = start.y; y < this.options.rows; y++) {
-          position = [x, y];
-          if (this._itemFitsAtPosition(item, position)) {
-            return position;
-          }
-        }
-      }
-    }
-
-    if (this.options.columnsPerGroup) {
-      // If we did not find a position for this item, check that adding it
-      // at the end does not span multiple sections.
-      if (!this.itemSpansMoreThanOneSection({'x': this.grid.length, 'w': item.w})) {
-        x = this.grid.length;
-        y = fixedRow || 0;
-        return [x, y];
-      // Otherwise, we must add a whole new section at the end of the grid
-      } else {
-        x = Math.floor((this.grid.length + this.options.columnsPerGroup - 1) / this.options.columnsPerGroup) * this.options.columnsPerGroup;
-        y = fixedRow || 0;
-        return [x, y];
-      }
-    } else {
-      return [this.grid.length, fixedRow || 0];
-    }
-
   },
 
   _itemFitsAtPosition: function(item, position) {
@@ -669,7 +637,7 @@ GridList.prototype = {
       }
 
       startX = this._findLeftMostPositionForItem(item);
-      newPosition = this._findPositionForItem(item, {x: startX}, item.y);
+      newPosition = this.findPositionForItem(item, {x: startX}, item.y);
       this._updateItemPosition(item, newPosition);
     }
   },
