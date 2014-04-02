@@ -99,8 +99,13 @@ GridList.prototype = {
     this.options.rows = rows;
     this._adjustHeightOfItems();
 
+    // We don't re-arrange items inside sections
+    if (this.options.columnsPerGroup)
+      return;
+
     this._sortItemsByPosition();
     this._resetGrid();
+
     // The items will be sorted based on their index within the this.items array,
     // that is their "1d position"
     for (i = 0; i < this.items.length; i++) {
