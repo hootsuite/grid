@@ -254,6 +254,26 @@ fixtures.COLUMN_GROUPS_1 = {
   ]
 };
 
+fixtures.DEMO = [
+  {w: 1, h: 1, x: 0, y: 0},
+  {w: 1, h: 1, x: 0, y: 1},
+  {w: 1, h: 1, x: 0, y: 2},
+  {w: 1, h: 0, x: 1, y: 0},
+  {w: 2, h: 1, x: 2, y: 0},
+  {w: 2, h: 1, x: 2, y: 1},
+  {w: 1, h: 1, x: 2, y: 2},
+  {w: 1, h: 1, x: 3, y: 2},
+  {w: 3, h: 1, x: 4, y: 0},
+  {w: 1, h: 1, x: 4, y: 1},
+  {w: 1, h: 1, x: 4, y: 2},
+  {w: 2, h: 1, x: 5, y: 1},
+  {w: 2, h: 1, x: 5, y: 2},
+  {w: 2, h: 0, x: 7, y: 0},
+  {w: 1, h: 1, x: 9, y: 0},
+  {w: 1, h: 1, x: 9, y: 1},
+  {w: 1, h: 1, x: 9, y: 2}
+];
+
 // Enable Node module
 if (typeof(require) == 'function') {
   for (var k in fixtures) {

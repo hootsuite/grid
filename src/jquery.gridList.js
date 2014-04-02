@@ -22,7 +22,11 @@
       rows: 5,
       widthHeightRatio: 1,
       dragAndDrop: true,
-      columnsPerGroup: false
+      columnsPerGroup: false,
+      // Since the entire grid is built fluid and responsive, the separator
+      // width will also be relative to the item width (which in turn is
+      // relative to the parent container's height)
+      groupSeparatorWidth: 0.5
     },
 
     destroy: function() {
@@ -93,12 +97,7 @@
     _initGridList: function() {
       // Create instance of GridList (decoupled lib for handling the grid
       // positioning and sorting post-drag and dropping)
-      var options = {
-          rows: this.options.rows,
-          columnsPerGroup: this.options.columnsPerGroup
-      };
-
-      this.gridList = new GridList(this.items, options);
+      this.gridList = new GridList(this.items, this.options);
     },
 
     _bindEvents: function() {
@@ -202,6 +201,30 @@
       if (this.options.heightToFontSizeRatio) {
         this._fontSize = this._cellHeight * this.options.heightToFontSizeRatio;
       }
+      if (this.options.columnsPerGroup) {
+        this._groupSeparatorWidth = this._cellWidth *
+                                    this.options.groupSeparatorWidth;
+      }
+      this._cacheColPositions();
+    },
+
+    _cacheColPositions: function() {
+      /**
+       * Calculate and cache the center positions from each column, to be able
+       * to find the closest one when dragging items around
+       */
+      var columnsPerGroup = this.options.columnsPerGroup,
+          position = 0,
+          i;
+      this._colPositions = [];
+      for (i = 0; i < this.gridList.grid.length; i++) {
+        this._colPositions[i] = position;
+        // We add a group separator after each last column from a group
+        position += this._cellWidth;
+        if (columnsPerGroup && (i % columnsPerGroup == columnsPerGroup - 1)) {
+          position += this._groupSeparatorWidth;
+        }
+      }
     },
 
     _getItemWidth: function(item) {
@@ -225,14 +248,13 @@
     },
 
     _applyPositionToItems: function() {
-      // TODO: Implement group separators
       for (var i = 0; i < this.items.length; i++) {
         // Don't interfere with the positions of the dragged items
         if (this.items[i].move) {
           continue;
         }
         this.items[i].$element.css({
-          left: this.items[i].x * this._cellWidth,
+          left: this._colPositions[this.items[i].x],
           top: this.items[i].y * this._cellHeight
         });
       }
@@ -253,8 +275,7 @@
       var position = item.$element.position(),
           row,
           col;
-      position[0] -= this.$element.position().left;
-      col = Math.round(position.left / this._cellWidth);
+      col = this._getClosestColFromPosition(position.left);
       row = Math.round(position.top / this._cellHeight);
       // Keep item position within the grid and don't let the item create more
       // than one extra column
@@ -273,11 +294,30 @@
       return [col, row];
     },
 
+    _getClosestColFromPosition: function(x) {
+       /**
+        * Given a horizontal position (in pixels), find the closest column from
+        * the grid. The column with the closest center position is selected.
+        */
+       var col = 0,
+           closestDist = Math.abs(x - this._colPositions[0]),
+           currentDist,
+           i;
+       for (i = 1; i < this._colPositions.length; i++) {
+         currentDist = Math.abs(x - this._colPositions[i]);
+         if (currentDist < closestDist) {
+           closestDist = currentDist;
+           col = i;
+         }
+       }
+       return col;
+     },
+
     _highlightPositionForItem: function(item) {
       this.$positionHighlight.css({
         width: this._getItemWidth(item),
         height: this._getItemHeight(item),
-        left: item.x * this._cellWidth,
+        left: this._colPositions[item.x],
         top: item.y * this._cellHeight
       }).show();
       if (this.options.heightToFontSizeRatio) {
