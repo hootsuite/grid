@@ -227,6 +227,29 @@ fixtures.COLUMN_GROUPS_1 = {
     {w: 1, h: 1, x: 11, y: 0, id: 11},
     {w: 1, h: 1, x: 11, y: 1, id: 12},
     {w: 1, h: 1, x: 11, y: 2, id: 13}
+  ],
+
+  after_moving_7_to_empty_section_and_dragging_10_over_7: [
+    {w: 1, h: 1, x: 0, y: 0, id: 0},
+    {w: 1, h: 1, x: 0, y: 1, id: 1},
+    {w: 1, h: 0, x: 1, y: 0, id: 2},
+    {w: 1, h: 1, x: 2, y: 0, id: 3},
+    {w: 1, h: 1, x: 2, y: 1, id: 4},
+    {w: 1, h: 1, x: 2, y: 2, id: 5},
+
+    {w: 1, h: 1, x: 3, y: 0, id: 6},
+    {w: 2, h: 1, x: 3, y: 2, id: 9},
+
+    {w: 1, h: 1, x: 8, y: 0, id: 11},
+    {w: 1, h: 1, x: 8, y: 1, id: 12},
+    {w: 1, h: 1, x: 8, y: 2, id: 13},
+
+    {w: 2, h: 0, x: 9, y: 0, id: 10},
+
+    {w: 2, h: 1, x: 12, y: 0, id: 7}
+  ],
+
+  after_dragging_6_over_3: [
   ]
 };
 

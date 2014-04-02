@@ -40,7 +40,6 @@ describe("Grid positioning", function() {
         rows: 4,
         columnsPerGroup: 3
       });
-      // This actually means that pullToLeft is done on section boundary only
       item_7 = grid._getItemByAttribute('id', 7);
       grid.moveItemToPosition(item_7, [6, 0]);
       expect(grid.items).toEqualPositionsById(gridFixture.after_dragging_7_to_the_right);
@@ -52,7 +51,6 @@ describe("Grid positioning", function() {
         rows: 4,
         columnsPerGroup: 3
       });
-      // This actually means that pullToLeft is done on section boundary only
       item_7 = grid._getItemByAttribute('id', 7);
       grid.moveItemToPosition(item_7, [4, 0]);
       expect(grid.items).toEqualPositionsById(gridFixture.initial);
@@ -64,7 +62,6 @@ describe("Grid positioning", function() {
         rows: 4,
         columnsPerGroup: 3
       });
-      // This actually means that pullToLeft is done on section boundary only
       item_6 = grid._getItemByAttribute('id', 6);
       grid.moveItemToPosition(item_6, [5, 0]);
       expect(grid.items).toEqualPositionsById(gridFixture.after_dragging_6_over_7_second_half);
@@ -76,11 +73,23 @@ describe("Grid positioning", function() {
         rows: 4,
         columnsPerGroup: 3
       });
-      // This actually means that pullToLeft is done on section boundary only
       item_7 = grid._getItemByAttribute('id', 7);
       grid.moveItemToPosition(item_7, [6, 0]);
       grid.moveItemToPosition(item_7, [4, 0]);
       expect(grid.items).toEqualPositionsById(gridFixture.initial);
+    });
+
+    it("moving 7 to a new section and dragging 10 over 7 should push 7 to a new section", function() {
+      var gridFixture = fixtures.COLUMN_GROUPS_1;
+      var grid = new GridList(GridList.cloneItems(gridFixture.initial), {
+        rows: 4,
+        columnsPerGroup: 3
+      });
+      item_7 = grid._getItemByAttribute('id', 7);
+      item_10 = grid._getItemByAttribute('id', 10);
+      grid.moveItemToPosition(item_7, [10, 0]);
+      grid.moveItemToPosition(item_10, [9, 0]);
+      expect(grid.items).toEqualPositionsById(gridFixture.after_moving_7_to_empty_section_and_dragging_10_over_7);
     });
 
   });
