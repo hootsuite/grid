@@ -148,24 +148,6 @@ GridList.prototype = {
     this._resolveCollisions(item);
   },
 
-
-  _resolveCollisions: function(item) {
-    if (!this._tryToResolveCollisionsLocally(item)) {
-      if (this.options.columnsPerGroup) {
-        var targetSection = this._getSection(item);
-        this._moveAllSectionsToTheRight(targetSection, item);
-      } else {
-        this._pullItemsToLeft(item);
-      }
-    }
-
-    if (!this.options.columnsPerGroup) {
-        this._pullItemsToLeft();
-    } else {
-        this._deleteEmptySections();
-    }
-  },
-
   resizeItem: function(item, width) {
     this._updateItemSize(item, width);
     this._resolveCollisions(item);
@@ -394,6 +376,24 @@ GridList.prototype = {
       if (!this.grid[i]) {
         this.grid.push(new GridCol(this.options.rows));
       }
+    }
+  },
+
+
+  _resolveCollisions: function(item) {
+    if (!this._tryToResolveCollisionsLocally(item)) {
+      if (this.options.columnsPerGroup) {
+        var targetSection = this._getSection(item);
+        this._moveAllSectionsToTheRight(targetSection, item);
+      } else {
+        this._pullItemsToLeft(item);
+      }
+    }
+
+    if (!this.options.columnsPerGroup) {
+        this._pullItemsToLeft();
+    } else {
+        this._deleteEmptySections();
     }
   },
 
