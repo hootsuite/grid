@@ -238,6 +238,7 @@ fixtures.COLUMN_GROUPS_1 = {
     {w: 1, h: 1, x: 2, y: 2, id: 5},
 
     {w: 1, h: 1, x: 3, y: 0, id: 6},
+    {w: 2, h: 1, x: 3, y: 1, id: 8},
     {w: 2, h: 1, x: 3, y: 2, id: 9},
 
     {w: 1, h: 1, x: 8, y: 0, id: 11},
