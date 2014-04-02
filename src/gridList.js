@@ -279,7 +279,8 @@ GridList.prototype = {
      * Check that an item wouldn't overlap with another one if placed at a
      * certain position within the grid
      */
-    var x, y, row;
+    var x, y, row,
+        currentSection, futureSection;
     // No coordonate can be negative
     if (position[0] < 0 || position[1] < 0) {
       return false;
