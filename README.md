@@ -37,10 +37,10 @@ positions in a persistent medium (e.g. syncing grid to db with minimum payload)
 
 #### Item
 
-The item is the building block of GridList. The primary function of the
-GridList is to position items two-dimentionally. Which brings us to the
-composition of an item: **w** and **h** for size, **x** and **y** for
-position. E.g.
+The item is the building block of GridList, and is a plain JavaScript object.
+The primary function of the GridList is to position such items
+two-dimentionally. Which brings us to the composition of an item: **w** and
+**h** for size, **x** and **y** for position. E.g.
 
 ```js
 {
@@ -54,6 +54,22 @@ they are integer values starting from 0. Naturally, w and h (**width** and
 **height**) also take up space in the same coordinate system, which reveals the
 smallest unit of a grid: the **cell.** You could say, for example, that the
 featured item from above takes up three grid cells.
+
+#### gridList.items
+
+A GridList instance works around a list of items. It is the first parameter of
+the class constructor and is always visible under the `.items` property. Here's
+a list of items for a grid with three 1x1 items on a column with three rows:
+
+```js
+[{
+  w: 1, h: 1, x: 0, y: 0
+}, {
+  w: 1, h: 1, x: 0, y: 1
+}, {
+  w: 1, h: 1, x: 0, y: 2
+}]
+```
 
 ## $.fn.gridList
 
