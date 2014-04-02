@@ -284,6 +284,18 @@ GridList.prototype = {
     if (position[0] < 0 || position[1] < 0) {
       return false;
     }
+
+    // Make sure the item fits in the current section
+    if(this.options.columnsPerGroup) {
+      currentSection = this._getSection(item);
+      futureSection = this._getSection({
+                                        x: position[0] + item.w,
+                                        y: position[1]
+                                      });
+      if(currentSection !== futureSection) {
+        return false;
+      }
+    }
     // Make sure the item isn't larger than the entire grid
     if (position[1] + item.h > this.options.rows) {
       return false;

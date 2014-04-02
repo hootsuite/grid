@@ -247,7 +247,7 @@ fixtures.COLUMN_GROUPS_1 = {
 
     {w: 2, h: 0, x: 9, y: 0, id: 10},
 
-    {w: 2, h: 1, x: 12, y: 0, id: 7}
+    {w: 2, h: 1, x: 13, y: 0, id: 7}
   ],
 
   after_dragging_6_over_3: [
