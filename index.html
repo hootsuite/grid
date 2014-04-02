@@ -141,18 +141,19 @@ var buildGridElements = function($gridContainer, items) {
   }
 };
 
-var currentGridSize = 3;
+var currentGridSize = 4;
 var updateGridSize = function() {
   $('#grid').gridList('resize', currentGridSize);
 };
 
 $(function() {
-  buildGridElements($('#grid'), fixtures.GRID2.rows3);
+  buildGridElements($('#grid'), fixtures.COLUMN_GROUPS_1.initial);
 
-  $('#grid').gridList({
+  var gridList = $('#grid').gridList({
     rows: currentGridSize,
     widthHeightRatio: 264 / 294,
     heightToFontSizeRatio: 0.25,
+    columnsPerGroup: 3,
     onChange: function(changedItems) {
       // Hack to flash changed items visually
       for (var i = 0; i < changedItems.length; i++) {
@@ -165,6 +166,24 @@ $(function() {
       }
     }
   });
+
+  //updateGridSize();
+  var i, elem;
+
+  for (i = 0; i < 50; i++) {
+    elem = $('<li></li>');
+    elem.css({
+      'width': 1,
+      'height': 10000,
+      'backgroundColor': 'red',
+      'position': 'absolute',
+      'top': 0,
+      'left': i * 3 * window._cellWidth
+    });
+
+    $('.grid-container ul.grid').append(elem);
+  }
+
   $('#grid li .resize').click(function(e) {
     e.preventDefault();
     var itemElement = $(e.currentTarget).closest('li'),
@@ -182,9 +201,12 @@ $(function() {
     updateGridSize();
   });
 });
+
 $(window).resize(function() {
   $('#grid').gridList('resize', currentGridSize);
-})
+});
+
+
   </script>
 </head>
 <body>
