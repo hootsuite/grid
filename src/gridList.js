@@ -424,35 +424,20 @@ GridList.prototype = {
      * It can optionally skip an item, given as a parameter, so that
      * the dragged item stays the same.
      */
-    var itemsInSection, i, itemToMove,
-        _gridList = new GridList([], this.options);
+    var startingWithCol = this.options.columnsPerGroup * sectionStartingWith,
+        itemToMove,
+        i;
 
-    // Note: we cannot use this.grid[i][j] to check which items should
-    // be moved to the right because it might be already corrupted by the
-    // _updateItemPosition call for the dragged item.
-
-    // Sort all the items by x, y so that we can go through them
-    // from the end to the start and move them one section to the right, each.
-    GridList.cloneItems(this.items, _gridList.items);
-    _gridList.generateGrid();
-    _gridList._sortItemsByPosition();
-
-    for (i = _gridList.items.length - 1; i >= 0; i--) {
-      itemToMove = _gridList.items[i];
-
-      // TODO: this is shaky, needs some love when itemToMove and itemToSkip
-      // are both with the same parameters, but are overlapping widgets.
-      if (itemToSkip != undefined && itemToMove.x == itemToSkip.x && itemToMove.y == itemToSkip.y && itemToMove.h == itemToSkip.h && itemToMove.w == itemToSkip.w) {
+    this._sortItemsByPosition();
+    for (i = this.items.length - 1; i >= 0; i--) {
+      itemToMove = this.items[i];
+      if (!itemToMove || itemToMove == itemToSkip || itemToMove.x < startingWithCol) {
         continue;
       }
-
-      if (this._getSection(itemToMove) >= sectionStartingWith) {
-        var itemInCurrentGrid = this._getItemByAttributes({x: itemToMove.x, y: itemToMove.y, w: itemToMove.w, h: itemToMove.h});
-        this._updateItemPosition(itemInCurrentGrid,
-                                 [itemInCurrentGrid.x + this.options.columnsPerGroup,
-                                  itemInCurrentGrid.y]);
-      }
+      this._updateItemPosition(
+        itemToMove, [itemToMove.x + this.options.columnsPerGroup, itemToMove.y]);
     }
+    this._sortItemsByPosition();
   },
 
   _getFirstEmptySection: function() {
