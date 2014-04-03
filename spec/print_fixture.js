@@ -33,15 +33,15 @@ function get_position(fixture, x,y){
     return 'xx'
 };
 
-s('\n   #| 0  1  2  3  4  5  6  7  8  9\n');
-s('   --------------------------------');
+s('\n   #| 0  1  2  3  4  5  6  7  8  9 10 11 12\n');
+s('   -------------------------------------------');
 for (var i=0; i<6; i++){
     s('\n   '+i+'|');
-    for (var j=0; j<10; j++){
+    for (var j=0; j<13; j++){
         s(' ');
         widget_name = get_position(fixture, j, i);
         if (widget_name <= 9){s('0');}
         s(widget_name);
     }
 };
-s('\n\n')
+s('\n\n');
