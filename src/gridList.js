@@ -298,6 +298,7 @@ GridList.prototype = {
       this._deleteItemPositionFromGrid(item);
     }
     item.w = width;
+    item.x = this._findLeftMostPositionForItem(item);
 
     // Move item to the right if it does not fit in the current section
     // anymore
