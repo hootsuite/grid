@@ -87,6 +87,17 @@ describe("Grid positioning", function() {
       expect(grid.items).toEqualPositions(gridFixture.after_moving_9_to_empty_section_and_dragging_10_over_9);
     });
 
+    it("moving 6 over 3 should push 3 to the next page (even though they have same x,y,w,h)", function() {
+      var gridFixture = fixtures.COLUMN_GROUPS_1;
+      var grid = new GridList(GridList.cloneItems(gridFixture.initial), {
+        rows: 4,
+        columnsPerGroup: 3
+      });
+      item_6 = grid.items[6];
+      grid.moveItemToPosition(item_6, [2, 0]);
+      expect(grid.items).toEqualPositions(gridFixture.after_moving_9_to_empty_section_and_dragging_10_over_9);
+    });
+
   });
 
 });
