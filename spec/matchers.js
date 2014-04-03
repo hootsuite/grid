@@ -3,9 +3,9 @@ exports.toEqualPositions = function(expected) {
     We don't care about the other fields, only the positions and that the
     indexes correspond (e.g. the h changes for items with auto height)
   */
- var _expected,
-     _actual;
- this.message = function () {
+  var _expected,
+      _actual;
+  this.message = function () {
     return JSON.stringify(_actual) +
            " should be at position " +
            JSON.stringify(_expected);
