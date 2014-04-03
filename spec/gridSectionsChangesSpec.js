@@ -95,7 +95,7 @@ describe("Grid positioning", function() {
       });
       item_6 = grid.items[6];
       grid.moveItemToPosition(item_6, [2, 0]);
-      expect(grid.items).toEqualPositions(gridFixture.after_moving_9_to_empty_section_and_dragging_10_over_9);
+      expect(grid.items).toEqualPositions(gridFixture.after_dragging_6_over_3);
     });
 
   });
