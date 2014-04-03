@@ -51,6 +51,16 @@ var GridList = function(items, options) {
 };
 
 GridList.renderItemsToString = function(items){
+  /* Illustates widget positions on grid from fixtures
+   *
+   *  #|  0  1  2  3  4  5  6  7  8  9 10 11 12 13
+   *  --------------------------------------------
+   *  0| 00 02 03 04 04 06 08 08 08 12 12 13 14 16
+   *  1| 01 -- 03 05 05 07 09 10 11 11 -- 13 15 --
+   *
+   * Warn: this is just an illustration, those aren't permanent ids, they're
+   * just the current position of the the widgets in the current item list.
+   */
   function get_position(x, y){
     /* Returns the index of the widget in the items list that ocuppies
      * those coordinates. `--` means no widget occupies that possition.*/
