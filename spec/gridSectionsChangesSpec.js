@@ -109,6 +109,17 @@ describe("Grid positioning", function() {
       expect(grid.items).toEqualPositions(gridFixture.after_dragging_6_over_7);
     });
 
+    it("moving 3 over 4 should interchange them instead of creating a new section", function() {
+      var gridFixture = fixtures.COLUMN_GROUPS_1;
+      var grid = new GridList(GridList.cloneItems(gridFixture.initial), {
+        rows: 4,
+        columnsPerGroup: 3
+      });
+      item_3 = grid.items[3];
+      grid.moveItemToPosition(item_6, [2, 1]);
+      expect(grid.items).toEqualPositions(gridFixture.after_moving_3_over_4);
+    });
+
   });
 
 });
