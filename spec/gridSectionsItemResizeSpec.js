@@ -29,6 +29,20 @@ describe("Grid positioning", function() {
       expect(grid.items).toEqualPositions(gridFixture.after_resizing_9_to_3x);
     });
 
+    it("move 7 to right and resizing 7 to 3x should move it back left in the same section", function() {
+      var gridFixture = fixtures.COLUMN_GROUPS_1;
+      var grid = new GridList(GridList.cloneItems(gridFixture.initial), {
+        rows: 4,
+        columnsPerGroup: 3
+      });
+      // This actually means that pullToLeft is done on section boundary only
+      item_7 = grid.items[7];
+      grid.moveItemToPosition(item_7, [4, 1]);
+      grid.resizeItem(item_7, 3);
+      expect(grid.items).toEqualPositions(gridFixture.after_resizing_7_to_3x);
+    });
+
+
   });
 
 });
