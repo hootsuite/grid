@@ -145,10 +145,10 @@ fixtures.COLUMN_GROUPS_1 = {
     {w: 2, h: 1, x: 3, y: 2, id: 8},
     {w: 2, h: 1, x: 4, y: 0, id: 9},
 
+    {w: 2, h: 0, x: 7, y: 0, id: 10},
     {w: 1, h: 1, x: 6, y: 0, id: 11},
     {w: 1, h: 1, x: 6, y: 1, id: 12},
-    {w: 1, h: 1, x: 6, y: 2, id: 13},
-    {w: 2, h: 0, x: 7, y: 0, id: 10}
+    {w: 1, h: 1, x: 6, y: 2, id: 13}
   ],
 
   after_moving_section_2_to_the_right: [

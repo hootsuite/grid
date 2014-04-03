@@ -17,9 +17,6 @@ describe("Grid positioning", function() {
 
   describe("For sections configuration #1", function() {
 
-    /*
-     * need better local conflict algorithm to solve this
-
     it("moving 10 to the right should leave 11, 12 and 13 on the same page", function() {
       var gridFixture = fixtures.COLUMN_GROUPS_1;
       var grid = new GridList(GridList.cloneItems(gridFixture.initial), {
@@ -31,7 +28,6 @@ describe("Grid positioning", function() {
       grid.moveItemToPosition(item_10, [7, 0]);
       expect(grid.items).toEqualPositions(gridFixture.after_dragging_10_to_the_right);
     });
-    */
 
     it("moving 9 to the right should move everything one section to the right", function() {
       var gridFixture = fixtures.COLUMN_GROUPS_1;
