@@ -266,7 +266,7 @@ GridList.prototype = {
                                                   y: position[1],
                                                   w: item.w
                                                 });
-      if (this.itemSpansOverCurrentSection) {
+      if (itemSpansOverCurrentSection) {
         return false;
       }
     }
