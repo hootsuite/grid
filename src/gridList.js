@@ -298,13 +298,18 @@ GridList.prototype = {
       this._deleteItemPositionFromGrid(item);
     }
     item.w = width;
-    item.x = this._findLeftMostPositionForItem(item);
+
+    // First try to position it from current position
+    if (this.itemSpansMoreThanOneSection(item)) {
+      item.x = this._findLeftMostPositionForItem(item);
+    }
 
     // Move item to the right if it does not fit in the current section
     // anymore
     if (this.itemSpansMoreThanOneSection(item)) {
       item.x = item.x + this.options.columnsPerGroup - item.x % this.options.columnsPerGroup;
     }
+
     this._markItemPositionToGrid(item);
   },
 
