@@ -216,7 +216,12 @@
           position = 0,
           i;
       this._colPositions = [];
-      for (i = 0; i < this.gridList.grid.length; i++) {
+
+      // Dragging might create a new section, so make sure we compute
+      // column coordinates for that one as well. Otherwise, the items
+      // will get snapped to the previous page.
+      columnsToGenerate = this.gridList.grid.length + columnsPerGroup;
+      for (i = 0; i < columnsToGenerate; i++) {
         this._colPositions[i] = position;
         // We add a group separator after each last column from a group
         position += this._cellWidth;
