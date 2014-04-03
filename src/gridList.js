@@ -51,55 +51,59 @@ var GridList = function(items, options) {
 };
 
 GridList.renderItemsToString = function(items){
-    function get_position(x, y){
-    	/* Returns the index of the widget in the items list that ocuppies
-    	 * those coordinates. `--` means no widget occupies that possition.*/
-        for (var i=0;i<items.length;i++){
-            height = items[i]['h']
-            if (height == 0){height = 999};
+  function get_position(x, y){
+    /* Returns the index of the widget in the items list that ocuppies
+     * those coordinates. `--` means no widget occupies that possition.*/
+    for (var i=0;i<items.length;i++){
+      height = items[i].h
+      if (height == 0){height = 999};
 
-            if (items[i]['x'] <= x && ((items[i]['x'] + items[i]['w']) > x) &&
-                items[i]['y'] <= y && ((items[i]['y'] + height) > y)){
-                return i;
-            }
-        };
-        return '--';
+      if (items[i].x <= x && ((items[i].x + items[i].w) > x) &&
+        items[i].y <= y && ((items[i].y + height) > y)){
+        return i;
+      };
     };
+    return '--';
+  };
 
-    function _get_max_coord(coord){
-    	/* Return the biggest value of the given coordinate (x or y).*/
-        var max_coord = 0;
-        for (var i=0; i<items.length;i++){
-                max_coord = Math.max(items[i][coord], max_coord);
-        };
-        return max_coord;
+  function _get_max_coord(coord){
+    /* Return the biggest value of the given coordinate (x or y) from the
+     * items list.*/
+    var max_coord = 0;
+    for (var i=0; i<items.length;i++){
+      max_coord = Math.max(items[i][coord], max_coord);
     };
+    return max_coord;
+  };
 
-    // Set the grid to be shown a bit bigger to illustrate margins
-    width_of_grid = _get_max_coord('x') + 1;
-    height_of_grid = _get_max_coord('y') + 1;
+  // Set the grid to be shown a bit bigger to illustrate margins
+  width_of_grid = _get_max_coord('x') + 1;
+  height_of_grid = _get_max_coord('y') + 1;
 
-    var output = '\n   #|';
-    var border = '\n   --';
-    for (var i=0; i<width_of_grid; i++){
-    	if (i<=9){pos = ' ' + i;}
-    	else {pos = i;};
-    	output += ' ' + pos;
-    	border += '---';
-    };
-    output += border;
+  // Print the upper axis coords and boarder
+  var output = '\n   #|';
+  var border = '\n   --';
+  for (var i=0; i<width_of_grid; i++){
+    if (i<=9){pos = ' ' + i;}
+    else {pos = i;};
+    output += ' ' + pos;
+    border += '---';
+  };
+  output += border;
 
-    for (var i=0; i<height_of_grid; i++){
-        output += '\n   ' + i + '|';
-        for (var j=0; j<width_of_grid; j++){
-            output += ' ';
-            widget_name = get_position(j, i);
-            if (widget_name <= 9){output += '0';}
-            output += widget_name;
-        }
-    };
-    output += '\n\n';
-    return output;
+  // Print as we go the y axis coords and border and each widget in what
+  // position it is
+  for (var i=0; i<height_of_grid; i++){
+    output += '\n   ' + i + '|';
+    for (var j=0; j<width_of_grid; j++){
+      output += ' ';
+      widget_name = get_position(j, i);
+      if (widget_name <= 9){output += '0';}
+      output += widget_name;
+    }
+  };
+  output += '\n\n';
+  return output;
 };
 
 GridList.cloneItems = function(items, _items) {
@@ -133,7 +137,7 @@ GridList.prototype = {
   },
 
   toString: function() {
-	return GridList.renderItemsToString(this.items);
+    return GridList.renderItemsToString(this.items);
   },
 
   generateGrid: function() {
