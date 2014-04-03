@@ -132,7 +132,7 @@ GridList.prototype = {
     for (x = start.x; x < this.grid.length; x++) {
       // If we have sections enabled, skip those candidates that would make the
       // item span more than one section.
-      if (this.options.columnsPerGroup && this.itemSpansMoreThanOneSection({'x': x, 'w': item.w})) {
+      if (this.itemSpansMoreThanOneSection({x: x, w: item.w})) {
         continue;
       }
 
@@ -151,22 +151,16 @@ GridList.prototype = {
       }
     }
 
-    if (this.options.columnsPerGroup) {
       // If we did not find a position for this item, check that adding it
       // at the end does not span multiple sections.
-      if (!this.itemSpansMoreThanOneSection({'x': this.grid.length, 'w': item.w})) {
-        x = this.grid.length;
+      if (this.itemSpansMoreThanOneSection({x: this.grid.length, w: item.w})) {
+        x = Math.floor((this.grid.length + this.options.columnsPerGroup - 1) / this.options.columnsPerGroup) * this.options.columnsPerGroup;
         y = fixedRow || 0;
         return [x, y];
       // Otherwise, we must add a whole new section at the end of the grid
       } else {
-        x = Math.floor((this.grid.length + this.options.columnsPerGroup - 1) / this.options.columnsPerGroup) * this.options.columnsPerGroup;
-        y = fixedRow || 0;
-        return [x, y];
+        return [this.grid.length, fixedRow || 0];
       }
-    } else {
-      return [this.grid.length, fixedRow || 0];
-    }
   },
 
   moveItemToPosition: function(item, position) {
@@ -243,6 +237,10 @@ GridList.prototype = {
   },
 
   itemSpansMoreThanOneSection: function(item) {
+    if (!this.options.columnsPerGroup) {
+      return false;
+    }
+
     return item.x % this.options.columnsPerGroup +
            item.w > this.options.columnsPerGroup;
   },
@@ -252,7 +250,7 @@ GridList.prototype = {
      * Check that an item wouldn't overlap with another one if placed at a
      * certain position within the grid
      */
-    var x, y, row, itemSpansOverCurrentSection;
+    var x, y, row;
 
     // No coordonate can be negative
     if (position[0] < 0 || position[1] < 0) {
@@ -260,15 +258,8 @@ GridList.prototype = {
     }
 
     // Make sure the item fits in the current section
-    if (this.options.columnsPerGroup) {
-      itemSpansOverCurrentSection = this.itemSpansMoreThanOneSection({
-                                                  x: position[0],
-                                                  y: position[1],
-                                                  w: item.w
-                                                });
-      if (itemSpansOverCurrentSection) {
+    if (this.itemSpansMoreThanOneSection({x: position[0], w: item.w})) {
         return false;
-      }
     }
     // Make sure the item isn't larger than the entire grid
     if (position[1] + item.h > this.options.rows) {
@@ -310,7 +301,7 @@ GridList.prototype = {
 
     // Move item to the right if it does not fit in the current section
     // anymore
-    if (this.options.columnsPerGroup && this.itemSpansMoreThanOneSection(item)) {
+    if (this.itemSpansMoreThanOneSection(item)) {
       item.x = item.x + this.options.columnsPerGroup - item.x % this.options.columnsPerGroup;
     }
     this._markItemPositionToGrid(item);
