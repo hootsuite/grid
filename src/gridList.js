@@ -51,7 +51,7 @@ var GridList = function(items, options) {
 };
 
 GridList.renderItemsToString = function(items){
-  /* Illustates widget positions on grid from fixtures
+  /* Illustates widget positions on grid from current items list.
    *
    *  #|  0  1  2  3  4  5  6  7  8  9 10 11 12 13
    *  --------------------------------------------
