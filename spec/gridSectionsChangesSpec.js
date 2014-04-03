@@ -116,7 +116,7 @@ describe("Grid positioning", function() {
         columnsPerGroup: 3
       });
       item_3 = grid.items[3];
-      grid.moveItemToPosition(item_6, [2, 1]);
+      grid.moveItemToPosition(item_3, [2, 1]);
       expect(grid.items).toEqualPositions(gridFixture.after_moving_3_over_4);
     });
 
