@@ -252,21 +252,21 @@ GridList.prototype = {
      * Check that an item wouldn't overlap with another one if placed at a
      * certain position within the grid
      */
-    var x, y, row,
-        currentSection, futureSection;
+    var x, y, row, itemSpansOverCurrentSection;
+
     // No coordonate can be negative
     if (position[0] < 0 || position[1] < 0) {
       return false;
     }
 
     // Make sure the item fits in the current section
-    if(this.options.columnsPerGroup) {
-      currentSection = this._getSection(item);
-      futureSection = this._getSection({
-                                        x: position[0] + item.w,
-                                        y: position[1]
-                                      });
-      if(currentSection !== futureSection) {
+    if (this.options.columnsPerGroup) {
+      itemSpansOverCurrentSection = this.itemSpansMoreThanOneSection({
+                                                  x: position[0],
+                                                  y: position[1],
+                                                  w: item.w
+                                                });
+      if (this.itemSpansOverCurrentSection) {
         return false;
       }
     }
