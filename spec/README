@@ -3,5 +3,5 @@ sudo npm install jasmine-node -g
 jasmine-node gridChangesSpec.js
 
 ### How to read fixtures easier
-node print_fixture.js GRID2.rows3
+In a test do console.log(GridList.renderItemsToString(fixtures['GRID2']['rows3']))
 

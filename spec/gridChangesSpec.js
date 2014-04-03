@@ -31,7 +31,7 @@ describe("Grid changes", function() {
       rows: 3
     });
     helpers.addIndexesToItems(grid.items);
-    snapshot = GridList.cloneItems(grid.items);
+    var snapshot = GridList.cloneItems(grid.items);
     grid.moveItemToPosition(grid.items[0], [0, 0]);
 
     expect(grid.getChangedItems(snapshot, 'index')).toEqual([]);
