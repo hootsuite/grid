@@ -44,7 +44,7 @@ describe("Grid collisions", function() {
     var expectedItems = GridList.cloneItems(gridFixture);
     expectedItems[13] = {x: 8, y: 0};
     expectedItems[14] = {x: 7, y: 0};
-    expectedItems[15] = {x: 7, y: 1};
+    expectedItems[15] = {x: 7, y: 2};
     expectedItems[16] = {x: 7, y: 2};
     helpers.addIndexesToItems(expectedItems);
     expect(grid.items).toEqualPositions(expectedItems);

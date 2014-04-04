@@ -80,18 +80,6 @@ GridList.prototype = {
     rows: 5
   },
 
-  /** Return the biggest value of the given axis (x or y) from the
-   * items list. Also extends if the item is not of size 1/1.
-   */
-  _getMaxCoord: function(axis) {
-    var maxCoord = 0;
-    var size = axis == 'x'? 'w' : 'h';
-    for (var i=0; i<this.items.length;i++){
-      maxCoord = Math.max(this.items[i][axis] + this.items[i][size], maxCoord);
-    };
-    return maxCoord;
-  },
-
   /**
    * Illustates grid with item.index of each.
    *
@@ -116,8 +104,8 @@ GridList.prototype = {
       this.items[i].index = i;
     };
 
-    widthOfGrid = this._getMaxCoord('x');
-    heightOfGrid = this._getMaxCoord('y');
+    widthOfGrid = this.grid.length;
+    heightOfGrid = this.options.rows;
 
     // Print the upper axis coords and boarder
     var output = '\n   #|';
