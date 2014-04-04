@@ -80,48 +80,49 @@ GridList.prototype = {
     rows: 5
   },
 
-  _get_max_coord: function(axis) {
+  _getMaxCoord: function(axis) {
     /* Return the biggest value of the given axis (x or y) from the
      * items list. Also extends if the items is not of size 1/1.*/
-    var max_coord = 0;
+    var maxCoord = 0;
     var size = axis == 'x'? 'w' : 'h';
     for (var i=0; i<this.items.length;i++){
-      max_coord = Math.max(this.items[i][axis] + this.items[i][size],
-                           max_coord);
+      maxCoord = Math.max(this.items[i][axis] + this.items[i][size],
+                           maxCoord);
     };
-    return max_coord;
+    return maxCoord;
   },
 
+  /**
+   * Illustates grid with item.index of each.
+   *
+   *  #|  0  1  2  3  4  5  6  7  8  9 10 11 12 13
+   *  --------------------------------------------
+   *  0| 00 02 03 04 04 06 08 08 08 12 12 13 14 16
+   *  1| 01 -- 03 05 05 07 09 10 11 11 -- 13 15 --
+   *
+   * Warn:
+   *  - items that don't have index, will use position in items
+   *  - does not work if width or height aren't specified(as the rest of
+   * 	the grid doesn't work)
+   */
   toString: function() {
-    /* Illustates grid with item.index of each.
-     *
-     *  #|  0  1  2  3  4  5  6  7  8  9 10 11 12 13
-     *  --------------------------------------------
-     *  0| 00 02 03 04 04 06 08 08 08 12 12 13 14 16
-     *  1| 01 -- 03 05 05 07 09 10 11 11 -- 13 15 --
-     *
-     * Warn:
-     *  - items that don't have index, will use position in items
-     *  - does not work if width or height aren't specified(as the rest of
-     * 	the grid doesn't work)
-     */
     // Set the index, this will be the `name` of the item in the illustation
-    var need_cleanup = false;
+    var needCleanup = false;
     for (var i = 0; i < this.items.length; i++) {
-      if (this.items[i].index != undefined){
+      if (this.items[i].index != undefined) {
       	break;
       };
-      need_cleanup = true;
+      needCleanup = true;
       this.items[i].index = i;
     };
 
-    width_of_grid = this._get_max_coord('x');
-    height_of_grid = this._get_max_coord('y');
+    widthOfGrid = this._getMaxCoord('x');
+    heightOfGrid = this._getMaxCoord('y');
 
     // Print the upper axis coords and boarder
     var output = '\n   #|';
     var border = '\n   --';
-    for (var i = 0; i < width_of_grid; i++) {
+    for (var i = 0; i < widthOfGrid; i++) {
       pos = i <= 9 ? ' ' + i : i;
       output += ' ' + pos;
       border += '---';
@@ -130,23 +131,23 @@ GridList.prototype = {
 
     // Print as we go on the y axis coords and border and each item in what
     // position it is.
-    for (var i = 0; i < height_of_grid; i++) {
+    for (var i = 0; i < heightOfGrid; i++) {
       output += '\n   ' + i + '|';
-      for (var j = 0; j < width_of_grid; j++) {
+      for (var j = 0; j < widthOfGrid; j++) {
         output += ' ';
-        item_name = (this.grid[j] != null &&
+        name = (this.grid[j] != null &&
                      this.grid[j][i] != null &&
                      this.grid[j][i].index != 'undefined'
                      ? this.grid[j][i].index : '--');
-        if (item_name <= 9) {
+        if (name <= 9) {
             output += '0';
         }
-        output += item_name;
+        output += name;
       }
     };
-    if (need_cleanup){
+    if (needCleanup) {
       for (var i = 0; i < this.items.length; i++){
-        delete this.items[i].index;
+        this.items[i].index = null;
       };
     };
     output += '\n\n';
