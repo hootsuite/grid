@@ -46,6 +46,7 @@ describe("Grid collisions", function() {
     expectedItems[14] = {x: 7, y: 0};
     expectedItems[15] = {x: 7, y: 1};
     expectedItems[16] = {x: 7, y: 2};
+    helpers.addIndexesToItems(expectedItems);
     expect(grid.items).toEqualPositions(expectedItems);
   });
 

@@ -50,72 +50,6 @@ var GridList = function(items, options) {
   this.generateGrid();
 };
 
-GridList.renderItemsToString = function(items){
-  /* Illustates widget positions on grid from current items list.
-   *
-   *  #|  0  1  2  3  4  5  6  7  8  9 10 11 12 13
-   *  --------------------------------------------
-   *  0| 00 02 03 04 04 06 08 08 08 12 12 13 14 16
-   *  1| 01 -- 03 05 05 07 09 10 11 11 -- 13 15 --
-   *
-   * Warn: this is just an illustration, those aren't permanent ids, they're
-   * just the current position of the the widgets in the current item list.
-   */
-  function get_position(x, y){
-    /* Returns the index of the widget in the items list that ocuppies
-     * those coordinates. `--` means no widget occupies that possition.*/
-    for (var i=0;i<items.length;i++){
-      height = items[i].h
-      if (height == 0){height = 999};
-
-      if (items[i].x <= x && ((items[i].x + items[i].w) > x) &&
-        items[i].y <= y && ((items[i].y + height) > y)){
-        return i;
-      };
-    };
-    return '--';
-  };
-
-  function _get_max_coord(coord){
-    /* Return the biggest value of the given coordinate (x or y) from the
-     * items list.*/
-    var max_coord = 0;
-    for (var i=0; i<items.length;i++){
-      max_coord = Math.max(items[i][coord], max_coord);
-    };
-    return max_coord;
-  };
-
-  // Set the grid to be shown a bit bigger to illustrate margins
-  width_of_grid = _get_max_coord('x') + 1;
-  height_of_grid = _get_max_coord('y') + 1;
-
-  // Print the upper axis coords and boarder
-  var output = '\n   #|';
-  var border = '\n   --';
-  for (var i=0; i<width_of_grid; i++){
-    if (i<=9){pos = ' ' + i;}
-    else {pos = i;};
-    output += ' ' + pos;
-    border += '---';
-  };
-  output += border;
-
-  // Print as we go the y axis coords and border and each widget in what
-  // position it is
-  for (var i=0; i<height_of_grid; i++){
-    output += '\n   ' + i + '|';
-    for (var j=0; j<width_of_grid; j++){
-      output += ' ';
-      widget_name = get_position(j, i);
-      if (widget_name <= 9){output += '0';}
-      output += widget_name;
-    }
-  };
-  output += '\n\n';
-  return output;
-};
-
 GridList.cloneItems = function(items, _items) {
   /**
    * Clone items with a deep level of one. Items are not referenced but their
@@ -147,7 +81,72 @@ GridList.prototype = {
   },
 
   toString: function() {
-    return GridList.renderItemsToString(this.items);
+    /* Illustates grid with item.index of each.
+     *
+     *  #|  0  1  2  3  4  5  6  7  8  9 10 11 12 13
+     *  --------------------------------------------
+     *  0| 00 02 03 04 04 06 08 08 08 12 12 13 14 16
+     *  1| 01 -- 03 05 05 07 09 10 11 11 -- 13 15 --
+     *
+     * Warn:
+     *  - items that don't have index, will use position in items
+     *  - does not work if width or height aren't specified
+     */
+    // Set the index, this will be the `name` of the item in the illustation
+    var need_cleanup = false;
+    for (var i = 0; i < this.items.length; i++){
+      if (this.items[i].index != undefined){
+      	break;
+      }
+      need_cleanup = true;
+      this.items[i].index = i;
+    };
+    function _get_max_coord(items, coord){
+      /* Return the biggest value of the given coordinate (x or y) from the
+       * items list. Also extends if the items is not of size 1/1.*/
+      var max_coord = 0;
+      var size = coord == 'x'? 'w' : 'h';
+      for (var i=0; i<items.length;i++){
+        max_coord = Math.max(items[i][coord] + items[i][size], max_coord);
+      };
+      return max_coord;
+    };
+
+    width_of_grid = _get_max_coord(this.items, 'x');
+    height_of_grid = _get_max_coord(this.items, 'y');
+
+    // Print the upper axis coords and boarder
+    var output = '\n   #|';
+    var border = '\n   --';
+    for (var i=0; i<width_of_grid; i++){
+      if (i<=9){pos = ' ' + i;}
+      else {pos = i;};
+      output += ' ' + pos;
+      border += '---';
+    };
+    output += border;
+
+    // Print as we go on the y axis coords and border and each item in what
+    // position it is.
+    for (var i=0; i<height_of_grid; i++){
+      output += '\n   ' + i + '|';
+      for (var j=0; j<width_of_grid; j++){
+        output += ' ';
+        item_name = (this.grid[j] != null &&
+                     this.grid[j][i] != null &&
+                     this.grid[j][i].index != 'undefined'
+                     ? this.grid[j][i].index : '--');
+        if (item_name <= 9){output += '0';}
+        output += item_name;
+      }
+    };
+    if (need_cleanup){
+      for (var i=0; i<this.items.length; i++){
+        delete this.items[i].index;
+      };
+    };
+    output += '\n\n';
+    return output;
   },
 
   generateGrid: function() {
