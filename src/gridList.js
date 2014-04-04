@@ -80,14 +80,14 @@ GridList.prototype = {
     rows: 5
   },
 
+  /** Return the biggest value of the given axis (x or y) from the
+   * items list. Also extends if the item is not of size 1/1.
+   */
   _getMaxCoord: function(axis) {
-    /* Return the biggest value of the given axis (x or y) from the
-     * items list. Also extends if the items is not of size 1/1.*/
     var maxCoord = 0;
     var size = axis == 'x'? 'w' : 'h';
     for (var i=0; i<this.items.length;i++){
-      maxCoord = Math.max(this.items[i][axis] + this.items[i][size],
-                           maxCoord);
+      maxCoord = Math.max(this.items[i][axis] + this.items[i][size], maxCoord);
     };
     return maxCoord;
   },
@@ -103,7 +103,7 @@ GridList.prototype = {
    * Warn:
    *  - items that don't have index, will use position in items
    *  - does not work if width or height aren't specified(as the rest of
-   * 	the grid doesn't work)
+   * 	the grid doesn't work).
    */
   toString: function() {
     // Set the index, this will be the `name` of the item in the illustation
