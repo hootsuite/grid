@@ -168,8 +168,11 @@ GridList.prototype = {
     this._resolveCollisions(item);
   },
 
-  resizeItem: function(item, width) {
-    this._updateItemSize(item, width);
+  resizeItem: function(item, width, height) {
+    if (height === undefined) {
+      height = item.h;
+    }
+    this._updateItemSize(item, width, height);
     this._resolveCollisions(item);
   },
 
@@ -224,11 +227,19 @@ GridList.prototype = {
       item = this.items[i];
       // This only happens the first time they are picked up
       if (item.autoHeight === undefined) {
-         item.autoHeight = !item.h;
+        this._computeAutoHeight(item);
       }
-      if (item.autoHeight) {
-        item.h = this.options.rows;
-      }
+      this._adjustHeightOfItem(item);
+    }
+  },
+
+  _computeAutoHeight: function(item) {
+    item.autoHeight = !item.h;
+  },
+
+  _adjustHeightOfItem: function(item) {
+    if (item.autoHeight) {
+      item.h = this.options.rows;
     }
   },
 
@@ -292,12 +303,14 @@ GridList.prototype = {
     this._markItemPositionToGrid(item);
   },
 
-  _updateItemSize: function(item, width) {
-    // TODO: Implement height change
+  _updateItemSize: function(item, width, height) {
     if (item.x !== null && item.y !== null) {
       this._deleteItemPositionFromGrid(item);
     }
     item.w = width;
+    item.h = height;
+    this._computeAutoHeight(item);
+    this._adjustHeightOfItem(item);
 
     // First try to position it from current position
     if (this.itemSpansMoreThanOneSection(item)) {
