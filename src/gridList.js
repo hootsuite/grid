@@ -123,7 +123,7 @@ GridList.prototype = {
       output += '\n   ' + i + '|';
       for (var j = 0; j < widthOfGrid; j++) {
         output += ' ';
-        name = (this.grid[j] != null &&
+        var name = (this.grid[j] != null &&
                      this.grid[j][i] != null &&
                      this.grid[j][i].index != 'undefined'
                      ? this.grid[j][i].index : '--');
