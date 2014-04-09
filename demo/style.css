@@ -24,6 +24,7 @@ body {
 }
   .grid li {
     position: absolute;
+    z-index: 1;
     font-weight: bold;
     line-height: 4em;
     text-align: center;
