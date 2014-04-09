@@ -9,8 +9,11 @@
   }
 }(function($, GridList) {
 
-  var DraggableGridList = function(element, options) {
+  var DraggableGridList = function(element, options, draggableOptions) {
     this.options = $.extend({}, this.defaults, options);
+    this.draggableOptions = $.extend(
+      {}, this.draggableDefaults, draggableOptions);
+
     this.$element = $(element);
     this._init();
     this._bindEvents();
@@ -22,6 +25,12 @@
       rows: 5,
       widthHeightRatio: 1,
       dragAndDrop: true
+    },
+
+    draggableDefaults: {
+      zIndex: 2,
+      scroll: true,
+      containment: "parent"
     },
 
     destroy: function() {
@@ -82,10 +91,7 @@
       if (this.options.dragAndDrop) {
         // Init Draggable JQuery UI plugin for each of the list items
         // http://api.jqueryui.com/draggable/
-        this.$items.draggable({
-          zIndex: this.items.length,
-          scroll: false
-        });
+        this.$items.draggable(this.draggableOptions);
       }
     },
 
