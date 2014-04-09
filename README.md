@@ -191,6 +191,16 @@ expected to have `data-w` and `data-h` attributes, and optionally `data-x` and
 `data-y` (if their positions have been previously generated and persisted)
 - **Drag and drop** capabilities
 
+The function takes an optional argument with options that will be passed to the
+draggables when constructing them.
+
+```js
+$('.my-list').gridList({rows: 3}, {handle: '.title');
+```
+
+See [jQuery UI Draggable API](api.jqueryui.com/draggable/) for details on all
+the available options.
+
 The rendered list is **responsive** to its parent container, meaning that the
 width and height of the items are calculated based on the container height
 divided by the number of grid rows.
