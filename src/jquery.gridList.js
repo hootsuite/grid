@@ -34,7 +34,7 @@
 
     draggableDefaults: {
       zIndex: 2,
-      scroll: true,
+      scroll: false,
       containment: "parent"
     },
 
@@ -404,7 +404,7 @@
     }
   };
 
-  $.fn.gridList = function(options) {
+  $.fn.gridList = function(options, draggableOptions) {
     if (!window.GridList) {
       throw new Error('GridList lib required');
     }
@@ -424,7 +424,7 @@
         instance = null;
       }
       if (!instance) {
-        instance = new DraggableGridList(this, options);
+        instance = new DraggableGridList(this, options, draggableOptions);
         $(this).data('_gridList', instance);
       }
       if (method) {
