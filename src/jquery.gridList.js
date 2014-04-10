@@ -29,7 +29,7 @@
 
     draggableDefaults: {
       zIndex: 2,
-      scroll: true,
+      scroll: false,
       containment: "parent"
     },
 
