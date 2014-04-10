@@ -71,6 +71,7 @@ describe("Grid positioning", function() {
       item_9 = grid.items[9];
       grid.moveItemToPosition(item_9, [6, 0]);
       grid.moveItemToPosition(item_9, [4, 0]);
+      grid._deleteEmptySections();
       expect(grid.items).toEqualPositions(gridFixture.initial);
     });
 

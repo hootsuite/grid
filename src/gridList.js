@@ -99,10 +99,6 @@ GridList.prototype = {
     this.options.rows = rows;
     this._adjustHeightOfItems();
 
-    // We don't re-arrange items inside sections
-    if (this.options.columnsPerGroup)
-      return;
-
     this._sortItemsByPosition();
     this._resetGrid();
 
@@ -390,8 +386,6 @@ GridList.prototype = {
         var targetSection = this._getSection(item);
         this._moveAllSectionsToTheRight(targetSection, item);
       }
-      this._deleteEmptySections();
-
     // When we don't have sections, we first try to resolve the collisions
     // locally, and then if that fails, we lay out all the items as much to
     // the left as possible, by putting the moved item in a fixed position.
@@ -493,20 +487,17 @@ GridList.prototype = {
      * right, where we have to go through all the items from right-to-left
      * and move them one by one. Here, we have to move them from left-to-right.
      */
-      var i, itemToMove, itemInCurrentGrid,
-          _gridList = new GridList([], this.options);
-
-      GridList.cloneItems(this.items, _gridList.items);
-      _gridList.generateGrid();
-      _gridList._sortItemsByPosition();
-
-      for (i = 0; i < _gridList.items.length; i++) {
-        itemToMove = _gridList.items[i];
-        if (this._getSection(itemToMove) > section) {
-            itemInCurrentGrid = this._getItemByAttributes({x: itemToMove.x, y: itemToMove.y, w: itemToMove.w, h: itemToMove.h});
-            this._updateItemPosition(itemInCurrentGrid,
-                                 [itemInCurrentGrid.x - this.options.columnsPerGroup,
-                                  itemInCurrentGrid.y]);
+      var itemToMove,
+          i, j;
+      for (i = section * this.options.columnsPerGroup; i < this.grid.length; i++) {
+        for (j = 0; j < this.options.rows; j++) {
+          itemToMove = this.grid[i][j];
+          if (!itemToMove) {
+            continue;
+          }
+          this._updateItemPosition(
+            itemToMove, [itemToMove.x - this.options.columnsPerGroup,
+                         itemToMove.y]);
         }
       }
   },
@@ -521,6 +512,22 @@ GridList.prototype = {
     while (firstEmptySection > -1) {
       this._deleteEmptySection(firstEmptySection);
       firstEmptySection = this._getFirstEmptySection();
+    }
+  },
+
+  _removeLastEmptyColumns: function() {
+    /**
+     * Delete all empty columns from the right side of the grid
+     */
+    var i,
+        j;
+    for (i = this.grid.length - 1; i >= 0; i--) {
+      for (j = 0; j < this.options.rows; j++) {
+        if (this.grid[i][j]) {
+          return;
+        }
+      }
+      this.grid.pop();
     }
   },
 

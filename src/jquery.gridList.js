@@ -104,6 +104,11 @@
       // Create instance of GridList (decoupled lib for handling the grid
       // positioning and sorting post-drag and dropping)
       this.gridList = new GridList(this.items, this.options);
+      // Ensure consistent clean-up from the beginning
+      if (this.options.columnsPerGroup) {
+        this.gridList._deleteEmptySections();
+      }
+      this.gridList._removeLastEmptyColumns();
     },
 
     _bindEvents: function() {
@@ -155,6 +160,11 @@
     },
 
     _onStop: function(event, ui) {
+      if (this.options.columnsPerGroup) {
+        this.gridList._deleteEmptySections();
+      }
+      this.gridList._removeLastEmptyColumns();
+
       this._updateGridSnapshot();
       this._previousDragPosition = null;
 
@@ -210,6 +220,29 @@
       if (this.options.columnsPerGroup) {
         this._groupSeparatorWidth = this._cellWidth *
                                     this.options.groupSeparatorWidth;
+      }
+    },
+
+    _reflowPageBackgrounds: function() {
+      var columnsPerGroup = this.options.columnsPerGroup,
+          groupsNum = Math.ceil(this.gridList.grid.length / columnsPerGroup),
+          groupWidth = this._cellWidth * columnsPerGroup,
+          groupPosition,
+          i;
+
+      this.$element.find('.group-background').remove();
+      for (i = 0; i < groupsNum; i++) {
+        groupPosition = i * (groupWidth + this._groupSeparatorWidth);
+        $pageBackground = $('<li class="group-background"></li>').css({
+          zIndex: -1,
+          top: 0,
+          left: groupPosition,
+          width: groupWidth,
+          height: '100%',
+          // Used for scaling margin/paddings in tandem with those of items
+          fontSize: this._fontSize
+        });
+        this.$element.append($pageBackground);
       }
     },
 
@@ -269,9 +302,21 @@
           top: this.items[i].y * this._cellHeight
         });
       }
-      // Update the width of the entire grid container with an extra column on
-      // the right for extra dragging room
-      this.$element.width((this.gridList.grid.length + 1) * this._cellWidth);
+      if (!this.options.columnsPerGroup) {
+        // Update the width of the entire grid container with an extra column on
+        // the right for extra dragging room
+        this.$element.width((this.gridList.grid.length + 1) * this._cellWidth);
+      } else {
+        var columnsPerGroup = this.options.columnsPerGroup,
+            groupsNum = Math.ceil(this.gridList.grid.length / columnsPerGroup),
+            groupWidth = this._cellWidth * columnsPerGroup + this._groupSeparatorWidth;
+        this.$element.width((groupsNum + 1) * groupWidth);
+      }
+
+
+      if (this.options.columnsPerGroup) {
+        this._reflowPageBackgrounds();
+      }
     },
 
     _dragPositionChanged: function(newPosition) {
