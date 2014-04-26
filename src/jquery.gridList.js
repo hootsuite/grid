@@ -23,6 +23,7 @@
 
     defaults: {
       rows: 5,
+      cols: 0,
       widthHeightRatio: 1,
       dragAndDrop: true
     },
@@ -37,12 +38,16 @@
       this._unbindEvents();
     },
 
-    resize: function(rows) {
+    resize: function(rows, cols) {
       if (rows) {
         this.options.rows = rows;
+        this.options.cols = 0;
+      } else {
+        this.options.rows = 0;
+        this.options.cols = cols;
       }
       this._createGridSnapshot();
-      this.gridList.resizeGrid(this.options.rows);
+      this.gridList.resizeGrid(this.options.rows, this.options.cols);
       this._updateGridSnapshot();
 
       this.reflow();
@@ -85,6 +90,11 @@
       // Used to highlight a position an element will land on upon drop
       this.$positionHighlight = this.$element.find('.position-highlight').hide();
 
+      // either horizontal or vertical grid
+      if (this.options.cols) {
+        this.options.rows = 0;
+      }
+
       this._initGridList();
       this.reflow();
 
@@ -98,7 +108,7 @@
     _initGridList: function() {
       // Create instance of GridList (decoupled lib for handling the grid
       // positioning and sorting post-drag and dropping)
-      this.gridList = new GridList(this.items, {rows: this.options.rows});
+      this.gridList = new GridList(this.items, {rows: this.options.rows, cols: this.options.cols});
     },
 
     _bindEvents: function() {
@@ -119,12 +129,13 @@
     _onStart: function(event, ui) {
       // Create a deep copy of the items; we use them to revert the item
       // positions after each drag change, making an entire drag operation less
-      // distructable
+      // destructive
       this._createGridSnapshot();
 
       // Since dragging actually alters the grid, we need to establish the number
-      // of cols (+1 extra) before the drag starts
-      this._maxGridCols = this.gridList.grid.length;
+      // of cols or rows (+1 extra) before the drag starts
+      this._maxGridCols = this.options.cols || this.gridList.grid.length;
+      this._maxGridRows = this.options.rows || this.gridList.grid[0].length;
     },
 
     _onDrag: function(event, ui) {
@@ -196,8 +207,13 @@
     },
 
     _calculateCellSize: function() {
-      this._cellHeight = Math.floor(this.$element.height() / this.options.rows);
-      this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
+      if (this.options.rows) {
+        this._cellHeight = Math.floor(this.$element.height() / this.options.rows);
+        this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
+      } else {
+        this._cellWidth = Math.floor(this.$element.width() / this.options.cols);
+        this._cellHeight = this._cellWidth / this.options.widthHeightRatio;
+      }
       if (this.options.heightToFontSizeRatio) {
         this._fontSize = this._cellHeight * this.options.heightToFontSizeRatio;
       }
@@ -237,7 +253,11 @@
       }
       // Update the width of the entire grid container with an extra column on
       // the right for extra dragging room
-      this.$element.width((this.gridList.grid.length + 1) * this._cellWidth);
+      if (this.options.rows) {
+        this.$element.width((this.gridList.grid.length + 1) * this._cellWidth);
+      } else {
+        this.$element.height(this.gridList.grid[0].length * this._cellHeight);
+      }
     },
 
     _dragPositionChanged: function(newPosition) {
@@ -256,11 +276,11 @@
       col = Math.round(position.left / this._cellWidth);
       row = Math.round(position.top / this._cellHeight);
       // Keep item position within the grid and don't let the item create more
-      // than one extra column
+      // than one extra column or row
       col = Math.max(col, 0);
       row = Math.max(row, 0);
-      col = Math.min(col, this._maxGridCols);
-      row = Math.min(row, this.options.rows - item.h);
+      col = Math.min(col, this.options.cols ? this.options.cols - item.w : this._maxGridCols);
+      row = Math.min(row, this.options.rows ? this.options.rows - item.h : this._maxGridRows);
       return [col, row];
     },
 

@@ -6,7 +6,7 @@
 body {
   background: #E5E5E5;
 }
-.grid-container {
+.grid-container.horizontal {
   position: absolute;
   top: 66px;
   left: 0;
@@ -15,12 +15,25 @@ body {
   overflow-x: auto;
   overflow-y: hidden;
 }
+.grid-container.vertical {
+  margin-top: 10px;
+  margin-right: 10px;
+  overflow-x: visible;
+  overflow-y: visible;
+}
 .grid {
   position: relative;
-  height: 100%;
   list-style: none;
   /* Will be modified by the grid jquery lib, depending on the items */
   -webkit-transition: width 0.2s;
+}
+.grid-container.horizontal ul.grid {
+  height: 100%;
+}
+.grid-container.vertical ul.grid {
+  width: 100%;
+  height: 100%;
+  margin: auto;
 }
   .grid li {
     position: absolute;
@@ -92,9 +105,9 @@ body {
 }
   .header .button {
     float: left;
-    width: 40px;
     height: 40px;
     margin: 6px 0 0 10px;
+    padding: 0 10px;
     border: solid 1px #ccc;
     background: #fafafa;
     color: #000;
@@ -104,6 +117,10 @@ body {
     text-align: center;
     text-decoration: none;
     cursor: pointer;
+  }
+  .header .button.remove-row, .header .button.add-row {
+    width: 40px;
+    padding: 0;
   }
   .header p {
     padding: 0 10px;
