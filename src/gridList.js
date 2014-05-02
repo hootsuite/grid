@@ -81,64 +81,42 @@ GridList.prototype = {
   },
 
   /**
-   * Illustates grid with item.index of each.
+   * Illustates grid as text-based table, using a number identifier for each
+   * item. E.g.
    *
    *  #|  0  1  2  3  4  5  6  7  8  9 10 11 12 13
    *  --------------------------------------------
    *  0| 00 02 03 04 04 06 08 08 08 12 12 13 14 16
    *  1| 01 -- 03 05 05 07 09 10 11 11 -- 13 15 --
    *
-   * Warn:
-   *  - items that don't have index, will use position in items
-   *  - does not work if width or height aren't specified(as the rest of
-   * 	the grid doesn't work).
+   * Warn: Does not work if items don't have a width or height specified
+   * besides their position in the grid.
    */
   toString: function() {
-    // Set the index, this will be the `name` of the item in the illustation
-    var needCleanup = false;
-    for (var i = 0; i < this.items.length; i++) {
-      if (this.items[i].index != undefined) {
-      	break;
-      };
-      needCleanup = true;
-      this.items[i].index = i;
-    };
+    var widthOfGrid = this.grid.length,
+        output = '\n #|',
+        border = '\n --',
+        item,
+        i,
+        j;
 
-    widthOfGrid = this.grid.length;
-    heightOfGrid = this.options.rows;
-
-    // Print the upper axis coords and boarder
-    var output = '\n   #|';
-    var border = '\n   --';
-    for (var i = 0; i < widthOfGrid; i++) {
-      pos = i <= 9 ? ' ' + i : i;
-      output += ' ' + pos;
+    // Render the table header
+    for (i = 0; i < widthOfGrid; i++) {
+      output += ' ' + this._padNumber(i, ' ');
       border += '---';
     };
     output += border;
 
-    // Print as we go on the y axis coords and border and each item in what
-    // position it is.
-    for (var i = 0; i < heightOfGrid; i++) {
-      output += '\n   ' + i + '|';
-      for (var j = 0; j < widthOfGrid; j++) {
+    // Render table contents row by row, as we go on the y axis
+    for (i = 0; i < this.options.rows; i++) {
+      output += '\n' + this._padNumber(i, ' ') + '|';
+      for (j = 0; j < widthOfGrid; j++) {
         output += ' ';
-        var name = (this.grid[j] != null &&
-                     this.grid[j][i] != null &&
-                     this.grid[j][i].index != 'undefined'
-                     ? this.grid[j][i].index : '--');
-        if (name <= 9) {
-            output += '0';
-        }
-        output += name;
+        item = this.grid[j][i];
+        output += item ? this._padNumber(this.items.indexOf(item), '0') : '--';
       }
     };
-    if (needCleanup) {
-      for (var i = 0; i < this.items.length; i++){
-        this.items[i].index = null;
-      };
-    };
-    output += '\n\n';
+    output += '\n';
     return output;
   },
 
@@ -527,6 +505,11 @@ GridList.prototype = {
       }
     }
     return null;
+  },
+
+  _padNumber: function(nr, prefix) {
+    // Currently works for 2-digit numbers (<100)
+    return nr >= 10 ? nr : prefix + nr;
   }
 };
 
