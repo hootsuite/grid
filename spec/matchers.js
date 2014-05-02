@@ -13,6 +13,17 @@ var ensureItemSizes = function(items) {
   };
 };
 
+var getMaxHeight = function(items) {
+  var height = 1,
+      i;
+  for (i = 0; i < items.length; i++) {
+    if (items[i].y + items[i].h > height) {
+      height = items[i].y + items[i].h;
+    }
+  }
+  return height;
+};
+
 exports.toEqualPositions = function(expected) {
   /**
     We don't care about the other fields, only the positions and that the
@@ -28,8 +39,8 @@ exports.toEqualPositions = function(expected) {
     ensureItemSizes(expected);
     ensureItemSizes(actual);
     console.log('\n\n' +
-      'Expected: ' + (new GridList(expected, {rows: 5})) +
-      'Actual: ' + (new GridList(actual, {rows: 5})));
+      'Expected: ' + (new GridList(expected, {rows: getMaxHeight(expected)})) +
+      'Actual: ' + (new GridList(actual, {rows: getMaxHeight(actual)})));
 
     // Let Jasmine know which are the items that differ
     return JSON.stringify(_actual) +
