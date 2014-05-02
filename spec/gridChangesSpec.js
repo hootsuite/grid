@@ -31,9 +31,10 @@ describe("Grid changes", function() {
       rows: 3
     });
     helpers.addIndexesToItems(grid.items);
+    var snapshot = GridList.cloneItems(grid.items);
     grid.moveItemToPosition(grid.items[0], [0, 0]);
 
-    expect(grid.getChangedItems(grid.items, 'index')).toEqual([]);
+    expect(grid.getChangedItems(snapshot, 'index')).toEqual([]);
   });
 
   it("should return only the horizontally swapped items", function() {

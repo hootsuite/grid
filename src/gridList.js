@@ -80,6 +80,46 @@ GridList.prototype = {
     rows: 5
   },
 
+  /**
+   * Illustates grid as text-based table, using a number identifier for each
+   * item. E.g.
+   *
+   *  #|  0  1  2  3  4  5  6  7  8  9 10 11 12 13
+   *  --------------------------------------------
+   *  0| 00 02 03 04 04 06 08 08 08 12 12 13 14 16
+   *  1| 01 -- 03 05 05 07 09 10 11 11 -- 13 15 --
+   *
+   * Warn: Does not work if items don't have a width or height specified
+   * besides their position in the grid.
+   */
+  toString: function() {
+    var widthOfGrid = this.grid.length,
+        output = '\n #|',
+        border = '\n --',
+        item,
+        i,
+        j;
+
+    // Render the table header
+    for (i = 0; i < widthOfGrid; i++) {
+      output += ' ' + this._padNumber(i, ' ');
+      border += '---';
+    };
+    output += border;
+
+    // Render table contents row by row, as we go on the y axis
+    for (i = 0; i < this.options.rows; i++) {
+      output += '\n' + this._padNumber(i, ' ') + '|';
+      for (j = 0; j < widthOfGrid; j++) {
+        output += ' ';
+        item = this.grid[j][i];
+        output += item ? this._padNumber(this.items.indexOf(item), '0') : '--';
+      }
+    };
+    output += '\n';
+    return output;
+  },
+
   generateGrid: function() {
     /**
      * Build the grid structure from scratch, with the current item positions
@@ -465,6 +505,11 @@ GridList.prototype = {
       }
     }
     return null;
+  },
+
+  _padNumber: function(nr, prefix) {
+    // Currently works for 2-digit numbers (<100)
+    return nr >= 10 ? nr : prefix + nr;
   }
 };
 
