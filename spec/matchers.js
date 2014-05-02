@@ -29,9 +29,8 @@ exports.toEqualPositions = function(expected) {
     We don't care about the other fields, only the positions and that the
     indexes correspond (e.g. the h changes for items with auto height)
   */
- var _expected,
-     _actual,
-     actual = this.actual;
+ var actual = this.actual,
+     _failingItem;
  this.message = function () {
     /* To avoid writing fully specified items in each test, we'll add default
      * sizes for the grid to be able to print them, allowing us to at least
@@ -43,15 +42,14 @@ exports.toEqualPositions = function(expected) {
       'Actual: ' + (new GridList(actual, {rows: getMaxHeight(actual)})));
 
     // Let Jasmine know which are the items that differ
-    return JSON.stringify(_actual) +
+    return JSON.stringify(actual[_failingItem]) +
            " should be at position " +
-           JSON.stringify(_expected);
+           JSON.stringify(expected[_failingItem]);
   };
   for (var i = 0; i < expected.length; i++) {
     if (expected[i].x != this.actual[i].x ||
         expected[i].y != this.actual[i].y) {
-      _expected = expected[i];
-      _actual = this.actual[i];
+      _failingItem = i;
       return false;
     }
   }
