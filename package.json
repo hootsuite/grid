@@ -7,6 +7,10 @@
     "jasmine-node": "~1.13.1"
   },
   "main": "src/gridList.js",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/ubervu/grid.git"
+  },
   "scripts": {
     "test": "./node_modules/jasmine-node/bin/jasmine-node --verbose spec"
   }
