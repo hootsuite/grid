@@ -46,7 +46,7 @@ var GridList = function(items, options) {
     }
   }
   this.items = items;
-  this._adjustHeightOfItems();
+  this._adjustSizeOfItems();
   this.generateGrid();
 };
 
@@ -77,7 +77,8 @@ GridList.cloneItems = function(items, _items) {
 GridList.prototype = {
 
   defaults: {
-    rows: 5
+    rows: 5,
+    cols: 0
   },
 
   /**
@@ -131,13 +132,15 @@ GridList.prototype = {
     }
   },
 
-  resizeGrid: function(rows) {
+  resizeGrid: function(rows, cols) {
     var currentColumn = 0,
+        currentRow = 0,
         item,
         i;
 
     this.options.rows = rows;
-    this._adjustHeightOfItems();
+    this.options.cols = rows ? 0 : cols;
+    this._adjustSizeOfItems();
 
     this._sortItemsByPosition();
     this._resetGrid();
@@ -146,9 +149,13 @@ GridList.prototype = {
     for (i = 0; i < this.items.length; i++) {
       item = this.items[i];
       this._updateItemPosition(
-        item, this.findPositionForItem(item, {x: currentColumn, y: 0}));
-      // New items should never be placed to the left of previous items
-      currentColumn = Math.max(currentColumn, item.x);
+        item, this.findPositionForItem(item, {x: currentColumn, y: currentRow}));
+      // New items should never be placed to the left or top of previous items
+      if (this.options.rows) {
+        currentColumn = Math.max(currentColumn, item.x);
+      } else {
+        currentRow = Math.max(currentRow, item.y);
+      }
     }
   },
 
@@ -164,23 +171,34 @@ GridList.prototype = {
 
     // Start searching for a position from the horizontal position of the
     // rightmost item from the grid
-    for (x = start.x; x < this.grid.length; x++) {
-      if (fixedRow !== undefined) {
-        position = [x, fixedRow];
-        if (this._itemFitsAtPosition(item, position)) {
-          return position;
-        }
-      } else {
-        for (y = start.y; y < this.options.rows; y++) {
-          position = [x, y];
+    if (this.options.rows) {
+      for (x = start.x; x < this.grid.length; x++) {
+        if (fixedRow !== undefined) {
+          position = [x, fixedRow];
           if (this._itemFitsAtPosition(item, position)) {
             return position;
           }
+        } else {
+          for (y = start.y; y < this.options.rows; y++) {
+            position = [x, y];
+            if (this._itemFitsAtPosition(item, position)) {
+              return position;
+            }
+          }
+        }
+      }
+      // If we've reached this point, we need to start a new column
+      return [this.grid.length, fixedRow || 0];
+    }
+
+    for (y = start.y; true; y++) {
+      for (x = (y > start.y ? 0 : start.x); x < this.options.cols; x++) {
+        position = [x, y];
+        if (this._itemFitsAtPosition(item, position)) {
+          return position;
         }
       }
     }
-    // If we've reached this point, we need to start a new column
-    return [this.grid.length, fixedRow || 0];
   },
 
   moveItemToPosition: function(item, position) {
@@ -220,23 +238,32 @@ GridList.prototype = {
   _sortItemsByPosition: function() {
     var _this = this;
     this.items.sort(function(item1, item2) {
-      // Cols preced rows when it comes to position order
-      if (item1.x != item2.x) {
-        return item1.x - item2.x;
-      }
-      if (item1.y != item2.y) {
-        return item1.y - item2.y;
+      if (_this.options.rows) {
+        // Cols precede rows when it comes to position order
+        if (item1.x != item2.x) {
+          return item1.x - item2.x;
+        }
+        if (item1.y != item2.y) {
+          return item1.y - item2.y;
+        }
+      } else {
+        if (item1.y != item2.y) {
+          return item1.y - item2.y;
+        }
+        if (item1.x != item2.x) {
+          return item1.x - item2.x;
+        }
       }
       // The items are placed on the same position
       return 0;
     });
   },
 
-  _adjustHeightOfItems: function() {
+  _adjustSizeOfItems: function() {
     /**
-     * Some items have 100% height, that height is expressed as 0. We need to
-     * ensure a valid height for each of those items (always as all the number of
-     * rows of the current grid configuration)
+     * Some items have 100% height or width, that dimension is expressed as 0.
+     * We need to ensure a valid height or width for each of those items
+     * (always as all the number of rows or columns of the current grid configuration)
      */
     var item,
         i;
@@ -246,8 +273,14 @@ GridList.prototype = {
       if (item.autoHeight === undefined) {
          item.autoHeight = !item.h;
       }
-      if (item.autoHeight) {
+      if (item.autoWidth === undefined) {
+         item.autoWidth = !item.w;
+      }
+      if (item.autoHeight || (this.options.rows && item.h > this.options.rows)) {
         item.h = this.options.rows;
+      }
+      if (item.autoWidth || (this.options.cols && item.w > this.options.cols)) {
+        item.w = this.options.cols;
       }
     }
   },
@@ -262,12 +295,15 @@ GridList.prototype = {
      * certain position within the grid
      */
     var x, y, row;
-    // No coordonate can be negative
+    // No coordinate can be negative
     if (position[0] < 0 || position[1] < 0) {
       return false;
     }
     // Make sure the item isn't larger than the entire grid
-    if (position[1] + item.h > this.options.rows) {
+    if (this.options.rows && (position[1] + item.h > this.options.rows)) {
+      return false;
+    }
+    if (this.options.cols && (position[0] + item.w > this.options.cols)) {
       return false;
     }
     // Make sure the item doesn't overlap with an already positioned item
@@ -312,8 +348,10 @@ GridList.prototype = {
      * from overlapping in the grid
      */
     var x, y;
-    // Ensure that the grid has enough columns to accomodate the current item.
+    // Ensure that the grid has enough columns or rows to accommodate the
+    // current item.
     this._ensureColumns(item.x + item.w);
+    this._ensureRows(item.y + item.h);
 
     for (x = item.x; x < item.x + item.w; x++) {
       for (y = item.y; y < item.y + item.h; y++) {
@@ -351,6 +389,21 @@ GridList.prototype = {
     for (i = 0; i < N; i++) {
       if (!this.grid[i]) {
         this.grid.push(new GridCol(this.options.rows));
+      }
+    }
+  },
+
+  _ensureRows: function(N) {
+    /**
+     * Ensure that the grid has at least N rows available.
+     */
+    var i, j;
+    for (i = 0; i < Math.max(this.options.cols, this.grid.length); i++) {
+      if (!this.grid[i]) {
+        this.grid.push(new GridCol(0));
+      }
+      for (j = this.grid[i].length; j < N; j++) {
+        this.grid[i].push(null);
       }
     }
   },
@@ -412,8 +465,8 @@ GridList.prototype = {
       // moving one:
       // 1. to its left side
       // 2. above it
-      // 3. under it
-      // 4. to its right side
+      // 3. to its right side
+      // 4. under it
       leftOfItem = [item.x - collidingItem.w, collidingItem.y];
       rightOfItem = [item.x + item.w, collidingItem.y];
       aboveOfItem = [collidingItem.x, item.y - collidingItem.h];
@@ -423,10 +476,10 @@ GridList.prototype = {
         _gridList._updateItemPosition(collidingItem, leftOfItem);
       } else if (_gridList._itemFitsAtPosition(collidingItem, aboveOfItem)) {
         _gridList._updateItemPosition(collidingItem, aboveOfItem);
-      } else if (_gridList._itemFitsAtPosition(collidingItem, belowOfItem)) {
-        _gridList._updateItemPosition(collidingItem, belowOfItem);
       } else if (_gridList._itemFitsAtPosition(collidingItem, rightOfItem)) {
         _gridList._updateItemPosition(collidingItem, rightOfItem);
+      } else if (_gridList._itemFitsAtPosition(collidingItem, belowOfItem)) {
+        _gridList._updateItemPosition(collidingItem, belowOfItem);
       } else {
         // Collisions failed, we must use the pullItemsToLeft method to arrange
         // the other items around this item with fixed position. This is our
@@ -446,7 +499,7 @@ GridList.prototype = {
   _pullItemsToLeft: function(fixedItem) {
     /**
      * Build the grid from scratch, by using the current item positions and
-     * pulling them as much to the left as possible, removing as space between
+     * pulling them as much to the left as possible, removing as much space between
      * them as possible.
      *
      * If a "fixed item" is provided, its position will be kept intact and the
@@ -471,7 +524,7 @@ GridList.prototype = {
       }
       this._updateItemPosition(item, this.findPositionForItem(
         item,
-        {x: this._findLeftMostPositionForItem(item), y: 0},
+        {x: this._findLeftMostPositionForItem(item), y: this.options.rows ? 0 : item.y},
         item.y));
     }
   },
