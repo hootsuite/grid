@@ -124,4 +124,27 @@ describe("Grid item resizing", function() {
       expect(grid.items).toEqualPositions(expectedItems);
     });
   });
+
+  describe("a 1x1 widget to 1x2", function() {
+    var grid, item1, item2;
+
+    beforeEach(function() {
+      item1 = {x: 0, y: 0, w: 1, h: 1};
+      item2 = {x: 0, y: 1, w: 1, h: 1};
+
+      grid = new GridList([item1, item2], {rows: 2});
+    });
+
+    it("should push other items while preserving their rows", function() {
+      grid.resizeItem(item1, 1, 2);
+
+      expect(grid.items).toEqualPositions([{x: 0, y: 0}, {x: 1, y: 1}]);
+    });
+
+    it("should put the item on a new column when it doesn't fit", function() {
+      grid.resizeItem(item2, 1, 2);
+
+      expect(grid.items).toEqualPositions([{x: 0, y: 0}, {x: 1, y: 0}]);
+    });
+  });
 });
