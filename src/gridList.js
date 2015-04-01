@@ -159,7 +159,17 @@ GridList.prototype = {
      *   positions to its right
      * - Accepting positions for a certain row number only (use-case: items
      *   being shifted to the left/right as a result of collisions)
+     *
+     * @param {Object<x:Number, y:Number, w:Number, h:Number} item
+     * @param {Object<x:Number, y:Number} start Position from which to start
+     *     the search.
+     * @param {Number} [fixedRow] If provided, we're going to try to find a
+     *     position for the new item on it. If doesn't fit there, we're going
+     *     to put it on the first row.
+     *
+     * @returns {Number[2]} x and y.
      */
+
     var x, y, position;
 
     // Start searching for a position from the horizontal position of the
@@ -179,8 +189,17 @@ GridList.prototype = {
         }
       }
     }
+
     // If we've reached this point, we need to start a new column
-    return [this.grid.length, fixedRow || 0];
+    var newCol = this.grid.length,
+        newRow = 0;
+
+    if (fixedRow !== undefined &&
+        this._itemFitsAtPosition(item, [newCol, fixedRow])) {
+      newRow = fixedRow;
+    }
+
+    return [newCol, newRow];
   },
 
   moveItemToPosition: function(item, position) {
@@ -188,8 +207,20 @@ GridList.prototype = {
     this._resolveCollisions(item);
   },
 
-  resizeItem: function(item, width) {
-    this._updateItemSize(item, width);
+  resizeItem: function(item, size) {
+    /**
+     * Resize an item and resolve collisions.
+     *
+     * @param {Object} item A reference to an item that's part of the grid.
+     * @param {Object} size
+     * @param {Number} [size.w=item.w] The new width.
+     * @param {Number} [size.h=item.h] The new height.
+     */
+
+    var width = size.w || item.w,
+        height = size.h || item.h;
+
+    this._updateItemSize(item, width, height);
     this._resolveCollisions(item);
   },
 
@@ -297,12 +328,20 @@ GridList.prototype = {
     this._markItemPositionToGrid(item);
   },
 
-  _updateItemSize: function(item, width) {
-    // TODO: Implement height change
+  _updateItemSize: function(item, width, height) {
+    /**
+     * @param {Object} item A reference to a grid item.
+     * @param {Number} width The new width.
+     * @param {Number} height The new height.
+     */
+
     if (item.x !== null && item.y !== null) {
       this._deleteItemPositionFromGrid(item);
     }
+
     item.w = width;
+    item.h = height;
+
     this._markItemPositionToGrid(item);
   },
 
