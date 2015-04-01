@@ -25,7 +25,7 @@ describe("Grid item resizing", function() {
     helpers.addIndexesToItems(grid.items);
 
     it("should move all three 1x1 widgets to right", function() {
-      grid.resizeItem(item, 3);
+      grid.resizeItem(item, {w: 3});
       helpers.sortItemsByIndex(grid.items);
 
       var expectedItems = GridList.cloneItems(fixture);
@@ -37,7 +37,7 @@ describe("Grid item resizing", function() {
     });
 
     it("should move all three 1x1 widgets back to left", function() {
-      grid.resizeItem(item, 1);
+      grid.resizeItem(item, {w: 1});
       helpers.sortItemsByIndex(grid.items);
 
       var expectedItems = GridList.cloneItems(fixture);
@@ -59,7 +59,7 @@ describe("Grid item resizing", function() {
     helpers.addIndexesToItems(grid.items);
 
     it("should pull next widgets from its row to left", function() {
-      grid.resizeItem(item, 1);
+      grid.resizeItem(item, {w: 1});
       helpers.sortItemsByIndex(grid.items);
 
       var expectedItems = GridList.cloneItems(fixture);
@@ -72,7 +72,7 @@ describe("Grid item resizing", function() {
     });
 
     it("should push next widgets from its row back to right", function() {
-      grid.resizeItem(item, 2);
+      grid.resizeItem(item, {w: 2});
       helpers.sortItemsByIndex(grid.items);
 
       var expectedItems = GridList.cloneItems(fixture);
@@ -95,7 +95,7 @@ describe("Grid item resizing", function() {
     helpers.addIndexesToItems(grid.items);
 
     it("should pull next widgets from its row to left", function() {
-      grid.resizeItem(item, 3);
+      grid.resizeItem(item, {w: 3});
       helpers.sortItemsByIndex(grid.items);
 
       var expectedItems = GridList.cloneItems(fixture);
@@ -110,7 +110,7 @@ describe("Grid item resizing", function() {
     });
 
     it("should push next widgets from its row back to right", function() {
-      grid.resizeItem(item, 2);
+      grid.resizeItem(item, {w: 2});
       helpers.sortItemsByIndex(grid.items);
 
       var expectedItems = GridList.cloneItems(fixture);
@@ -136,13 +136,13 @@ describe("Grid item resizing", function() {
     });
 
     it("should push other items while preserving their rows", function() {
-      grid.resizeItem(item1, 1, 2);
+      grid.resizeItem(item1, {h: 2});
 
       expect(grid.items).toEqualPositions([{x: 0, y: 0}, {x: 1, y: 1}]);
     });
 
     it("should put the item on a new column when it doesn't fit", function() {
-      grid.resizeItem(item2, 1, 2);
+      grid.resizeItem(item2, {h: 2});
 
       expect(grid.items).toEqualPositions([{x: 0, y: 0}, {x: 1, y: 0}]);
     });
