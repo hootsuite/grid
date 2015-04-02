@@ -72,6 +72,7 @@ body {
     -webkit-transition: opacity 0.2s;
   }
     .grid .controls .resize {
+      font-size: 0.6em;
       float: left;
       margin: 5px 5px 0 0;
       padding: 0.3em;
