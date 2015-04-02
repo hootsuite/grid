@@ -49,6 +49,14 @@
     },
 
     resizeItem: function(element, size) {
+      /**
+       * Resize an item.
+       *
+       * @param {Object} size
+       * @param {Number} [size.w]
+       * @param {Number} [size.h}
+       */
+
       this._createGridSnapshot();
       this.gridList.resizeItem(this._getItemByElement(element), size);
       this._updateGridSnapshot();

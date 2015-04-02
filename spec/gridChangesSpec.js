@@ -78,7 +78,7 @@ describe("Grid changes", function() {
     helpers.addIndexesToItems(grid.items);
     var initialItems = GridList.cloneItems(grid.items);
 
-    grid.resizeItem(grid.items[1], 2);
+    grid.resizeItem(grid.items[1], {w: 2});
     var changedItems = grid.getChangedItems(initialItems, 'index');
 
     expect(changedItems.length).toEqual(15);
