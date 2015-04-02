@@ -8,9 +8,9 @@ var DemoGrid = {
         '<li>' +
           '<div class="inner">' +
             '<div class="controls">' +
-              '<a href="#zoom1" class="resize" data-size="1">1x</a>' +
-              '<a href="#zoom2" class="resize" data-size="2">2x</a>' +
-              '<a href="#zoom3" class="resize" data-size="3">3x</a>' +
+              '<a href="#zoom1" class="resize" data-w="1" data-h="1">1x1</a>' +
+              '<a href="#zoom2" class="resize" data-w="2" data-h="1">2x1</a>' +
+              '<a href="#zoom3" class="resize" data-w="3" data-h="1">3x1</a>' +
             '</div>' +
             i +
           '</div>' +
@@ -62,8 +62,13 @@ $(function() {
   $('#grid li .resize').click(function(e) {
     e.preventDefault();
     var itemElement = $(e.currentTarget).closest('li'),
-        itemSize = $(e.currentTarget).data('size');
-    $('#grid').gridList('resizeItem', itemElement, itemSize);
+        itemWidth = $(e.currentTarget).data('w'),
+        itemHeight = $(e.currentTarget).data('h');
+
+    $('#grid').gridList('resizeItem', itemElement, {
+      w: itemWidth,
+      h: itemHeight
+    });
   });
   $('.add-row').click(function(e) {
     e.preventDefault();
