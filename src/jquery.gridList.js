@@ -9,8 +9,11 @@
   }
 }(function($, GridList) {
 
-  var DraggableGridList = function(element, options) {
+  var DraggableGridList = function(element, options, draggableOptions) {
     this.options = $.extend({}, this.defaults, options);
+    this.draggableOptions = $.extend(
+      {}, this.draggableDefaults, draggableOptions);
+
     this.$element = $(element);
     this._init();
     this._bindEvents();
@@ -22,6 +25,12 @@
       rows: 5,
       widthHeightRatio: 1,
       dragAndDrop: true
+    },
+
+    draggableDefaults: {
+      zIndex: 2,
+      scroll: false,
+      containment: "parent"
     },
 
     destroy: function() {
@@ -40,6 +49,14 @@
     },
 
     resizeItem: function(element, size) {
+      /**
+       * Resize an item.
+       *
+       * @param {Object} size
+       * @param {Number} [size.w]
+       * @param {Number} [size.h}
+       */
+
       this._createGridSnapshot();
       this.gridList.resizeItem(this._getItemByElement(element), size);
       this._updateGridSnapshot();
@@ -82,10 +99,7 @@
       if (this.options.dragAndDrop) {
         // Init Draggable JQuery UI plugin for each of the list items
         // http://api.jqueryui.com/draggable/
-        this.$items.draggable({
-          zIndex: this.items.length,
-          scroll: false
-        });
+        this.$items.draggable(this.draggableOptions);
       }
     },
 
@@ -293,7 +307,7 @@
     }
   };
 
-  $.fn.gridList = function(options) {
+  $.fn.gridList = function(options, draggableOptions) {
     if (!window.GridList) {
       throw new Error('GridList lib required');
     }
@@ -313,7 +327,7 @@
         instance = null;
       }
       if (!instance) {
-        instance = new DraggableGridList(this, options);
+        instance = new DraggableGridList(this, options, draggableOptions);
         $(this).data('_gridList', instance);
       }
       if (method) {
