@@ -23,6 +23,7 @@
 
     defaults: {
       rows: 5,
+      itemSelector: 'li[data-w]',
       widthHeightRatio: 1,
       dragAndDrop: true
     },
@@ -88,7 +89,7 @@
     _init: function() {
       // Read items and their meta data. Ignore other list elements (like the
       // position highlight)
-      this.$items = this.$element.children('li[data-w]');
+      this.$items = this.$element.children(this.options.itemSelector);
       this.items = this._generateItemsFromDOM();
       // Used to highlight a position an element will land on upon drop
       this.$positionHighlight = this.$element.find('.position-highlight').hide();
