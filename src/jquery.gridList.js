@@ -23,6 +23,7 @@
 
     defaults: {
       rows: 5,
+      extraColumns: 1,
       itemSelector: 'li[data-w]',
       widthHeightRatio: 1,
       dragAndDrop: true
@@ -73,6 +74,11 @@
     render: function() {
       this._applySizeToItems();
       this._applyPositionToItems();
+    },
+
+    setExtraColumns: function(extraColumns){
+      this.options.extraColumns = extraColumns;
+      this._updateGridWidth();
     },
 
     _bindMethod: function(fn) {
@@ -132,8 +138,8 @@
       this._createGridSnapshot();
 
       // Since dragging actually alters the grid, we need to establish the number
-      // of cols (+1 extra) before the drag starts
-      this._maxGridCols = this.gridList.grid.length;
+      // of cols (plus configured extra col[s]) before the drag starts
+      this._maxGridCols = (this.gridList.grid.length - 1) + this.options.extraColumns;
     },
 
     _onDrag: function(event, ui) {
@@ -244,9 +250,12 @@
           top: this.items[i].y * this._cellHeight
         });
       }
-      // Update the width of the entire grid container with an extra column on
-      // the right for extra dragging room
-      this.$element.width((this.gridList.grid.length + 1) * this._cellWidth);
+
+      this._updateGridWidth();
+    },
+
+    _updateGridWidth: function(){
+      this.$element.width((this.gridList.grid.length + this.options.extraColumns) * this._cellWidth);
     },
 
     _dragPositionChanged: function(newPosition) {
@@ -265,7 +274,7 @@
       col = Math.round(position.left / this._cellWidth);
       row = Math.round(position.top / this._cellHeight);
       // Keep item position within the grid and don't let the item create more
-      // than one extra column
+      // than configured extra column(s)
       col = Math.max(col, 0);
       row = Math.max(row, 0);
       col = Math.min(col, this._maxGridCols);
