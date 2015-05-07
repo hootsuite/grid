@@ -91,6 +91,9 @@
       // position highlight)
       this.$items = this.$element.children(this.options.itemSelector);
       this.items = this._generateItemsFromDOM();
+      this._widestItem = Math.max.apply(
+        null, this.items.map(function(item) { return item.w; }));
+
       // Used to highlight a position an element will land on upon drop
       this.$positionHighlight = this.$element.find('.position-highlight').hide();
 
@@ -244,9 +247,10 @@
           top: this.items[i].y * this._cellHeight
         });
       }
-      // Update the width of the entire grid container with an extra column on
-      // the right for extra dragging room
-      this.$element.width((this.gridList.grid.length + 1) * this._cellWidth);
+      // Update the width of the entire grid container with enough room on the
+      // right to allow dragging items to the end of the grid.
+      this.$element.width(
+        (this.gridList.grid.length + this._widestItem) * this._cellWidth);
     },
 
     _dragPositionChanged: function(newPosition) {
