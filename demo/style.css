@@ -12,8 +12,6 @@ body {
   left: 0;
   right: 10px;
   bottom: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
 }
 .grid {
   position: relative;
