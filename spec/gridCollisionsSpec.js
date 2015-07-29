@@ -18,7 +18,7 @@ describe("Grid collisions", function() {
   it("should move first three 1x1 widgets to right of 1xtimeline", function() {
     var gridFixture = fixtures.GRID2.rows3;
     var grid = new GridList(GridList.cloneItems(gridFixture), {
-      rows: 3
+      itemsPerLane: 3
     });
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[3], [0, 0]);
@@ -35,7 +35,7 @@ describe("Grid collisions", function() {
   it("should move last three 1x1 widgets to left of 1xtimeline", function() {
     var gridFixture = fixtures.GRID2.rows3;
     var grid = new GridList(GridList.cloneItems(gridFixture), {
-      rows: 3
+      itemsPerLane: 3
     });
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[13], [8, 0]);
@@ -52,7 +52,7 @@ describe("Grid collisions", function() {
   it("should move 1x1 widget to left of 1x1 widget", function() {
     var gridFixture = fixtures.GRID2.rows3;
     var grid = new GridList(GridList.cloneItems(gridFixture), {
-      rows: 3
+      itemsPerLane: 3
     });
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[6], [2, 2]);
@@ -67,7 +67,7 @@ describe("Grid collisions", function() {
   it("should move 1x1 widget to right of 1x1 widget", function() {
     var gridFixture = fixtures.GRID2.rows3;
     var grid = new GridList(GridList.cloneItems(gridFixture), {
-      rows: 3
+      itemsPerLane: 3
     });
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[7], [3, 2]);
@@ -82,7 +82,7 @@ describe("Grid collisions", function() {
   it("should move 1x1 widget above 1x1 widget", function() {
     var gridFixture = fixtures.GRID2.rows3;
     var grid = new GridList(GridList.cloneItems(gridFixture), {
-      rows: 3
+      itemsPerLane: 3
     });
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[10], [4, 1]);
@@ -97,7 +97,7 @@ describe("Grid collisions", function() {
   it("should move 1x1 widget below 1x1 widget", function() {
     var gridFixture = fixtures.GRID2.rows3;
     var grid = new GridList(GridList.cloneItems(gridFixture), {
-      rows: 3
+      itemsPerLane: 3
     });
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[9], [4, 2]);
@@ -112,7 +112,7 @@ describe("Grid collisions", function() {
   it("should move 2x1 widget above 2x1 widget", function() {
     var gridFixture = fixtures.GRID2.rows3;
     var grid = new GridList(GridList.cloneItems(gridFixture), {
-      rows: 3
+      itemsPerLane: 3
     });
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[12], [5, 1]);
@@ -127,7 +127,7 @@ describe("Grid collisions", function() {
   it("should move 2x1 widget below 2x1 widget", function() {
     var gridFixture = fixtures.GRID2.rows3;
     var grid = new GridList(GridList.cloneItems(gridFixture), {
-      rows: 3
+      itemsPerLane: 3
     });
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[11], [5, 2]);
@@ -142,7 +142,7 @@ describe("Grid collisions", function() {
   it("should move 1x1 + 1x1 widgets above 2x1 widget", function() {
     var gridFixture = fixtures.GRID2.rows3;
     var grid = new GridList(GridList.cloneItems(gridFixture), {
-      rows: 3
+      itemsPerLane: 3
     });
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[5], [2, 2]);
@@ -158,7 +158,7 @@ describe("Grid collisions", function() {
   it("should move 1x1 + 2x1 widgets above 3x1 widget", function() {
     var gridFixture = fixtures.GRID2.rows3;
     var grid = new GridList(GridList.cloneItems(gridFixture), {
-      rows: 3
+      itemsPerLane: 3
     });
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[8], [4, 1]);
@@ -174,7 +174,7 @@ describe("Grid collisions", function() {
   it("should move 1x1 + 1x1 widgets to right of 2x1 widget", function() {
     var gridFixture = fixtures.GRID2.rows3;
     var grid = new GridList(GridList.cloneItems(gridFixture), {
-      rows: 3
+      itemsPerLane: 3
     });
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[12], [3, 2]);
@@ -190,7 +190,7 @@ describe("Grid collisions", function() {
   it("should keep position when moving 1x1 widget over timeline", function() {
     var gridFixture = fixtures.GRID2.rows3;
     var grid = new GridList(GridList.cloneItems(gridFixture), {
-      rows: 3
+      itemsPerLane: 3
     });
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[1], [1, 1]);
@@ -204,7 +204,7 @@ describe("Grid collisions", function() {
   it("should position to left when moving 1x1 widget over 2x1", function() {
     var gridFixture = fixtures.GRID2.rows3;
     var grid = new GridList(GridList.cloneItems(gridFixture), {
-      rows: 3
+      itemsPerLane: 3
     });
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[7], [3, 1]);

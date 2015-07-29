@@ -20,7 +20,7 @@ describe("Grid item resizing", function() {
         item,
         grid;
 
-    grid = new GridList(GridList.cloneItems(fixture), {rows: 3});
+    grid = new GridList(GridList.cloneItems(fixture), {itemsPerLane: 3});
     item = grid.items[13];
     helpers.addIndexesToItems(grid.items);
 
@@ -54,7 +54,7 @@ describe("Grid item resizing", function() {
         item,
         grid;
 
-    grid = new GridList(GridList.cloneItems(fixture), {rows: 3});
+    grid = new GridList(GridList.cloneItems(fixture), {itemsPerLane: 3});
     item = grid.items[5];
     helpers.addIndexesToItems(grid.items);
 
@@ -90,7 +90,7 @@ describe("Grid item resizing", function() {
         item,
         grid;
 
-    grid = new GridList(GridList.cloneItems(fixture), {rows: 3});
+    grid = new GridList(GridList.cloneItems(fixture), {itemsPerLane: 3});
     item = grid.items[5];
     helpers.addIndexesToItems(grid.items);
 
@@ -132,7 +132,7 @@ describe("Grid item resizing", function() {
       item1 = {x: 0, y: 0, w: 1, h: 1};
       item2 = {x: 0, y: 1, w: 1, h: 1};
 
-      grid = new GridList([item1, item2], {rows: 2});
+      grid = new GridList([item1, item2], {itemsPerLane: 2});
     });
 
     it("should push other items while preserving their rows", function() {
@@ -145,6 +145,32 @@ describe("Grid item resizing", function() {
       grid.resizeItem(item2, {h: 2});
 
       expect(grid.items).toEqualPositions([{x: 0, y: 0}, {x: 1, y: 0}]);
+    });
+  });
+
+  describe("a 1x1 widget to 1x2 for vertical", function() {
+    var grid, item1, item2;
+
+    beforeEach(function() {
+      item1 = {w: 1, h: 2, x: 0, y: 0};
+      item2 = {w: 1, h: 1, x: 1, y: 0};
+
+      grid = new GridList([item1, item2], {
+        itemsPerLane: 2,
+        direction: "vertical"
+      });
+    });
+
+    it("should push other items while preserving their rows", function() {
+      grid.resizeItem(item2, {h: 2});
+
+      expect(grid.items).toEqualPositions([{x: 0, y: 0}, {x: 1, y: 0}]);
+    });
+
+    it("should put the item on a new row when it doesn't fit", function() {
+      grid.resizeItem(item1, {w: 2, h: 1});
+
+      expect(grid.items).toEqualPositions([{x: 0, y: 0}, {x: 0, y: 1}]);
     });
   });
 });

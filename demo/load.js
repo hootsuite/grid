@@ -54,7 +54,7 @@ $(function() {
   DemoGrid.buildElements($('#grid'), fixtures.DEMO);
 
   $('#grid').gridList({
-    rows: DemoGrid.currentSize,
+    itemsPerLane: DemoGrid.currentSize,
     widthHeightRatio: 264 / 294,
     heightToFontSizeRatio: 0.25,
     onChange: function(changedItems) {
