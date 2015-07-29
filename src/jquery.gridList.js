@@ -22,7 +22,8 @@
   DraggableGridList.prototype = {
 
     defaults: {
-      rows: 5,
+      itemsPerLane: 5,
+      direction: "horizontal",
       itemSelector: 'li[data-w]',
       widthHeightRatio: 1,
       dragAndDrop: true
@@ -38,12 +39,12 @@
       this._unbindEvents();
     },
 
-    resize: function(rows) {
-      if (rows) {
-        this.options.rows = rows;
+    resize: function(itemsPerLane) {
+      if (itemsPerLane) {
+        this.options.itemsPerLane = itemsPerLane;
       }
       this._createGridSnapshot();
-      this.gridList.resizeGrid(this.options.rows);
+      this.gridList.resizeGrid(this.options.itemsPerLane);
       this._updateGridSnapshot();
 
       this.reflow();
@@ -93,6 +94,8 @@
       this.items = this._generateItemsFromDOM();
       this._widestItem = Math.max.apply(
         null, this.items.map(function(item) { return item.w; }));
+      this._tallestItem = Math.max.apply(
+        null, this.items.map(function(item) { return item.h; }));
 
       // Used to highlight a position an element will land on upon drop
       this.$positionHighlight = this.$element.find('.position-highlight').hide();
@@ -110,7 +113,10 @@
     _initGridList: function() {
       // Create instance of GridList (decoupled lib for handling the grid
       // positioning and sorting post-drag and dropping)
-      this.gridList = new GridList(this.items, {rows: this.options.rows});
+      this.gridList = new GridList(this.items, {
+        itemsPerLane: this.options.itemsPerLane,
+        direction: this.options.direction
+      });
     },
 
     _bindEvents: function() {
@@ -136,6 +142,7 @@
 
       // Since dragging actually alters the grid, we need to establish the number
       // of cols (+1 extra) before the drag starts
+
       this._maxGridCols = this.gridList.grid.length;
     },
 
@@ -208,8 +215,13 @@
     },
 
     _calculateCellSize: function() {
-      this._cellHeight = Math.floor(this.$element.height() / this.options.rows);
-      this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
+      if (this.options.direction === "horizontal") {
+        this._cellHeight = Math.floor(this.$element.height() / this.options.itemsPerLane);
+        this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
+      } else {
+        this._cellWidth = Math.floor(this.$element.width() / this.options.itemsPerLane);
+        this._cellHeight = this._cellWidth * this.options.widthHeightRatio;
+      }
       if (this.options.heightToFontSizeRatio) {
         this._fontSize = this._cellHeight * this.options.heightToFontSizeRatio;
       }
@@ -249,8 +261,13 @@
       }
       // Update the width of the entire grid container with enough room on the
       // right to allow dragging items to the end of the grid.
-      this.$element.width(
-        (this.gridList.grid.length + this._widestItem) * this._cellWidth);
+      if (this.options.direction === "horizontal") {
+        this.$element.width(
+          (this.gridList.grid.length + this._widestItem) * this._cellWidth);
+      } else {
+        this.$element.height(
+          (this.gridList.grid.length + this._tallestItem) * this._cellHeight);
+      }
     },
 
     _dragPositionChanged: function(newPosition) {
@@ -272,8 +289,14 @@
       // than one extra column
       col = Math.max(col, 0);
       row = Math.max(row, 0);
-      col = Math.min(col, this._maxGridCols);
-      row = Math.min(row, this.options.rows - item.h);
+      if (this.options.direction === "horizontal") {
+        col = Math.min(col, this._maxGridCols);
+        row = Math.min(row, this.options.itemsPerLane - item.h);
+      } else {
+        col = Math.min(col, this.options.itemsPerLane - item.w);
+        row = Math.min(row, this._maxGridCols);
+      }
+      console.log(col, row);
       return [col, row];
     },
 
