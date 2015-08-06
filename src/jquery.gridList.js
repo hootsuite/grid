@@ -279,16 +279,18 @@
     },
 
     _snapItemPositionToGrid: function(item) {
-      var position = item.$element.position(),
-          row,
-          col;
+      var position = item.$element.position();
+
       position[0] -= this.$element.position().left;
-      col = Math.round(position.left / this._cellWidth);
-      row = Math.round(position.top / this._cellHeight);
+
+      var col = Math.round(position.left / this._cellWidth),
+          row = Math.round(position.top / this._cellHeight);
+
       // Keep item position within the grid and don't let the item create more
       // than one extra column
       col = Math.max(col, 0);
       row = Math.max(row, 0);
+
       if (this.options.direction === "horizontal") {
         col = Math.min(col, this._maxGridCols);
         row = Math.min(row, this.options.itemsPerLane - item.h);
@@ -296,7 +298,7 @@
         col = Math.min(col, this.options.itemsPerLane - item.w);
         row = Math.min(row, this._maxGridCols);
       }
-      console.log(col, row);
+
       return [col, row];
     },
 
