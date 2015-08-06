@@ -161,16 +161,16 @@ describe("Grid item resizing", function() {
       });
     });
 
-    it("should push other items while preserving their rows", function() {
-      grid.resizeItem(item2, {h: 2});
+    it("should put the item on a new row when it doesn't fit", function() {
+      grid.resizeItem(item2, {w: 2});
 
-      expect(grid.items).toEqualPositions([{x: 0, y: 0}, {x: 1, y: 0}]);
+      expect(grid.items).toEqualPositions([{x: 0, y: 0}, {x: 0, y: 2}]);
     });
 
-    it("should put the item on a new row when it doesn't fit", function() {
+    it("should push other items while preserving their rows", function() {
       grid.resizeItem(item1, {w: 2, h: 1});
 
-      expect(grid.items).toEqualPositions([{x: 0, y: 0}, {x: 0, y: 1}]);
+      expect(grid.items).toEqualPositions([{x: 0, y: 0}, {x: 1, y: 1}]);
     });
   });
 });
