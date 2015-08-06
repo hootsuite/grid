@@ -27,7 +27,7 @@ var GridList = function(items, options) {
    * The positioning algorithm places items in columns. Starting from left to
    * right, going through each column top to bottom.
    *
-   * The size of an item is expressed using the number of cols and rows it
+   * The size of an item is expressed using the number of cols and itemsPerLane it
    * takes up within the grid (w and h)
    *
    * The position of an item is express using the col and row position within
@@ -77,7 +77,7 @@ GridList.cloneItems = function(items, _items) {
 GridList.prototype = {
 
   defaults: {
-    rows: 5
+    itemsPerLane: 5
   },
 
   /**
@@ -108,7 +108,7 @@ GridList.prototype = {
     output += border;
 
     // Render table contents row by row, as we go on the y axis
-    for (i = 0; i < this.options.rows; i++) {
+    for (i = 0; i < this.options.itemsPerLane; i++) {
       output += '\n' + this._padNumber(i, ' ') + '|';
       for (j = 0; j < widthOfGrid; j++) {
         output += ' ';
@@ -131,12 +131,12 @@ GridList.prototype = {
     }
   },
 
-  resizeGrid: function(rows) {
+  resizeGrid: function(itemsPerLane) {
     var currentColumn = 0,
         item,
         i;
 
-    this.options.rows = rows;
+    this.options.itemsPerLane = itemsPerLane;
     this._adjustHeightOfItems();
 
     this._sortItemsByPosition();
@@ -181,7 +181,7 @@ GridList.prototype = {
           return position;
         }
       } else {
-        for (y = start.y; y < this.options.rows; y++) {
+        for (y = start.y; y < this.options.itemsPerLane; y++) {
           position = [x, y];
           if (this._itemFitsAtPosition(item, position)) {
             return position;
@@ -251,7 +251,7 @@ GridList.prototype = {
   _sortItemsByPosition: function() {
     var _this = this;
     this.items.sort(function(item1, item2) {
-      // Cols preced rows when it comes to position order
+      // Cols preced itemsPerLane when it comes to position order
       if (item1.x != item2.x) {
         return item1.x - item2.x;
       }
@@ -267,7 +267,7 @@ GridList.prototype = {
     /**
      * Some items have 100% height, that height is expressed as 0. We need to
      * ensure a valid height for each of those items (always as all the number of
-     * rows of the current grid configuration)
+     * itemsPerLane of the current grid configuration)
      */
     var item,
         i;
@@ -278,7 +278,7 @@ GridList.prototype = {
          item.autoHeight = !item.h;
       }
       if (item.autoHeight) {
-        item.h = this.options.rows;
+        item.h = this.options.itemsPerLane;
       }
     }
   },
@@ -298,7 +298,7 @@ GridList.prototype = {
       return false;
     }
     // Make sure the item isn't larger than the entire grid
-    if (position[1] + item.h > this.options.rows) {
+    if (position[1] + item.h > this.options.itemsPerLane) {
       return false;
     }
     // Make sure the item doesn't overlap with an already positioned item
@@ -389,7 +389,7 @@ GridList.prototype = {
     var i;
     for (i = 0; i < N; i++) {
       if (!this.grid[i]) {
-        this.grid.push(new GridCol(this.options.rows));
+        this.grid.push(new GridCol(this.options.itemsPerLane));
       }
     }
   },
@@ -552,8 +552,8 @@ GridList.prototype = {
   }
 };
 
-var GridCol = function(rows) {
-  for (var i = 0; i < rows; i++) {
+var GridCol = function(itemsPerLane) {
+  for (var i = 0; i < itemsPerLane; i++) {
     this.push(null);
   }
 };
