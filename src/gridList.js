@@ -184,12 +184,14 @@ GridList.prototype = {
     for (x = start.x; x < this.grid.length; x++) {
       if (fixedRow !== undefined) {
         position = [x, fixedRow];
+
         if (this._itemFitsAtPosition(item, position)) {
           return position;
         }
       } else {
         for (y = start.y; y < this._options.itemsPerLane; y++) {
           position = [x, y];
+
           if (this._itemFitsAtPosition(item, position)) {
             return position;
           }
@@ -552,9 +554,8 @@ GridList.prototype = {
       }
 
       var x = this._findLeftMostPositionForItem(item),
-          newPosition = this.findPositionForItem(item,
-                                                 {x: x, y: 0},
-                                                 position.y);
+          newPosition = this.findPositionForItem(
+            item, {x: x, y: 0}, position.y);
 
       this._updateItemPosition(item, newPosition);
     }
