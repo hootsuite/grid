@@ -608,12 +608,36 @@ GridList.prototype = {
   },
 
   _getItemPosition: function(item) {
+    /**
+     * If the direction is vertical we need to rotate the grid 90 deg to the
+     * left. Thus, we simulate the fact that items are being pulled to the top.
+     *
+     * Since the items have widths and heights, if we apply the classic
+     * counter-clockwise 90 deg rotation
+     *
+     *     [0 -1]
+     *     [1  0]
+     *
+     * then the top left point of an item will become the bottom left point of
+     * the rotated item. To adjust for this, we need to subtract from the y
+     * position the height of the original item - the width of the rotated item.
+     *
+     * However, if we do this then we'll reverse some actions: resizing the
+     * width of an item will stretch the item to the left instead of to the
+     * right; resizing an item that doesn't fit into the grid will push the
+     * items around it instead of going on a new row, etc.
+     *
+     * We found it better to do a vertical flip of the grid after rotating it.
+     * This restores the direction of the actions and greatly simplifies the
+     * transformations.
+     */
+
     if (this._options.direction === 'horizontal') {
       return item;
     } else {
       return {
         x: item.y,
-        y: this._options.itemsPerLane - item.x - item.w,
+        y: item.x,
         w: item.h,
         h: item.w
       };
@@ -621,13 +645,17 @@ GridList.prototype = {
   },
 
   _setItemPosition: function(item, position) {
+    /**
+     * See _getItemPosition.
+     */
+
     if (this._options.direction === 'horizontal') {
       item.x = position[0];
       item.y = position[1];
     } else {
       // We're supposed to subtract the rotated item's height which is actually
       // the non-rotated item's width.
-      item.x = this._options.itemsPerLane - position[1] - item.w;
+      item.x = position[1];
       item.y = position[0];
     }
   }
