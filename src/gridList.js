@@ -49,7 +49,7 @@ var GridList = function(items, options) {
 
   this.items = items;
 
-  this._adjustHeightOfItems();
+  this._adjustSizeOfItems();
 
   this.generateGrid();
 };
@@ -140,7 +140,7 @@ GridList.prototype = {
     var currentColumn = 0;
 
     this._options.itemsPerLane = itemsPerLane;
-    this._adjustHeightOfItems();
+    this._adjustSizeOfItems();
 
     this._sortItemsByPosition();
     this._resetGrid();
@@ -284,22 +284,27 @@ GridList.prototype = {
     }.bind(this));
   },
 
-  _adjustHeightOfItems: function() {
+  _adjustSizeOfItems: function() {
     /**
-     * Some items have 100% height, that height is expressed as 0. We need to
-     * ensure a valid height for each of those items (always as all the number of
-     * itemsPerLane of the current grid configuration)
+     * Some items can have 100% height or 100% width. Those dimmensions are
+     * expressed as 0. We need to ensure a valid width and height for each of
+     * those items as the number of items per lane.
      */
-    var item,
-        i;
-    for (i = 0; i < this.items.length; i++) {
-      item = this.items[i];
-      // This only happens the first time they are picked up
-      if (item.autoHeight === undefined) {
-         item.autoHeight = !item.h;
+
+    for (var i = 0; i < this.items.length; i++) {
+      var item = this.items[i];
+
+      // This can happen only the first time items are checked.
+      if (item.w === 0 || item.h === 0) {
+        item.autoHeight = true;
       }
+
       if (item.autoHeight) {
-        item.h = this.options.itemsPerLane;
+        if (this._options.direction === 'horizontal') {
+          item.h = this._options.itemsPerLane;
+        } else {
+          item.w = this._options.itemsPerLane;
+        }
       }
     }
   },
