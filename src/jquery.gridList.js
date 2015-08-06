@@ -220,7 +220,7 @@
         this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
       } else {
         this._cellWidth = Math.floor(this.$element.width() / this.options.itemsPerLane);
-        this._cellHeight = this._cellWidth * this.options.widthHeightRatio;
+        this._cellHeight = this._cellWidth / this.options.widthHeightRatio;
       }
       if (this.options.heightToFontSizeRatio) {
         this._fontSize = this._cellHeight * this.options.heightToFontSizeRatio;
