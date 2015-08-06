@@ -231,13 +231,11 @@ GridList.prototype = {
      * @param {Number} [size.h=item.h] The new height.
      */
 
-    var itemPosition = this._getItemPosition(item),
-        _size = this._getItemPosition(size);
-
-    var width = _size.w || itemPosition.w,
-        height = _size.h || itemPosition.h;
+    var width = size.w || item.w,
+        height = size.h || item.h;
 
     this._updateItemSize(item, width, height);
+
     this._resolveCollisions(item);
   },
 
@@ -370,7 +368,8 @@ GridList.prototype = {
       this._deleteItemPositionFromGrid(item);
     }
 
-    this._setItemSize(item, width, height);
+    item.w = width;
+    item.h = height;
 
     this._markItemPositionToGrid(item);
   },
@@ -624,16 +623,6 @@ GridList.prototype = {
       // the non-rotated item's width.
       item.x = this._options.itemsPerLane - position[1] - item.w;
       item.y = position[0];
-    }
-  },
-
-  _setItemSize: function(item, width, height) {
-    if (this._options.direction === 'horizontal') {
-      item.w = width;
-      item.h = height;
-    } else {
-      item.w = height;
-      item.h = width;
     }
   }
 };
