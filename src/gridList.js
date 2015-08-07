@@ -332,8 +332,8 @@ GridList.prototype = {
       return false;
     }
 
-    // Make sure the position doesn't overlap with an already newPositioned
-    // position.
+    // Make sure the position doesn't overlap with an already positioned
+    // item.
     for (x = newPosition[0]; x < newPosition[0] + position.w; x++) {
       var col = this.grid[x];
 
@@ -343,8 +343,8 @@ GridList.prototype = {
       }
 
       for (y = newPosition[1]; y < newPosition[1] + position.h; y++) {
-        // Any space occupied by an position can continue to be occupied by the
-        // same position.
+        // Any space occupied by an item can continue to be occupied by the
+        // same item.
         if (col[y] && col[y] !== position) {
           return false;
         }
