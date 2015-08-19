@@ -524,14 +524,17 @@ GridList.prototype = {
      */
     var tail = 0,
         otherItem,
-        i;
+        i, j;
+
     for (i = 0; i < this.grid.length; i++) {
-      otherItem = this.grid[i][item.y];
-      if (!otherItem) {
-        continue;
-      }
-      if (this.items.indexOf(otherItem) < this.items.indexOf(item)) {
-        tail = otherItem.x + otherItem.w;
+      for (j = item.y; j < item.y + item.h; j++) {
+        otherItem = this.grid[i][j];
+        if (!otherItem) {
+          continue;
+        }
+        if (this.items.indexOf(otherItem) < this.items.indexOf(item)) {
+          tail = otherItem.x + otherItem.w;
+        }
       }
     }
     return tail;
