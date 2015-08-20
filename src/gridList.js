@@ -150,6 +150,8 @@ GridList.prototype = {
       // New items should never be placed to the left of previous items
       currentColumn = Math.max(currentColumn, item.x);
     }
+
+    this._pullItemsToLeft();
   },
 
   findPositionForItem: function(item, start, fixedRow) {
