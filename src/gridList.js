@@ -224,6 +224,8 @@ GridList.prototype = {
 
     this._updateItemSize(item, width, height);
     this._resolveCollisions(item);
+
+    this._pullItemsToLeft();
   },
 
   getChangedItems: function(initialItems, idAttribute) {
