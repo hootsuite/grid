@@ -147,4 +147,15 @@ describe("Grid item resizing", function() {
       expect(grid.items).toEqualPositions([{x: 0, y: 0}, {x: 1, y: 0}]);
     });
   });
+
+  it("should pull to left after resizing", function() {
+    var item1 = {x: 0, y: 2, w: 1, h: 1},
+        item2 = {x: 0, y: 3, w: 1, h: 1};
+
+    var grid = new GridList([item1, item2], {rows: 4});
+
+    grid.resizeItem(item2, {w: 2, h: 2});
+
+    expect(grid.items).toEqualPositions([{x: 0, y: 2}, {x: 0, y: 0}]);
+  });
 });
