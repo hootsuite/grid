@@ -37,8 +37,11 @@ the grid with.
  Supported options:
 
  - **direction** - Can be `'horizontal'` or `'vertical'`. Defaults to
-   `'vertical'`.
- - **itemsPerLane** - Number of rows or columns, depending on the direction.
+   `'vertical'`. This sets how the grid can expand e.g. for 'horizontal' the
+   grid will stretch towards the right to accommodate all the items. For
+   'vertical', it will stretch towards the bottom.
+ - **itemsPerLane** - Number of fixed rows or columns, depending on the
+   direction.
 
 #### generateGrid()
 
