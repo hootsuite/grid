@@ -5,20 +5,13 @@ items
 
 **Demo: http://ubervu.github.io/grid/**
 
-**Disclaimer: The current implementation is for a horizontal grid. This means
-that the number of rows is configurable, whereas columns extend dynamically,
-based on the number, size and position of items placed inside the grid.** While
-this is by design, most, if not all, logic was built around the idea that at
-any point the other axis could be supported with minor/moderate code changes,
-making both orientations available through the use of an single option.
-
 The GridList library is split into two roles:
 
 1. An agnostic [**GridList class**](#gridlist-class) that manages the
-two-dimensional positions from a list of items within a virtual matrix
+two-dimensional positions from a list of items within a virtual matrix.
 2. A [**jQuery plugin**](#fngridlist) built on top of the GridList class
 that translates the generic items positions into responsive DOM elements with
-drag and drop capabilities
+drag and drop capabilities.
 
 ## GridList class
 
