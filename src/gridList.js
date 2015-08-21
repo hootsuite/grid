@@ -157,6 +157,8 @@ GridList.prototype = {
       // New items should never be placed to the left of previous items
       currentColumn = Math.max(currentColumn, position.x);
     }
+
+    this._pullItemsToLeft();
   },
 
   findPositionForItem: function(item, start, fixedRow) {
@@ -239,6 +241,8 @@ GridList.prototype = {
     this._updateItemSize(item, width, height);
 
     this._resolveCollisions(item);
+
+    this._pullItemsToLeft();
   },
 
   getChangedItems: function(initialItems, idAttribute) {
@@ -578,18 +582,21 @@ GridList.prototype = {
         position = this._getItemPosition(item);
 
     for (var i = 0; i < this.grid.length; i++) {
-      var otherItem = this.grid[i][position.y];
+      for (var j = position.y; j < position.y + position.h; j++) {
+        var otherItem = this.grid[i][j];
 
-      if (!otherItem) {
-        continue;
-      }
+        if (!otherItem) {
+          continue;
+        }
 
-      var otherPosition = this._getItemPosition(otherItem);
+        var otherPosition = this._getItemPosition(otherItem);
 
-      if (this.items.indexOf(otherItem) < this.items.indexOf(item)) {
-        tail = otherPosition.x + otherPosition.w;
+        if (this.items.indexOf(otherItem) < this.items.indexOf(item)) {
+          tail = otherPosition.x + otherPosition.w;
+        }
       }
     }
+
     return tail;
   },
 

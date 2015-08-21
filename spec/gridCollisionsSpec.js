@@ -223,4 +223,24 @@ describe("Grid collisions", function() {
     expectedItems[16] = {x: 9, y: 2};
     expect(grid.items).toEqualPositions(expectedItems);
   });
+
+  it("should check across the entire height of an item when searching for a " +
+     "position", function() {
+    var items = [
+      {x: 0, y: 2, w: 2, h: 2},
+      {x: 2, y: 1, w: 1, h: 2},
+      {x: 3, y: 1, w: 2, h: 2}
+    ];
+
+    var grid = new GridList(GridList.cloneItems(items), {rows: 4});
+
+    helpers.addIndexesToItems(grid.items);
+    grid.moveItemToPosition(grid.items[2], [3, 0]);
+    helpers.sortItemsByIndex(grid.items);
+
+    var expectedItems = GridList.cloneItems(items);
+    expectedItems[2].y = 0;
+
+    expect(grid.items).toEqualPositions(expectedItems);
+  });
 });
