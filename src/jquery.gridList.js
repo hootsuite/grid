@@ -22,7 +22,7 @@
   DraggableGridList.prototype = {
 
     defaults: {
-      itemsPerLane: 5,
+      lanes: 5,
       direction: "horizontal",
       itemSelector: 'li[data-w]',
       widthHeightRatio: 1,
@@ -39,12 +39,12 @@
       this._unbindEvents();
     },
 
-    resize: function(itemsPerLane) {
-      if (itemsPerLane) {
-        this.options.itemsPerLane = itemsPerLane;
+    resize: function(lanes) {
+      if (lanes) {
+        this.options.lanes = lanes;
       }
       this._createGridSnapshot();
-      this.gridList.resizeGrid(this.options.itemsPerLane);
+      this.gridList.resizeGrid(this.options.lanes);
       this._updateGridSnapshot();
 
       this.reflow();
@@ -114,7 +114,7 @@
       // Create instance of GridList (decoupled lib for handling the grid
       // positioning and sorting post-drag and dropping)
       this.gridList = new GridList(this.items, {
-        itemsPerLane: this.options.itemsPerLane,
+        lanes: this.options.lanes,
         direction: this.options.direction
       });
     },
@@ -216,10 +216,10 @@
 
     _calculateCellSize: function() {
       if (this.options.direction === "horizontal") {
-        this._cellHeight = Math.floor(this.$element.height() / this.options.itemsPerLane);
+        this._cellHeight = Math.floor(this.$element.height() / this.options.lanes);
         this._cellWidth = this._cellHeight * this.options.widthHeightRatio;
       } else {
-        this._cellWidth = Math.floor(this.$element.width() / this.options.itemsPerLane);
+        this._cellWidth = Math.floor(this.$element.width() / this.options.lanes);
         this._cellHeight = this._cellWidth / this.options.widthHeightRatio;
       }
       if (this.options.heightToFontSizeRatio) {
@@ -293,9 +293,9 @@
 
       if (this.options.direction === "horizontal") {
         col = Math.min(col, this._maxGridCols);
-        row = Math.min(row, this.options.itemsPerLane - item.h);
+        row = Math.min(row, this.options.lanes - item.h);
       } else {
-        col = Math.min(col, this.options.itemsPerLane - item.w);
+        col = Math.min(col, this.options.lanes - item.w);
         row = Math.min(row, this._maxGridCols);
       }
 
