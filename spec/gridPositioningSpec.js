@@ -20,7 +20,7 @@ describe("Grid positioning", function() {
 
       var gridFixture = fixtures.GRID1;
       var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
-        itemsPerLane: 3
+        lanes: 3
       });
 
       it("should maintain positions for 3 rows", function() {
@@ -42,7 +42,7 @@ describe("Grid positioning", function() {
 
       var gridFixture = fixtures.GRID2;
       var grid = new GridList(GridList.cloneItems(gridFixture.rows3), {
-        itemsPerLane: 3
+        lanes: 3
       });
 
       it("should maintain positions for 3 rows", function() {

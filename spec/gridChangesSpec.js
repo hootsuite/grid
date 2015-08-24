@@ -18,7 +18,7 @@ describe("Grid changes", function() {
   it("should return 0 items between same snapshots", function() {
     var gridFixture = fixtures.GRID2.rows3,
         grid = new GridList(GridList.cloneItems(gridFixture), {
-      itemsPerLane: 3
+      lanes: 3
     });
     helpers.addIndexesToItems(grid.items);
 
@@ -28,7 +28,7 @@ describe("Grid changes", function() {
   it("should return 0 items after moving item to same position", function() {
     var gridFixture = fixtures.GRID2.rows3,
         grid = new GridList(GridList.cloneItems(gridFixture), {
-      itemsPerLane: 3
+      lanes: 3
     });
     helpers.addIndexesToItems(grid.items);
     var snapshot = GridList.cloneItems(grid.items);
@@ -40,7 +40,7 @@ describe("Grid changes", function() {
   it("should return only the horizontally swapped items", function() {
     var gridFixture = fixtures.GRID2.rows3,
         grid = new GridList(GridList.cloneItems(gridFixture), {
-      itemsPerLane: 3
+      lanes: 3
     });
     helpers.addIndexesToItems(grid.items);
     var initialItems = GridList.cloneItems(grid.items);
@@ -56,7 +56,7 @@ describe("Grid changes", function() {
   it("should return only the vertically swapped items", function() {
     var gridFixture = fixtures.GRID2.rows3,
         grid = new GridList(GridList.cloneItems(gridFixture), {
-      itemsPerLane: 3
+      lanes: 3
     });
     helpers.addIndexesToItems(grid.items);
     var initialItems = GridList.cloneItems(grid.items);
@@ -73,7 +73,7 @@ describe("Grid changes", function() {
   it("should return all items following resized item (to its right)", function() {
     var gridFixture = fixtures.GRID2.rows3,
         grid = new GridList(GridList.cloneItems(gridFixture), {
-      itemsPerLane: 3
+      lanes: 3
     });
     helpers.addIndexesToItems(grid.items);
     var initialItems = GridList.cloneItems(grid.items);

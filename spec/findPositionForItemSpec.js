@@ -16,7 +16,7 @@ describe("findPositionForItem", function() {
       var grid;
 
       beforeEach(function() {
-        grid = new GridList([], {itemsPerLane: 2});
+        grid = new GridList([], {lanes: 2});
       });
 
       it("should place it at the top", function() {
@@ -36,7 +36,7 @@ describe("findPositionForItem", function() {
       var grid;
 
       beforeEach(function() {
-        grid = new GridList([{x: 0, y: 0, w: 1, h: 1}], {itemsPerLane: 2});
+        grid = new GridList([{x: 0, y: 0, w: 1, h: 1}], {lanes: 2});
       });
 
       it("should place it at after the rest of the elements", function() {
@@ -58,7 +58,7 @@ describe("findPositionForItem", function() {
       beforeEach(function() {
         grid = new GridList(
             [{x: 0, y: 0, w: 1, h: 1}, {x: 0, y: 1, w: 1, h: 1}],
-            {itemsPerLane: 2});
+            {lanes: 2});
       });
 
       it("should place it on a new column on the row I tell it to", function() {
@@ -81,7 +81,7 @@ describe("findPositionForItem", function() {
       var grid;
 
       beforeEach(function() {
-        grid = new GridList([], {itemsPerLane: 2});
+        grid = new GridList([], {lanes: 2});
       });
 
       it("should place it at the top", function() {
@@ -101,7 +101,7 @@ describe("findPositionForItem", function() {
       var grid;
 
       beforeEach(function() {
-        grid = new GridList([{x: 0, y: 0, w: 1, h: 1}], {itemsPerLane: 2});
+        grid = new GridList([{x: 0, y: 0, w: 1, h: 1}], {lanes: 2});
       });
 
       it("should place it on a new column at the top", function() {

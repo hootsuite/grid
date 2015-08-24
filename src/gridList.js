@@ -81,7 +81,7 @@ GridList.cloneItems = function(items, _items) {
 GridList.prototype = {
 
   defaults: {
-    itemsPerLane: 5,
+    lanes: 5,
     direction: 'horizontal'
   },
 
@@ -113,7 +113,7 @@ GridList.prototype = {
     output += border;
 
     // Render table contents row by row, as we go on the y axis
-    for (i = 0; i < this._options.itemsPerLane; i++) {
+    for (i = 0; i < this._options.lanes; i++) {
       output += '\n' + this._padNumber(i, ' ') + '|';
       for (j = 0; j < widthOfGrid; j++) {
         output += ' ';
@@ -136,10 +136,10 @@ GridList.prototype = {
     }
   },
 
-  resizeGrid: function(itemsPerLane) {
+  resizeGrid: function(lanes) {
     var currentColumn = 0;
 
-    this._options.itemsPerLane = itemsPerLane;
+    this._options.lanes = lanes;
     this._adjustSizeOfItems();
 
     this._sortItemsByPosition();
@@ -191,7 +191,7 @@ GridList.prototype = {
           return position;
         }
       } else {
-        for (y = start.y; y < this._options.itemsPerLane; y++) {
+        for (y = start.y; y < this._options.lanes; y++) {
           position = [x, y];
 
           if (this._itemFitsAtPosition(item, position)) {
@@ -305,9 +305,9 @@ GridList.prototype = {
 
       if (item.autoHeight) {
         if (this._options.direction === 'horizontal') {
-          item.h = this._options.itemsPerLane;
+          item.h = this._options.lanes;
         } else {
-          item.w = this._options.itemsPerLane;
+          item.w = this._options.lanes;
         }
       }
     }
@@ -332,7 +332,7 @@ GridList.prototype = {
     }
 
     // Make sure the item isn't larger than the entire grid
-    if (newPosition[1] + position.h > this._options.itemsPerLane) {
+    if (newPosition[1] + position.h > this._options.lanes) {
       return false;
     }
 
@@ -435,7 +435,7 @@ GridList.prototype = {
     var i;
     for (i = 0; i < N; i++) {
       if (!this.grid[i]) {
-        this.grid.push(new GridCol(this._options.itemsPerLane));
+        this.grid.push(new GridCol(this._options.lanes));
       }
     }
   },
@@ -668,8 +668,8 @@ GridList.prototype = {
   }
 };
 
-var GridCol = function(itemsPerLane) {
-  for (var i = 0; i < itemsPerLane; i++) {
+var GridCol = function(lanes) {
+  for (var i = 0; i < lanes; i++) {
     this.push(null);
   }
 };

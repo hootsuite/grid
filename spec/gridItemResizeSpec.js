@@ -20,7 +20,7 @@ describe("Grid item resizing", function() {
         item,
         grid;
 
-    grid = new GridList(GridList.cloneItems(fixture), {itemsPerLane: 3});
+    grid = new GridList(GridList.cloneItems(fixture), {lanes: 3});
     item = grid.items[13];
     helpers.addIndexesToItems(grid.items);
 
@@ -54,7 +54,7 @@ describe("Grid item resizing", function() {
         item,
         grid;
 
-    grid = new GridList(GridList.cloneItems(fixture), {itemsPerLane: 3});
+    grid = new GridList(GridList.cloneItems(fixture), {lanes: 3});
     item = grid.items[5];
     helpers.addIndexesToItems(grid.items);
 
@@ -90,7 +90,7 @@ describe("Grid item resizing", function() {
         item,
         grid;
 
-    grid = new GridList(GridList.cloneItems(fixture), {itemsPerLane: 3});
+    grid = new GridList(GridList.cloneItems(fixture), {lanes: 3});
     item = grid.items[5];
     helpers.addIndexesToItems(grid.items);
 
@@ -132,7 +132,7 @@ describe("Grid item resizing", function() {
       item1 = {x: 0, y: 0, w: 1, h: 1};
       item2 = {x: 0, y: 1, w: 1, h: 1};
 
-      grid = new GridList([item1, item2], {itemsPerLane: 2});
+      grid = new GridList([item1, item2], {lanes: 2});
     });
 
     it("should push other items while preserving their rows", function() {
@@ -156,7 +156,7 @@ describe("Grid item resizing", function() {
       item2 = {w: 1, h: 1, x: 1, y: 0};
 
       grid = new GridList([item1, item2], {
-        itemsPerLane: 2,
+        lanes: 2,
         direction: "vertical"
       });
     });
@@ -178,7 +178,7 @@ describe("Grid item resizing", function() {
     var item1 = {x: 0, y: 2, w: 1, h: 1},
         item2 = {x: 0, y: 3, w: 1, h: 1};
 
-    var grid = new GridList([item1, item2], {itemsPerLane: 4});
+    var grid = new GridList([item1, item2], {lanes: 4});
 
     grid.resizeItem(item2, {w: 2, h: 2});
 
