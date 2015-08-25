@@ -31,7 +31,7 @@ var DemoGrid = {
     if (size) {
       this.currentSize = size;
     }
-    $('#grid').gridList('reflow');
+    $('#grid').gridList('resize', this.currentSize);
   },
   flashItems: function(items) {
     // Hack to flash changed items visually
@@ -47,7 +47,7 @@ var DemoGrid = {
 };
 
 $(window).resize(function() {
-  DemoGrid.resize();
+  $('#grid').gridList('reflow');
 });
 
 $(function() {
