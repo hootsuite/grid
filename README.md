@@ -215,19 +215,22 @@ divided by the number of grid rows.
 ## FAQ: Why not [gridster](https://github.com/ducksboard/gridster.js)?
 
 - Their README reads Ducksboard is no longer active in their development. There
-are a few notable forks but it's hard to assert their [reliability.](https://github.com/dustmoo/gridster.js/issues)
+  are a few notable forks but it's hard to assert their
+  [reliability.](https://github.com/dustmoo/gridster.js/issues)
+- gridster works vertically while our solution works both vertically and
+  horizontally.
 - Our lib contains over 5 times fewer code.
-- gridster collisions are [very basic](https://github.com/ducksboard/gridster.js/issues/54),
-we pushed towards better UX and found alternative ways for dealing with
-collisions.
+- gridster collisions are [very
+  basic](https://github.com/ducksboard/gridster.js/issues/54), we pushed towards
+  better UX and found alternative ways for dealing with collisions.
 - We wanted out-of-the-box responsiveness, and the entire grid system was build
-fluid, relative to any parent container.
+  fluid, relative to any parent container.
 - We needed the grid logic to be a DOM-less lib outside the jQuery plugin. This
-allows us to compute grid positions on the server-side and run kick-ass fast
-tests with Node.
+  allows us to compute grid positions on the server-side and run kick-ass fast
+  tests with Node.
 - Another more particular thing we needed was widgets that had height=0, which
-means they stretch on however many rows a grid has. We show timelines like
-this. It also works for width=0.
+  means they stretch on however many rows a grid has. We show timelines like
+  this. It also works for width=0.
 
 *Please check [demo page](http://ubervu.github.io/grid/) or code directly for
 investigating these assumptions.*
