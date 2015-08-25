@@ -31,7 +31,7 @@ var DemoGrid = {
     if (size) {
       this.currentSize = size;
     }
-    $('#grid').gridList('resize', this.currentSize);
+    $('#grid').gridList('reflow');
   },
   flashItems: function(items) {
     // Hack to flash changed items visually
