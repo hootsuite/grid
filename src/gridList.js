@@ -349,7 +349,7 @@ GridList.prototype = {
       for (y = newPosition[1]; y < newPosition[1] + position.h; y++) {
         // Any space occupied by an item can continue to be occupied by the
         // same item.
-        if (col[y] && col[y] !== position) {
+        if (col[y] && col[y] !== item) {
           return false;
         }
       }

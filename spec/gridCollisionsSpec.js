@@ -232,7 +232,7 @@ describe("Grid collisions", function() {
       {x: 3, y: 1, w: 2, h: 2}
     ];
 
-    var grid = new GridList(GridList.cloneItems(items), {rows: 4});
+    var grid = new GridList(GridList.cloneItems(items), {lanes: 4});
 
     helpers.addIndexesToItems(grid.items);
     grid.moveItemToPosition(grid.items[2], [3, 0]);
@@ -242,5 +242,24 @@ describe("Grid collisions", function() {
     expectedItems[2].y = 0;
 
     expect(grid.items).toEqualPositions(expectedItems);
+  });
+
+  it("should swap two items when possible in vertical mode", function() {
+    var items = [
+      {x: 0, y: 0, w: 2, h: 1},
+      {x: 2, y: 0, w: 1, h: 1}
+    ];
+
+    var grid = new GridList(GridList.cloneItems(items),
+                            {lanes: 3, direction: 'vertical'});
+
+    helpers.addIndexesToItems(grid.items);
+    grid.moveItemToPosition(grid.items[1], [0, 0]);
+    helpers.sortItemsByIndex(grid.items);
+
+    expect(grid.items).toEqualPositions([
+      {x: 1, y: 0},
+      {x: 0, y: 0}
+    ]);
   });
 });
