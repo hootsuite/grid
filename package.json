@@ -1,6 +1,6 @@
 {
   "name": "grid-list",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Drag and drop library for a two-dimensional resizable and responsive list of items",
   "dependencies": {},
   "devDependencies": {
