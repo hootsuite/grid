@@ -47,14 +47,14 @@ var DemoGrid = {
 };
 
 $(window).resize(function() {
-  DemoGrid.resize();
+  $('#grid').gridList('reflow');
 });
 
 $(function() {
   DemoGrid.buildElements($('#grid'), fixtures.DEMO);
 
   $('#grid').gridList({
-    rows: DemoGrid.currentSize,
+    lanes: DemoGrid.currentSize,
     widthHeightRatio: 264 / 294,
     heightToFontSizeRatio: 0.25,
     onChange: function(changedItems) {
