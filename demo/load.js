@@ -31,7 +31,7 @@ var DemoGrid = {
     if (size) {
       this.currentSize = size;
     }
-    $('#grid').gridList('resize', this.currentSize);
+    $('#grid').gridList('reflow');
   },
   flashItems: function(items) {
     // Hack to flash changed items visually
@@ -54,7 +54,7 @@ $(function() {
   DemoGrid.buildElements($('#grid'), fixtures.DEMO);
 
   $('#grid').gridList({
-    rows: DemoGrid.currentSize,
+    lanes: DemoGrid.currentSize,
     widthHeightRatio: 264 / 294,
     heightToFontSizeRatio: 0.25,
     onChange: function(changedItems) {
