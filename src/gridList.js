@@ -301,11 +301,11 @@ GridList.prototype = {
       var item = this.items[i];
 
       // This can happen only the first time items are checked.
-      if (item.autoHeight === undefined) {
-         item.autoHeight = item.w === 0 || item.h === 0;
+      if (item.autoSize === undefined) {
+        item.autoSize = item.w === 0 || item.h === 0;
       }
 
-      if (item.autoHeight) {
+      if (item.autoSize) {
         if (this._options.direction === 'horizontal') {
           item.h = this._options.lanes;
         } else {
