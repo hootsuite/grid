@@ -254,11 +254,12 @@ GridList.prototype = {
      * Since both their position and size can change, the items need an
      * additional identifier attribute to match them with their previous state
      */
-    var changedItems = [],
-        i,
-        item;
-    for (i = 0; i < initialItems.length; i++) {
-      item = this._getItemByAttribute(idAttribute, initialItems[i][idAttribute]);
+    var changedItems = [];
+
+    for (var i = 0; i < initialItems.length; i++) {
+      var item = this._getItemByAttribute(idAttribute,
+                                      initialItems[i][idAttribute]);
+
       if (item.x !== initialItems[i].x ||
           item.y !== initialItems[i].y ||
           item.w !== initialItems[i].w ||
@@ -266,6 +267,7 @@ GridList.prototype = {
         changedItems.push(item);
       }
     }
+
     return changedItems;
   },
 
