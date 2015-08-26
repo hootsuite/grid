@@ -38,8 +38,8 @@ exports.toEqualPositions = function(expected) {
     ensureItemSizes(expected);
     ensureItemSizes(actual);
     console.log('\n\n' +
-      'Expected: ' + (new GridList(expected, {rows: getMaxHeight(expected)})) +
-      'Actual: ' + (new GridList(actual, {rows: getMaxHeight(actual)})));
+      'Expected: ' + (new GridList(expected, {lanes: getMaxHeight(expected)})) +
+      'Actual: ' + (new GridList(actual, {lanes: getMaxHeight(actual)})));
 
     // Let Jasmine know which are the items that differ
     return JSON.stringify(actual[_failingItem]) +
