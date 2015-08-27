@@ -254,11 +254,12 @@ GridList.prototype = {
      * Since both their position and size can change, the items need an
      * additional identifier attribute to match them with their previous state
      */
-    var changedItems = [],
-        i,
-        item;
-    for (i = 0; i < initialItems.length; i++) {
-      item = this._getItemByAttribute(idAttribute, initialItems[i][idAttribute]);
+    var changedItems = [];
+
+    for (var i = 0; i < initialItems.length; i++) {
+      var item = this._getItemByAttribute(idAttribute,
+                                          initialItems[i][idAttribute]);
+
       if (item.x !== initialItems[i].x ||
           item.y !== initialItems[i].y ||
           item.w !== initialItems[i].w ||
@@ -266,6 +267,7 @@ GridList.prototype = {
         changedItems.push(item);
       }
     }
+
     return changedItems;
   },
 
@@ -299,11 +301,21 @@ GridList.prototype = {
       var item = this.items[i];
 
       // This can happen only the first time items are checked.
-      if (item.w === 0 || item.h === 0) {
-        item.autoHeight = true;
+      // We need the property to have a value for all the items so that the
+      // `cloneItems` method will merge the properties properly. If we only set
+      // it to the items that need it then the following can happen:
+      //
+      // cloneItems([{id: 1, autoSize: true}, {id: 2}],
+      //            [{id: 2}, {id: 1, autoSize: true}]);
+      //
+      // will result in
+      //
+      // [{id: 1, autoSize: true}, {id: 2, autoSize: true}]
+      if (item.autoSize === undefined) {
+        item.autoSize = item.w === 0 || item.h === 0;
       }
 
-      if (item.autoHeight) {
+      if (item.autoSize) {
         if (this._options.direction === 'horizontal') {
           item.h = this._options.lanes;
         } else {
