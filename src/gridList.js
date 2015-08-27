@@ -299,8 +299,8 @@ GridList.prototype = {
       var item = this.items[i];
 
       // This can happen only the first time items are checked.
-      if (item.w === 0 || item.h === 0) {
-        item.autoHeight = true;
+      if (item.autoHeight === undefined) {
+         item.autoHeight = item.w === 0 || item.h === 0;
       }
 
       if (item.autoHeight) {
