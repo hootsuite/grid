@@ -301,6 +301,16 @@ GridList.prototype = {
       var item = this.items[i];
 
       // This can happen only the first time items are checked.
+      // We need the property to have a value for all the items so that the
+      // `cloneItems` method will merge the properties properly. If we only set
+      // it to the items that need it then the following can happen:
+      //
+      // cloneItems([{id: 1, autoSize: true}, {id: 2}],
+      //            [{id: 2}, {id: 1, autoSize: true}]);
+      //
+      // will result in
+      //
+      // [{id: 1, autoSize: true}, {id: 2, autoSize: true}]
       if (item.autoSize === undefined) {
         item.autoSize = item.w === 0 || item.h === 0;
       }
