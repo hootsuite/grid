@@ -258,7 +258,7 @@ GridList.prototype = {
 
     for (var i = 0; i < initialItems.length; i++) {
       var item = this._getItemByAttribute(idAttribute,
-                                      initialItems[i][idAttribute]);
+                                          initialItems[i][idAttribute]);
 
       if (item.x !== initialItems[i].x ||
           item.y !== initialItems[i].y ||
