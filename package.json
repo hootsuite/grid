@@ -12,6 +12,6 @@
     "url": "https://github.com/ubervu/grid.git"
   },
   "scripts": {
-    "test": "./node_modules/jasmine-node/bin/jasmine-node --verbose spec"
+    "test": "jasmine-node --verbose spec"
   }
 }
