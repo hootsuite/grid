@@ -80,4 +80,7 @@ $(function() {
     e.preventDefault();
     DemoGrid.resize(Math.max(1, DemoGrid.currentSize - 1));
   });
+
+  var grid = $('#grid').data('_gridList').gridList.grid;
+  grid[current_pos_x][current_pos_y].$element.addClass('focus');
 });

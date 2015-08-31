@@ -43,7 +43,7 @@ body {
     bottom: 10px;
     left: 10px;
     right: 0;
-    -webkit-transition: background 3s;
+    /*-webkit-transition: background 3s;*/
   }
   .grid li.changed .inner {
     background: #ffff66;
@@ -119,3 +119,8 @@ body {
     .header a:hover {
       text-decoration: underline;
     }
+
+
+.grid li.focus div {
+    background-color: cornflowerblue;
+}
