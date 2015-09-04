@@ -130,8 +130,6 @@ fixtures.DEMO = [
   {w: 1, h: 1, x: 10, y: 0},
   {w: 1, h: 1, x: 10, y: 1},
   {w: 1, h: 1, x: 10, y: 2}
-<<<<<<< HEAD
-=======
 ];
 
 fixtures.verticalGridDemo = [
@@ -152,7 +150,6 @@ fixtures.verticalGridDemo = [
   {w: 1, h: 1, x: 1, y: 6},
   {w: 2, h: 2, x: 0, y: 7},
   {w: 1, h: 2, x: 2, y: 7}
->>>>>>> master
 ];
 
 // Enable Node module
