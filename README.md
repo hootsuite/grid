@@ -1,24 +1,17 @@
-GridList [![Build Status](https://travis-ci.org/uberVU/grid.svg?branch=master)](https://travis-ci.org/uberVU/grid)
+GridList [![Build Status](https://travis-ci.org/hootsuite/grid.svg?branch=master)](https://travis-ci.org/hootsuite/grid)
 ====
 Drag and drop library for a two-dimensional resizable and responsive list of
 items
 
-**Demo: http://ubervu.github.io/grid/**
-
-**Disclaimer: The current implementation is for a horizontal grid. This means
-that the number of rows is configurable, whereas columns extend dynamically,
-based on the number, size and position of items placed inside the grid.** While
-this is by design, most, if not all, logic was built around the idea that at
-any point the other axis could be supported with minor/moderate code changes,
-making both orientations available through the use of an single option.
+**Demo: http://hootsuite.github.io/grid/**
 
 The GridList library is split into two roles:
 
 1. An agnostic [**GridList class**](#gridlist-class) that manages the
-two-dimensional positions from a list of items within a virtual matrix
+two-dimensional positions from a list of items within a virtual matrix.
 2. A [**jQuery plugin**](#fngridlist) built on top of the GridList class
 that translates the generic items positions into responsive DOM elements with
-drag and drop capabilities
+drag and drop capabilities.
 
 ## GridList class
 
@@ -32,7 +25,10 @@ Jump to:
 #### new GridList(items, options)
 
 ```js
-var myGrid = new GridList(items, {rows: 3});
+var myGrid = new GridList(items, {
+  direction: 'horizontal',
+  lanes: 3
+});
 ```
 
 The first constructor parameter is an array of [items](#primitives) to populate
@@ -40,7 +36,12 @@ the grid with.
 
  Supported options:
 
- - **rows** - Number of rows for the grid
+ - **direction** - Can be `'horizontal'` or `'vertical'`. Defaults to
+   `'vertical'`. This sets how the grid can expand e.g. for 'horizontal' the
+   grid will stretch towards the right to accommodate all the items. For
+   'vertical', it will stretch towards the bottom.
+ - **lanes** - Number of fixed rows or columns, depending on the
+   direction.
 
 #### generateGrid()
 
@@ -54,22 +55,22 @@ possibly overlapping. If you want to build a grid around a list of items that
 only have their size attributes defined (w and h), and rely on the library to
 position them two-dimensionally, use [_resizeGrid._](#resizegridrows)
 
-#### resizeGrid(rows)
+#### resizeGrid(lanes)
 
 ```js
 myGrid.resizeGrid(4);
 ```
 
 (Re)generate positions for the items inside a grid instance for a given number
-of rows. This method has two major use-cases:
+of rows/columns. This method has two major use-cases:
 
-1. Items are being represented two-dimensionally for the first time
+1. Items are being represented two-dimensionally for the first time.
 2. Items already have 2d positions but need to be represented on a different
-grid size, maintaining as much as possible of their previous order
+grid size, maintaining as much as possible of their previous order.
 
-Given the horizontal orientation, positions inside the grid are generated
-left-to-right, top-to-bottom. So when looking for a new position inside the
-grid the topmost row from the leftmost column is chosen.
+Positions inside the grid are generated left-to-right, top-to-bottom. So when
+looking for a new position inside the grid the topmost row from the leftmost
+column is chosen.
 
 #### moveItemToPosition(item, position)
 
@@ -81,11 +82,11 @@ myGrid.moveItemToPosition(carefreeItem, [1, 1]);
 
 Here are things that happen when moving an item inside the grid:
 
-1. The item's previous position is cleared inside the [2d grid](#gridlistgrid)
-2. The position inside the [item object](#item) is updated
-3. The item's new position is marked inside the 2d grid
+1. The item's previous position is cleared inside the [2d grid](#gridlistgrid),
+2. The position inside the [item object](#item) is updated,
+3. The item's new position is marked inside the 2d grid and
 4. Collisions are handled if the moved item overlaps with other item(s) from
-the grid
+the grid.
 
 Collisions can be solved in two ways. First, an attempt to resolve them
 _locally_ is made, meaning that the moved item tries to swap position with
@@ -95,20 +96,23 @@ entire grid will be [regenerated](#resizegridrows), starting with the moved
 item fixed in its new position. In the latter case, all the items around and
 to the right of the moved item might have their position slightly altered.
 
-#### resizeItem(item, width)
+#### resizeItem(item, size)
 
 ```js
 // Resize item from position [0, 0] to span over 3 columns
 var growthItem = myGrid.grid[0, 0];
-myGrid.resizeItem(growthItem, 3);
+
+myGrid.resizeItem(growthItem, {w: 3});
 console.log(growthItem.w); // will output "3"
+
+myGrid.resizing(growthItem, {h: 2});
+console.log(growthItem.h); // will output "2"
 ```
 
 Resizing an item is very similar to moving its position, in the sense that
 [grid](#gridlistgrid) cells will be repopulated and collisions will be handled
 afterwards. See [moveItemToPosition.](#moveitemtopositionitem-position)
 
-_TODO: Implement resizing of item height_
 
 ### Primitives
 
@@ -181,7 +185,10 @@ PS. This grid would be generated by these items:
 ## $.fn.gridList
 
 ```js
-$('.my-list').gridList({rows: 3});
+$('.my-list').gridList({
+  direction: 'horizontal',
+  lanes: 3
+});
 ```
 
 The jQuery plugin has two main functions:
@@ -191,6 +198,16 @@ expected to have `data-w` and `data-h` attributes, and optionally `data-x` and
 `data-y` (if their positions have been previously generated and persisted)
 - **Drag and drop** capabilities
 
+The function takes an optional argument with options that will be passed to the
+draggables when constructing them.
+
+```js
+$('.my-list').gridList({lanes: 3}, {handle: '.title');
+```
+
+See [jQuery UI Draggable API](api.jqueryui.com/draggable/) for details on all
+the available options.
+
 The rendered list is **responsive** to its parent container, meaning that the
 width and height of the items are calculated based on the container height
 divided by the number of grid rows.
@@ -198,22 +215,22 @@ divided by the number of grid rows.
 ## FAQ: Why not [gridster](https://github.com/ducksboard/gridster.js)?
 
 - Their README reads Ducksboard is no longer active in their development. There
-are a few notable forks but it's hard to assert their [reliability.](https://github.com/dustmoo/gridster.js/issues)
-- gridster works vertically and our design is horizontal. We instigated a
-gridster pull request that attempted to make gridster work both ways and it
-didn't seem to stabilize any time soon, plus the code was too complex to
-approach. Our lib ended up having over than 5 times fewer code.
-- gridster collisions are [very basic](https://github.com/ducksboard/gridster.js/issues/54),
-we pushed towards better UX and found alternative ways for dealing with
-collisions.
+  are a few notable forks but it's hard to assert their
+  [reliability.](https://github.com/dustmoo/gridster.js/issues)
+- gridster works vertically while our solution works both vertically and
+  horizontally.
+- Our lib contains over 5 times fewer code.
+- gridster collisions are [very
+  basic](https://github.com/ducksboard/gridster.js/issues/54), we pushed towards
+  better UX and found alternative ways for dealing with collisions.
 - We wanted out-of-the-box responsiveness, and the entire grid system was build
-fluid, relative to any parent container.
+  fluid, relative to any parent container.
 - We needed the grid logic to be a DOM-less lib outside the jQuery plugin. This
-allows us to compute grid positions on the server-side and run kick-ass fast
-tests with Node.
+  allows us to compute grid positions on the server-side and run kick-ass fast
+  tests with Node.
 - Another more particular thing we needed was widgets that had height=0, which
-means they stretch on however many rows a grid has. We show timelines like
-this. The same can be easily adapted for width in vertical grids.
+  means they stretch on however many rows a grid has. We show timelines like
+  this. It also works for width=0.
 
-*Please check [demo page](http://ubervu.github.io/grid/) or code directly for
+*Please check [demo page](http://hootsuite.github.io/grid/) or code directly for
 investigating these assumptions.*

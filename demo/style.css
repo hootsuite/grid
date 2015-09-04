@@ -12,8 +12,7 @@ body {
   left: 0;
   right: 10px;
   bottom: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: auto;
 }
 .grid {
   position: relative;
@@ -107,16 +106,8 @@ body {
     cursor: pointer;
   }
   .header p {
-    padding: 0 10px;
+    float: left;
+    padding: 14px 0 0 10px;
     font-size: 18px;
-    line-height: 55px;
-    text-align: right;
-    text-transform: uppercase;
+    line-height: 18px;
   }
-    .header a {
-      color: #000;
-      text-decoration: none;
-    }
-    .header a:hover {
-      text-decoration: underline;
-    }
