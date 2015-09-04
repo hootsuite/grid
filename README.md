@@ -1,9 +1,9 @@
-GridList [![Build Status](https://travis-ci.org/uberVU/grid.svg?branch=master)](https://travis-ci.org/uberVU/grid)
+GridList [![Build Status](https://travis-ci.org/hootsuite/grid.svg?branch=master)](https://travis-ci.org/hootsuite/grid)
 ====
 Drag and drop library for a two-dimensional resizable and responsive list of
 items
 
-**Demo: http://ubervu.github.io/grid/**
+**Demo: http://hootsuite.github.io/grid/**
 
 The GridList library is split into two roles:
 
@@ -232,5 +232,5 @@ divided by the number of grid rows.
   means they stretch on however many rows a grid has. We show timelines like
   this. It also works for width=0.
 
-*Please check [demo page](http://ubervu.github.io/grid/) or code directly for
+*Please check [demo page](http://hootsuite.github.io/grid/) or code directly for
 investigating these assumptions.*

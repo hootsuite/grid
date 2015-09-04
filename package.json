@@ -1,6 +1,6 @@
 {
   "name": "grid-list",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Drag and drop library for a two-dimensional resizable and responsive list of items",
   "dependencies": {},
   "devDependencies": {
@@ -9,7 +9,7 @@
   "main": "src/gridList.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ubervu/grid.git"
+    "url": "https://github.com/hootsuite/grid.git"
   },
   "scripts": {
     "test": "jasmine-node --verbose spec"
