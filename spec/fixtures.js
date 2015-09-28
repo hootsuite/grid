@@ -152,6 +152,17 @@ fixtures.verticalGridDemo = [
   {w: 1, h: 2, x: 2, y: 7}
 ];
 
+fixtures.VGRID1 = {
+  input: [
+    {w: 1, h: 1},
+    {w: 1, h: 1}
+  ],
+  target: [
+    {w: 1, h: 1, x: 0, y: 0},
+    {w: 1, h: 1, x: 1, y: 0}
+  ]
+};
+
 // Enable Node module
 if (typeof(require) == 'function') {
   for (var k in fixtures) {

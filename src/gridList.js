@@ -149,12 +149,13 @@ GridList.prototype = {
     // that is their "1d position"
     for (var i = 0; i < this.items.length; i++) {
       var item = this.items[i],
-          position = this._getItemPosition(item);
+          position;
 
       this._updateItemPosition(
         item, this.findPositionForItem(item, {x: currentColumn, y: 0}));
 
       // New items should never be placed to the left of previous items
+      position = this._getItemPosition(item);
       currentColumn = Math.max(currentColumn, position.x);
     }
 
