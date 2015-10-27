@@ -19,8 +19,10 @@ body {
   height: 100%;
   list-style: none;
   /* Will be modified by the grid jquery lib, depending on the items */
-  -webkit-transition: width 0.2s;
-          transition: width 0.2s;
+  -webkit-transition: width 0.2s,
+                      height 0.2s;
+          transition: width 0.2s,
+                      height 0.2s;
 }
   .grid li {
     position: absolute;
