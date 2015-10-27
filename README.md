@@ -37,7 +37,7 @@ the grid with.
  Supported options:
 
  - **direction** - Can be `'horizontal'` or `'vertical'`. Defaults to
-   `'vertical'`. This sets how the grid can expand e.g. for 'horizontal' the
+   `'horizontal'`. This sets how the grid can expand e.g. for 'horizontal' the
    grid will stretch towards the right to accommodate all the items. For
    'vertical', it will stretch towards the bottom.
  - **lanes** - Number of fixed rows or columns, depending on the
