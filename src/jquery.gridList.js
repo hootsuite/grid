@@ -338,7 +338,7 @@
   };
 
   $.fn.gridList = function(options, draggableOptions) {
-    if (!window.GridList) {
+    if (!GridList) {
       throw new Error('GridList lib required');
     }
     var instance,
