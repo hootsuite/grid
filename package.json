@@ -8,6 +8,7 @@
     "resizable",
     "reponsive"
   ],
+  "license": "Apache-2.0",
   "dependencies": {},
   "devDependencies": {
     "jasmine-node": "~1.13.1"
