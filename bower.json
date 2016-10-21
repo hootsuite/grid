@@ -1,18 +1,15 @@
 {
   "name": "grid-list",
-  "version": "0.1.0",
   "homepage": "https://github.com/hootsuite/grid",
   "description": "Drag and drop library for a two-dimensional resizable and responsive list of items",
-  "main": [
-    "src/gridList.js",
-    "src/jquery.gridList.js"
-  ],
+  "main": "src/gridList.js",
   "keywords": [
     "grid",
     "drag and drop",
     "resizable",
     "reponsive"
   ],
+  "license": "Apache-2.0",
   "ignore": [
     "node_modules",
     "demo",

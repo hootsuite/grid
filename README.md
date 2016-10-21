@@ -202,7 +202,7 @@ The function takes an optional argument with options that will be passed to the
 draggables when constructing them.
 
 ```js
-$('.my-list').gridList({lanes: 3}, {handle: '.title');
+$('.my-list').gridList({lanes: 3}, {handle: '.title'});
 ```
 
 See [jQuery UI Draggable API](api.jqueryui.com/draggable/) for details on all
