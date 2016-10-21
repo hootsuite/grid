@@ -2,6 +2,12 @@
   "name": "grid-list",
   "version": "0.3.3",
   "description": "Drag and drop library for a two-dimensional resizable and responsive list of items",
+  "keywords": [
+    "grid",
+    "drag and drop",
+    "resizable",
+    "reponsive"
+  ],
   "dependencies": {},
   "devDependencies": {
     "jasmine-node": "~1.13.1"
