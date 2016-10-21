@@ -9,6 +9,7 @@
     "resizable",
     "reponsive"
   ],
+  "license": "Apache-2.0",
   "ignore": [
     "node_modules",
     "demo",
