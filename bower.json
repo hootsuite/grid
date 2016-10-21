@@ -1,6 +1,5 @@
 {
   "name": "grid-list",
-  "version": "0.1.0",
   "homepage": "https://github.com/hootsuite/grid",
   "description": "Drag and drop library for a two-dimensional resizable and responsive list of items",
   "main": [
