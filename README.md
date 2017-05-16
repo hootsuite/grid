@@ -205,7 +205,7 @@ draggables when constructing them.
 $('.my-list').gridList({lanes: 3}, {handle: '.title'});
 ```
 
-See [jQuery UI Draggable API](api.jqueryui.com/draggable/) for details on all
+See [jQuery UI Draggable API](https://api.jqueryui.com/draggable/) for details on all
 the available options.
 
 The rendered list is **responsive** to its parent container, meaning that the
