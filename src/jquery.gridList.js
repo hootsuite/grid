@@ -3,7 +3,7 @@
 (function (factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['jquery', 'gridlist'], factory);
+    define(['jquery', 'grid-list'], factory);
   } else {
     factory(jQuery, GridList);
   }
