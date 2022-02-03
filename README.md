@@ -1,3 +1,6 @@
+# DEPRECATED 
+This project is no longer maintained, please consider using [react-grid-layout](https://github.com/react-grid-layout/react-grid-layout) instead.
+
 GridList [![Build Status](https://travis-ci.org/hootsuite/grid.svg?branch=master)](https://travis-ci.org/hootsuite/grid)
 ====
 Drag and drop library for a two-dimensional resizable and responsive list of
