@@ -5,7 +5,7 @@
     // AMD. Register as an anonymous module.
     define(['jquery', 'grid-list'], factory);
   } else {
-    factory(jQuery, GridList);
+    this.DraggableGridList = factory(jQuery, GridList);
   }
 }(function($, GridList) {
 
