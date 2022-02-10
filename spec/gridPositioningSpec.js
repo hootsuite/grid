@@ -61,6 +61,21 @@ describe("Grid positioning", function() {
     });
   });
 
+  describe("vertical grid", function() {
+    describe("for grid configuration 1", function() {
+      var gridFixture = fixtures.VGRID1;
+      var grid = new GridList(GridList.cloneItems(gridFixture.input), {
+        lanes: 2,
+        direction: 'vertical'
+      });
+      grid.resizeGrid(2);
+
+      it("should lay out both items in the top row", function() {
+        expect(grid.items).toEqualPositions(gridFixture.target);
+      });
+    })
+  });
+
   it("should pull to left after resizing", function() {
     var grid = new GridList([
       {x: 0, y: 0, w: 1, h: 1},

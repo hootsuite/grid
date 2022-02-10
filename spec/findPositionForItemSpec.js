@@ -65,6 +65,26 @@ describe("findPositionForItem", function() {
         expect(grid.findPositionForItem(item, {x: 0, y: 0}, 1)).toEqual([1, 1]);
       });
     });
+
+    describe("on an empty vertical grid", function() {
+      var grid;
+
+      beforeEach(function() {
+        grid = new GridList([], {lanes: 2, direction: 'vertical'});
+      });
+
+      it("should place it at the top", function() {
+        expect(grid.findPositionForItem(item, {x: 0, y: 0})).toEqual([0, 0]);
+      });
+
+      it("should place it ignoring the start position", function() {
+        expect(grid.findPositionForItem(item, {x: 1, y: 1})).toEqual([0, 0]);
+      });
+
+      it("should place it on the row I tell it to", function() {
+        expect(grid.findPositionForItem(item, {x: 0, y: 0}, 1)).toEqual([0, 1]);
+      });
+    });
   });
 
   describe("for an item that doesn't fit", function() {
